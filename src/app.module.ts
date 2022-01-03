@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { Users } from './users/users.entity';
 import { LoginController } from './login/login.controller';
 import { LoginModule } from './login/login.module';
+import { ListController } from './list/list.controller';
+import { ListModule } from './list/list.module';
 
 @Module({
   imports: [
@@ -26,8 +28,9 @@ import { LoginModule } from './login/login.module';
     // }),
     // UsersModule,
     LoginModule,
+    ListModule,
   ],
-  controllers: [AppController, LoginController],
+  controllers: [AppController, LoginController, ListController],
   providers: [AppService],
 })
 export class AppModule {}
