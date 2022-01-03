@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Users } from './users.entity';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -18,11 +17,11 @@ export class UsersService {
     private connection: Connection,
   ) {}
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<Users[]> {
     return this.userRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
+  findOne(id: string): Promise<Users> {
     return this.userRepository.findOne(id);
   }
 
@@ -31,10 +30,14 @@ export class UsersService {
   }
 
   // 트랜잭션 처리방법
-  async createMany(users: User[]) {
+  async createMany(users: Users[]) {
     await this.connection.transaction(async (manager) => {
       await manager.save(users[0]);
       await manager.save(users[1]);
     });
+  }
+
+  async save(user: Users) {
+    await this.userRepository.save(user);
   }
 }

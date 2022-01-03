@@ -3,7 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/user.entity';
+import { Users } from './users/users.entity';
+import { LoginController } from './login/login.controller';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -20,11 +22,12 @@ import { User } from './users/user.entity';
       autoLoadEntities: true,
 
       // Setting synchronize makes sure your entities will be synced with the database, every time you run the application.
-      // synchronize: true,
+      synchronize: true,
     }),
     UsersModule,
+    LoginModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, LoginController],
   providers: [AppService],
 })
 export class AppModule {}
