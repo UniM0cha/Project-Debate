@@ -22,7 +22,7 @@ import { LoginModule } from './login/login.module';
       autoLoadEntities: true,
 
       // Setting synchronize makes sure your entities will be synced with the database, every time you run the application.
-      synchronize: true,
+      // synchronize: true,
     }),
     UsersModule,
     LoginModule,

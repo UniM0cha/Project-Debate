@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 
 @Controller('login')
 export class LoginController {
   @Get('/')
-  login(): String {
-    return 'login';
+  @Render('login')
+  login() {
+    return;
   }
 }
