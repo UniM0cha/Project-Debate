@@ -3,28 +3,31 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { User } from './users/user.entity';
+import { Users } from './users/users.entity';
+import { LoginController } from './login/login.controller';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
     // mysql config
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'debate',
-      password: 'mochamocha',
-      database: 'debate',
-      // entities: [User],
-      // 이 옵션은 forFeature() 메소드를 통해 등록된 모든 엔티티가 자동 추가된다.
-      autoLoadEntities: true,
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'debate',
+    //   password: 'mochamocha',
+    //   database: 'debate',
+    //   // entities: [User],
+    //   // 이 옵션은 forFeature() 메소드를 통해 등록된 모든 엔티티가 자동 추가된다.
+    //   autoLoadEntities: true,
 
-      // Setting synchronize makes sure your entities will be synced with the database, every time you run the application.
-      // synchronize: true,
-    }),
-    UsersModule,
+    //   // Setting synchronize makes sure your entities will be synced with the database, every time you run the application.
+    //   // synchronize: true,
+    // }),
+    // UsersModule,
+    LoginModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, LoginController],
   providers: [AppService],
 })
 export class AppModule {}
