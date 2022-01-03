@@ -1,0 +1,78 @@
+.form-ex-debatelist {
+  margin: 0px;
+}
+
+.btn-ex-debatelist {
+  margin-left: 10px;
+}
+
+.title {
+  text-decoration: none;
+  color: white;
+  font-size: 30px;
+  display: block;
+  margin: 0 auto;
+}
+
+.title img {
+  vertical-align: middle;
+}
+
+.title:hover {
+  color: white;
+}
+
+.form-login {
+  margin: 0px;
+}
+
+.btn-login {
+  margin-right: 10px;
+}
+
+/*로그인 버튼 모음*/
+.login-form {
+  text-align: center;
+}
+
+.login-btn {
+  width: 50%;
+  height: 5%;
+  border: none;
+  border-radius: 5px;
+}
+
+.kakao {
+  background-color: #f7e600;
+  color: #3a1d1d;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.kakao img {
+  margin-bottom: 2px;
+}
+
+.naver {
+  margin-top: 10px;
+  background-color: #2db400;
+  color: white;
+  font-weight: bold;
+  margin-top: 50px;
+}
+
+.google {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.google img {
+  margin-bottom: 2px;
+  margin-right: 5px;
+}
+
+@media (min-width: 992px) {
+  .login-btn {
+    width: 30%;
+  }
+}
