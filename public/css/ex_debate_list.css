@@ -1,0 +1,47 @@
+/*위의 메뉴바*/
+.form-ex-debatelist {
+  margin: 0px;
+}
+
+.btn-ex-debatelist {
+  margin-left: 10px;
+}
+
+.title {
+  text-decoration: none;
+  color: white;
+  font-size: 30px;
+}
+
+.title img {
+  vertical-align: middle;
+}
+
+.title:hover {
+  color: white;
+}
+
+.form-login {
+  margin: 0px;
+}
+
+.btn-login {
+  margin-right: 10px;
+}
+
+/* 게시판 */
+.topic-list {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+/*페이지 이동*/
+
+/*노트북&데스크탑*/
+@media (min-width: 992px) {
+  .topic-list {
+    width: 60%;
+  }
+}

@@ -1,0 +1,213 @@
+/*위의 메뉴바*/
+.form-ex-debatelist {
+  margin: 0px;
+}
+
+.btn-ex-debatelist {
+  margin-left: 10px;
+}
+
+.title {
+  text-decoration: none;
+  color: white;
+  font-size: 30px;
+}
+
+.title img {
+  vertical-align: middle;
+}
+
+.title:hover {
+  color: white;
+}
+
+.form-login {
+  margin: 0px;
+}
+
+.btn-login {
+  margin-right: 10px;
+}
+
+/*중간 토론 주제*/
+.time-topic-div {
+  margin-top: 10px;
+  width: 90%;
+  background-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 10px;
+  height: auto;
+}
+
+.time {
+  font-size: x-small;
+}
+
+.topic {
+  font-size: 30px;
+}
+
+/* 찬성반대바 */
+.age-dis-bar-wrapper {
+  width: 90%;
+  background-color: white;
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+
+.agree-bar {
+  width: 50%;
+  background-color: #4aa8d8;
+  color: white;
+  text-align: center;
+  border-radius: 7px 0px 0px 7px;
+}
+
+.disagree-bar {
+  width: 50%;
+  background-color: #ff4040;
+  color: white;
+  text-align: center;
+  border-radius: 0px 7px 7px 0px;
+}
+
+/* 찬성반대버튼*/
+.bar-button {
+  width: 50%;
+  border-radius: 7px;
+}
+
+.agree-btn {
+  border: none;
+  background-color: #4aa8d8;
+}
+
+.disagree-btn {
+  border: none;
+  background-color: #ff4040;
+}
+
+/* 실시간 토론 상자 */
+.debate-wrapper {
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  width: 90%;
+  height: 70vh;
+  background-color: transparent;
+  border: solid 2px black;
+  border-radius: 7px;
+}
+
+.debate-wrapper ul {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  overflow: auto;
+  height: 100%;
+  padding-bottom: 5px;
+}
+
+.debate-wrapper li {
+  overflow: auto;
+}
+
+.debate-wrapper ::-webkit-scrollbar {
+  background-color: #adacac;
+  width: 10px;
+  border-radius: 5px;
+}
+
+.debate-wrapper ::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 5px;
+}
+
+.nickname {
+  font-size: x-small;
+}
+
+.user-opinion {
+  border: solid 2px black;
+  padding: 5px;
+  width: fit-content;
+  max-width: 70%;
+  display: inline-flex;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.opinion-time {
+  display: inline-flex;
+  vertical-align: bottom;
+  font-size: x-small;
+}
+
+.agree {
+  margin-left: 5px;
+}
+
+.disagree {
+  text-align: right;
+  margin-right: 5px;
+}
+
+.agree .nickname {
+  margin-left: 7px;
+}
+
+.disagree .nickname {
+  margin-right: 7px;
+}
+
+.disagree .user-opinion {
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+.input-box {
+  display: flex;
+  height: 10%;
+}
+
+.opinion-input {
+  width: 80%;
+  height: 100%;
+  border-radius: 7px;
+  word-break: break-all;
+}
+
+.send {
+  width: 20%;
+  height: 100%;
+  border-radius: 7px;
+}
+
+/*휴대폰*/
+@media (min-width: 576px) {
+}
+
+/*태블릿*/
+@media (min-width: 768px) {
+}
+
+/*노트북&데스크탑*/
+@media (min-width: 992px) {
+  .time-topic-div {
+    width: 60%;
+  }
+  .age-dis-bar-wrapper {
+    width: 60%;
+    height: 40px;
+  }
+  .debate-wrapper {
+    width: 60%;
+    height: 75vh;
+  }
+}
