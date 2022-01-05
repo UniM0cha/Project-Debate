@@ -53,7 +53,7 @@ export class LoginController {
     const accessToken = e.data['access_token'];
     this.logger.debug(`Kakao Access Token: ${accessToken}`);
     this.loginService.setTocken(accessToken);
-    // TODO : 받은 토큰을 저장하는 방법 모
+    // TODO : 받은 토큰을 저장하는 방법 모색
 
     return res.redirect(`http://${REDIRECT_URI}/`);
   }
