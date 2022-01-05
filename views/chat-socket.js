@@ -1,5 +1,4 @@
-const socket = io();
-let io = require('socket.io')(http, { cors: { origin: '*' } });
+const socket = io('http://localhost:3000', { transports: ['websocket'] });
 
 const message = document.getElementById('message');
 const messages = document.getElementById('messages');

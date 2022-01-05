@@ -8,6 +8,7 @@ import { LoginController } from './login/login.controller';
 import { LoginModule } from './login/login.module';
 import { ListController } from './list/list.controller';
 import { ListModule } from './list/list.module';
+import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { ListModule } from './list/list.module';
     ListModule,
   ],
   controllers: [AppController, LoginController, ListController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule {}
