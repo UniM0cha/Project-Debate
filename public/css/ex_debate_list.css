@@ -5,6 +5,7 @@
 
 .btn-ex-debatelist {
   margin-left: 10px;
+  width: 120px;
 }
 
 .title {
@@ -27,6 +28,7 @@
 
 .btn-login {
   margin-right: 10px;
+  width: 120px;
 }
 
 /* 게시판 */
