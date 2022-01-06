@@ -21,10 +21,17 @@
       </form>
 
       <a class='title' href='#'>
-        토론 사이트</a>
+        토론 사이트 / 로그인: {{ isLogined }}, id: {{ id }}</a>
+
+      {{!-- isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 --}}
+      {{!-- isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 --}}
+      {{!-- 지금은 임시로 로그아웃 버튼을 같이 나오게 생성함 --}}
 
       <form class='form-login expand' action='/auth'>
         <button type='submit' class='btn btn-light btn-login'>로그인</button>
+      </form>
+      <form class='form-login expand' action='/auth/logout'>
+        <button type='submit' class='btn btn-light btn-login'>로그아웃</button>
       </form>
     </nav>
 

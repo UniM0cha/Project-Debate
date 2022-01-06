@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { Users } from './users/users.entity';
 import { LoginController } from './login/login.controller';
 import { LoginModule } from './login/login.module';
 import { HttpModule } from '@nestjs/axios';

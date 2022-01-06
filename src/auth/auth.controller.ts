@@ -1,5 +1,3 @@
-const REDIRECT_URI = `localhost:3000`;
-
 import {
   Controller,
   Get,
@@ -9,6 +7,7 @@ import {
   Redirect,
   Render,
   Res,
+  Session,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -26,10 +25,7 @@ export class AuthController {
   @Redirect()
   login() {
     this.logger.debug(`Kakao Login Request`);
-    const _hostName = 'https://kauth.kakao.com';
-    const _restApiKey = 'ff5db7469114a5d6adfbdbc19d58501a';
-    const _redirectUri = `http://${REDIRECT_URI}/auth/redirect`;
-    const url = `${_hostName}/oauth/authorize?client_id=${_restApiKey}&redirect_uri=${_redirectUri}&response_type=code`;
+    const url = this.authService.getAccessCode();
     return { url: url };
 
     // TODO : 구글
@@ -37,39 +33,67 @@ export class AuthController {
   }
 
   @Get('redirect')
-  async loginRedirect(@Query() qs, @Res() res: Response) {
-    // 엑세스 코드로 엑세스 토큰 받기
+  async loginRedirect(
+    @Query() qs,
+    @Res() res: Response,
+    @Session() session: Record<string, any>,
+  ) {
     const accessCode = qs.code;
-    this.logger.debug(`Kakao Login access_token: ${accessCode}`);
+    this.logger.debug(`Response Access_Token from Kakao: ${accessCode}`);
 
-    const _hostName = 'https://kauth.kakao.com';
-    const _restApiKey = 'ff5db7469114a5d6adfbdbc19d58501a';
-    let _header = {
-      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-    };
-    const _redirectUri = `http://${REDIRECT_URI}/auth/redirect`;
-    let _url = `${_hostName}/oauth/token?grant_type=authorization_code&client_id=${_restApiKey}&redirect_uri=${_redirectUri}&code=${accessCode}`;
-
-    const token = await this.authService.login(_url, _header);
+    // Get Access Token
+    const token = await this.authService.getAccessToken(accessCode);
     this.logger.debug(
-      `Response Data from Kakao: ${JSON.stringify(token.data)}`,
+      `Response Token_Data from Kakao: ${JSON.stringify(token.data, null, 4)}`,
     );
     const accessToken = token.data['access_token'];
 
-    // 엑세스 토큰으로 유저 정보 가져오기mmㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-    _url = `${_hostName}/v2/user/me?grant_type=authorization_code&client_id=${_restApiKey}&redirect_uri=${_redirectUri}&code=${accessCode}`;
+    // Get User Info
+    const userInfo = await this.authService.getUserInfo(accessToken);
+    this.logger.debug(
+      `Response User_Data from Kakao: ${JSON.stringify(
+        userInfo.data,
+        null,
+        4,
+      )}`,
+    );
 
-    // const userInfo = await this.authService.getUserInfo(accessToken);
-
-    // TODO : 받은 토큰을 통해 사용자 정보 불러오기
     // TODO : 받은 사용자 정보를 세션에 저장
+    const authData = {
+      ...token.data,
+      ...userInfo.data,
+    };
 
-    return res.redirect(`http://${REDIRECT_URI}/`);
+    session.isLogined = true;
+    session.authData = authData;
+    session.regenerate((err) => {
+      if (err) throw err;
+      this.logger.debug(
+        `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
+      );
+    });
+
+    // TODO : 받는 사용자 정보중 카카오 사용자 id를 중복되지 않는 닉네임과 함께 저장 (추후에 사용자id를 받아왔을 때 중복 처리해야함)
+
+    return res.redirect(`http://localhost:3000/`);
+  }
+
+  @Get('logout')
+  @Redirect('/')
+  async logout(@Session() session: Record<string, any>) {
+    this.logger.debug(`Kakao Logout Request`);
+
+    // TODO : 카카오측에 요청하여 토큰 만료시킴
+    const accessToken = session.authData.access_token;
+    this.logger.debug(accessToken);
+    await this.authService.logout(accessToken);
+
+    // TODO : 세션에 등록된 사용자 정보 삭제
+    session.destroy((err) => {
+      if (err) throw err;
+    });
   }
 
   @Get('status')
   status() {}
-
-  @Get('logout')
-  logout() {}
 }
