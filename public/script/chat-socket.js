@@ -4,7 +4,6 @@ const message = document.getElementById('message');
 const messages = document.getElementById('messages');
 
 const handleSubmitNewMessage = () => {
-  console.log('ddd');
   socket.emit('message', { data: message.value });
 };
 
