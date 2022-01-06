@@ -4,6 +4,7 @@
 }
 
 .btn-ex-debatelist {
+  width: 120px;
   margin-left: 10px;
 }
 
@@ -26,6 +27,7 @@
 }
 
 .btn-login {
+  width: 120px;
   margin-right: 10px;
 }
 

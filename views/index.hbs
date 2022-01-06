@@ -15,8 +15,8 @@
 
     <!-- 상단 메뉴 -->
     <nav class='navbar navbar-lg navbar-dark bg-dark'>
-      <form class='form-ex-debatelist'>
-        <button type='button' class='btn btn-light btn-ex-debatelist'>이전
+      <form class='form-ex-debatelist' action='/list'>
+        <button type='submit' class='btn btn-light btn-ex-debatelist'>이전
           리스트</button>
       </form>
 
@@ -47,8 +47,8 @@
 
     <!-- 찬성반대투표바 -->
     <div class='age-dis-bar-wrapper'>
-      {{! <div class='agree-bar'>찬성: 50%</div>
-      <div class='disagree-bar'>반대: 50%</div> }}
+      <div class='agree-bar'>찬성: {{agree-persent}}</div>
+      <div class='disagree-bar'>반대: {{disagree-persent}}</div>
 
       <button class='bar-button agree-btn'>찬성</button>
       <button class='bar-button disagree-btn'>반대</button>
@@ -72,46 +72,6 @@
             <div class='opinion-time'>오후 01:37</div>
             <div class='user-opinion'>반대의견</div>
           </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
 
         </ul>
       </div>
@@ -128,4 +88,5 @@
     integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
     crossorigin='anonymous'
   ></script>
+  <script src='./js/index.js'></script>
 </html>
