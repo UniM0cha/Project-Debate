@@ -50,8 +50,7 @@
     <!-- 실시간 토론 하는 곳 -->
     <div class='debate-wrapper'>
       <div class='debate-box'>
-        <ul class='live-debate'>
-
+        <ul class='live-debate' id='messages'>
           <li class='agree'>
             <div class='nickname'>usernickname</div>
             <div
@@ -65,55 +64,18 @@
             <div class='opinion-time'>오후 01:37</div>
             <div class='user-opinion'>반대의견</div>
           </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-
         </ul>
       </div>
       <div class='input-box'>
-        <input class='opinion-input' type='text' />
-        <button class='send' type='button'>전송</button>
+        <input id='message' class='opinion-input' type='text' />
+        <button
+          onclick='handleSubmitNewMessage()'
+          class='send'
+          type='button'
+        >전송</button>
       </div>
     </div>
-
+    <script src='./script/chat-socket.js'></script>
   </body>
 
   <script
@@ -121,4 +83,10 @@
     integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
     crossorigin='anonymous'
   ></script>
+  <script
+    src='https://cdn.socket.io/4.4.0/socket.io.min.js'
+    integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
+    crossorigin='anonymous'
+  ></script>
+
 </html>
