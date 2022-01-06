@@ -23,51 +23,51 @@ document.addEventListener("DOMContentLoaded", function () {
     let disagree = 50;
 
     //로그인 안하고 그냥 볼 때 찬성 반대 비율 바 보여주기
-    agree_btn.style.display = "none";
-    disagree_btn.style.display = "none";
-    agree_bar.style.display = "block"
-    disagree_bar.style.display = "block"
+    // agree_btn.style.display = "none";
+    // disagree_btn.style.display = "none";
+    // agree_bar.style.display = "block"
+    // disagree_bar.style.display = "block"
 
-    agree_bar.style.width = agree + '%';
-    disagree_bar.style.width = disagree + '%';
+    // agree_bar.style.width = agree + '%';
+    // disagree_bar.style.width = disagree + '%';
 
 
     //로그인 했을때
     //찬성 반대 바 숨기기
-    // agree_bar.style.display = "none";
-    // disagree_bar.style.display = "none";
+    agree_bar.style.display = "none";
+    disagree_bar.style.display = "none";
 
-    // agree_btn.addEventListener('click', () => {
-    //     agree = agree + 1;
-    //     disagree = disagree - 1;
-    //     console.log(agree);
-    //     console.log(disagree);
-    //     //찬성 반대 선택 이후 버튼 숨기기
-    //     agree_btn.style.display = "none";
-    //     disagree_btn.style.display = "none"; 
-    //     //찬성 반대 비율 변경
-    //     agree_bar.style.width = agree + '%';
-    //     disagree_bar.style.width = disagree + '%';
-    //     //찬성 반대 비율 바 보여주기
-    //     agree_bar.style.display = "block"
-    //     disagree_bar.style.display = "block"
-    // })
+    agree_btn.addEventListener('click', () => {
+        agree = agree + 1;
+        disagree = disagree - 1;
+        console.log(agree);
+        console.log(disagree);
+        //찬성 반대 선택 이후 버튼 숨기기
+        agree_btn.style.display = "none";
+        disagree_btn.style.display = "none"; 
+        //찬성 반대 비율 변경
+        agree_bar.style.width = agree + '%';
+        disagree_bar.style.width = disagree + '%';
+        //찬성 반대 비율 바 보여주기
+        agree_bar.style.display = "block"
+        disagree_bar.style.display = "block"
+    })
 
-    // disagree_btn.addEventListener('click', () => {
-    //     agree = agree - 1;
-    //     disagree = disagree + 1;
-    //     console.log(agree);
-    //     console.log(disagree);
-    //     //찬성 반대 선택 이후 버튼 숨기기
-    //     agree_btn.style.display = "none";
-    //     disagree_btn.style.display = "none";
-    //      //찬성 반대 비율 변경
-    //      agree_bar.style.width = agree + '%';
-    //      disagree_bar.style.width = disagree + '%';
-    //      //찬성 반대 비율 바 보여주기
-    //      agree_bar.style.display = "block"
-    //      disagree_bar.style.display = "block"
-    // })
+    disagree_btn.addEventListener('click', () => {
+        agree = agree - 1;
+        disagree = disagree + 1;
+        console.log(agree);
+        console.log(disagree);
+        //찬성 반대 선택 이후 버튼 숨기기
+        agree_btn.style.display = "none";
+        disagree_btn.style.display = "none";
+         //찬성 반대 비율 변경
+         agree_bar.style.width = agree + '%';
+         disagree_bar.style.width = disagree + '%';
+         //찬성 반대 비율 바 보여주기
+         agree_bar.style.display = "block"
+         disagree_bar.style.display = "block"
+    })
 
 });
 
