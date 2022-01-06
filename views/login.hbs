@@ -21,7 +21,7 @@
       <button class='login-btn naver'>네이버로 로그인 하기</button>
     </form>
 
-    <form class='login-form'>
+    <form class='login-form' action="/auth/login">
       <button class='login-btn kakao'>
         <img src='css/kakao.png' width='25px' height='25px' />
         카카오로 로그인 하기
@@ -32,6 +32,12 @@
       <button class='login-btn google'>
         <img src='css/google.png' width='30px' height='30px' />구글로
         로그인하기
+      </button>
+    </form>
+
+    <form class='login-form' action="/auth/logout">
+      <button class='login-btn google'>
+        <img src='/public/css/google.png' width='30px' height='30px' />로그아웃
       </button>
     </form>
   </body>
