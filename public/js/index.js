@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //채팅 입력 부분
   const ul = document.querySelector('.live-debate');
-  let opinion_input = document.querySelector('.opinion-input');
+  const opinion_input = document.querySelector('.opinion-input');
   const send = document.querySelector('.send');
 
   send.addEventListener('click', () => {
