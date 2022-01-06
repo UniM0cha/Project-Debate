@@ -10,6 +10,7 @@ import {
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { Users } from 'src/users/users.entity';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -74,6 +75,17 @@ export class AuthController {
     });
 
     // TODO : 받는 사용자 정보중 카카오 사용자 id를 중복되지 않는 닉네임과 함께 저장 (추후에 사용자id를 받아왔을 때 중복 처리해야함)
+    /*
+    const isValidate: boolean = this.authService.validateUser(
+      'kakao',
+      userInfo.id,
+    );
+    if (isValidate) {
+      const user: Users = new Users();
+      user.kakaoId = userInfo.id;
+      this.authService.saveUser(user);
+    }
+    */
 
     return res.redirect(`http://localhost:3000/`);
   }
