@@ -26,7 +26,16 @@
   margin: 0px;
 }
 
+.form-logout {
+  margin: 0px;
+}
+
 .btn-login {
+  width: 120px;
+  margin-right: 10px;
+}
+
+.btn-logout {
   width: 120px;
   margin-right: 10px;
 }
