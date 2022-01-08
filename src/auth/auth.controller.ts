@@ -10,13 +10,16 @@ import {
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Users } from 'src/users/users.entity';
+import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersSerivce: UsersService,
+  ) {}
 
   @Get('/')
   @Render('login')
@@ -66,7 +69,6 @@ export class AuthController {
     };
 
     session.isLogined = true;
-    session.authData = authData;
     session.regenerate((err) => {
       if (err) throw err;
       this.logger.debug(
@@ -74,18 +76,21 @@ export class AuthController {
       );
     });
 
-    // TODO : 받는 사용자 정보중 카카오 사용자 id를 중복되지 않는 닉네임과 함께 저장 (추후에 사용자id를 받아왔을 때 중복 처리해야함)
-    /*
-    const isValidate: boolean = this.authService.validateUser(
+    /**
+     * 받아온 카카오id가 중복되는 사람이 있으면 로그인이다. -> 그 사람의 user_id를 받아온다
+     * 등록된 카카오id가 없다면 회원가입이다. -> 닉네임을 입력하게 한다.
+     */
+
+    const isValidate: boolean = await this.usersSerivce.validateUser(
       'kakao',
       userInfo.id,
     );
     if (isValidate) {
-      const user: Users = new Users();
-      user.kakaoId = userInfo.id;
-      this.authService.saveUser(user);
+      this.logger.debug('User Is Validate!');
+      // const user: Users = new Users();
+      // user.kakaoId = userInfo.id;
+      // this.authService.saveUser(user);
     }
-    */
 
     return res.redirect(`http://localhost:3000/`);
   }

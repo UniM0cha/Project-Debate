@@ -12,7 +12,6 @@ export class AppController {
     if (session.isLogined) {
       return {
         isLogined: true,
-        id: session.authData.id,
       };
     } else {
       return { isLogined: false };

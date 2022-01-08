@@ -28,8 +28,8 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/platform-socket.io": "^8.2.4",
     "@nestjs/typeorm": "^8.0.2",
-    "express-session": "^1.17.2",
     "@nestjs/websockets": "^8.2.4",
+    "express-session": "^1.17.2",
     "hbs": "^4.2.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
@@ -37,7 +37,8 @@
     "rxjs": "^7.2.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.4.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "typeorm-naming-strategies": "^2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -74,6 +75,9 @@
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

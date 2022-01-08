@@ -10,14 +10,12 @@ const REST_API_KEY = `ff5db7469114a5d6adfbdbc19d58501a`;
 export class AuthService {
   check: boolean;
   accessToken: string;
-  constructor(private httpService: HttpService) {
+  constructor(
+    private httpService: HttpService,
+    private userService: UsersService,
+  ) {
     this.check = false;
     this.accessToken = '';
-  }
-
-  loginCheck(): void {
-    this.check = !this.check;
-    return;
   }
 
   getAccessCode(): string {
@@ -57,6 +55,11 @@ export class AuthService {
       this.httpService.post(_url, '', { headers: _header }),
     );
   }
+
+  // loginCheck(): void {
+  //   this.check = !this.check;
+  //   return;
+  // }
 
   // setTocken(token: string): boolean {
   //   this.accessToken = token;

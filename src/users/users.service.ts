@@ -41,4 +41,10 @@ export class UsersService {
   async save(user: Users) {
     await this.userRepository.save(user);
   }
+
+  async validateUser(platform: string, id: any): Promise<any> {
+    if (platform === 'kakao') {
+      this.userRepository.findByKakaoId();
+    }
+  }
 }

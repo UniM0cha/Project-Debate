@@ -8,6 +8,17 @@
       integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3'
       crossorigin='anonymous'
     />
+
+    <script
+      src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
+      integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
+      crossorigin='anonymous'
+    ></script>
+    <script
+      src='https://cdn.socket.io/4.4.0/socket.io.min.js'
+      integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
+      crossorigin='anonymous'
+    ></script>
     <link rel='stylesheet' href='css/index.css' />
   </head>
 
@@ -21,11 +32,13 @@
       </form>
 
       <a class='title' href='#'>
-        토론 사이트 / 로그인: {{ isLogined }}, id: {{ id }}</a>
+        토론 사이트 / 로그인:
+        {{isLogined}}, id:
+        {{id}}</a>
 
-      {{!-- isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 --}}
-      {{!-- isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 --}}
-      {{!-- 지금은 임시로 로그아웃 버튼을 같이 나오게 생성함 --}}
+      {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
+      {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
+      {{! 지금은 임시로 로그아웃 버튼을 같이 나오게 생성함 }}
 
       <form class='form-login expand' action='/auth'>
         <button type='submit' class='btn btn-light btn-login'>로그인</button>
@@ -82,18 +95,7 @@
         >전송</button>
       </div>
     </div>
-    <script src='./script/chat-socket.js'></script>
+    <script src='./js/chat-socket.js'></script>
   </body>
-
-  <script
-    src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
-    integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
-    crossorigin='anonymous'
-  ></script>
-  <script
-    src='https://cdn.socket.io/4.4.0/socket.io.min.js'
-    integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
-    crossorigin='anonymous'
-  ></script>
 
 </html>
