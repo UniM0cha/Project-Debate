@@ -14,4 +14,5 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   autoLoadEntities: true,
   synchronize: true,
   dropSchema: true,
+  logging: true,
 };

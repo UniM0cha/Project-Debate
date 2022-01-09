@@ -10,6 +10,7 @@ import {
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 
@@ -62,7 +63,6 @@ export class AuthController {
       )}`,
     );
 
-    // TODO : 받은 사용자 정보를 세션에 저장
     const authData = {
       ...token.data,
       ...userInfo.data,
@@ -81,15 +81,19 @@ export class AuthController {
      * 등록된 카카오id가 없다면 회원가입이다. -> 닉네임을 입력하게 한다.
      */
 
-    const isValidate: boolean = await this.usersSerivce.validateUser(
+    const isUser: Users = await this.usersSerivce.findUser(
       'kakao',
-      userInfo.id,
+      authData.id,
     );
-    if (isValidate) {
-      this.logger.debug('User Is Validate!');
-      // const user: Users = new Users();
-      // user.kakaoId = userInfo.id;
-      // this.authService.saveUser(user);
+    if (isUser) {
+      this.logger.debug('User Exist!');
+    } else {
+      this.logger.debug('User NonExist!');
+      const user: Users = new Users();
+      user.nickname = 'test';
+      user.platform = 'kakao';
+      user.kakaoId = authData.id;
+      this.usersSerivce.save(user);
     }
 
     return res.redirect(`http://localhost:3000/`);

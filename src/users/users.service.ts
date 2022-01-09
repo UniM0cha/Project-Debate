@@ -42,9 +42,10 @@ export class UsersService {
     await this.userRepository.save(user);
   }
 
-  async validateUser(platform: string, id: any): Promise<any> {
+  async findUser(platform: string, id: string): Promise<Users> {
     if (platform === 'kakao') {
-      this.userRepository.findByKakaoId();
+      const user = await this.userRepository.findByKakaoId(id);
+      return user;
     }
   }
 }
