@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { HttpModule } from '@nestjs/axios';
 import { AuthModule } from './auth/auth.module';
-import { typeORMConfig } from 'configs/typeorm.config';
+import { typeORMConfig } from 'src/configs/typeorm.config';
 
 @Module({
   imports: [
