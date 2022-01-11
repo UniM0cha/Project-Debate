@@ -48,4 +48,9 @@ export class UsersService {
       return user;
     }
   }
+
+  async findByNickname(nickname: string): Promise<Users> {
+    const user = await this.userRepository.findByNickname(nickname);
+    return user;
+  }
 }

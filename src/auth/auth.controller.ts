@@ -1,15 +1,22 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   Get,
+  HttpException,
   Logger,
   Param,
+  Post,
   Query,
   Redirect,
   Render,
+  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
+import session from 'express-session';
+import { retryWhen } from 'rxjs';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
@@ -68,35 +75,88 @@ export class AuthController {
       ...userInfo.data,
     };
 
-    session.isLogined = true;
-    session.regenerate((err) => {
-      if (err) throw err;
-      this.logger.debug(
-        `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
-      );
-    });
+    // 인증내용 세션등록
+    session.authData = authData;
 
     /**
-     * 받아온 카카오id가 중복되는 사람이 있으면 로그인이다. -> 그 사람의 user_id를 받아온다
-     * 등록된 카카오id가 없다면 회원가입이다. -> 닉네임을 입력하게 한다.
+     * 받아온 카카오id가 중복되는 사람이 있으면 로그인이다. -> 그 사람의 user_id를 받아와서 세션에 등록한다.
+     * 등록된 카카오id가 없다면 회원가입이다. -> 닉네임을 입력하게 한다. -> 닉네임과 함께 db에 저장하고 세션에 등록한다.
      */
 
-    const isUser: Users = await this.usersSerivce.findUser(
-      'kakao',
-      authData.id,
-    );
-    if (isUser) {
+    const user: Users = await this.usersSerivce.findUser('kakao', authData.id);
+
+    // 회원가입 여부 확인
+    if (user) {
       this.logger.debug('User Exist!');
+
+      const userData = {
+        userId: user.userId,
+        nickname: user.nickname,
+      };
+
+      // 유저 정보 세션 등록
+      session.userData = userData;
+      session.isLogined = true;
+      session.regenerate((err) => {
+        if (err) throw err;
+        this.logger.debug(
+          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
+        );
+      });
+
+      return res.redirect(`http://localhost:3000/`);
     } else {
       this.logger.debug('User NonExist!');
+
+      session.regenerate((err) => {
+        if (err) throw err;
+        this.logger.debug(
+          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
+        );
+      });
+      return res.redirect(`http://localhost:3000/auth/register`);
+    }
+  }
+
+  /**
+   * 닉네임을 입력하기 위한 페이지 컨트롤러
+   * @param session
+   * @returns
+   *
+   * 들어오면 안되는 경우 :
+   * 1. 이미 로그인중일 때
+   * 2. 이미 유저 정보가 존재할 때
+   */
+  @Get('register')
+  @Render('register')
+  async register(@Session() session: Record<string, any>) {
+    if (session.isLogined) {
+      return new BadRequestException();
+    } else {
+    }
+  }
+
+  /**
+   * 닉네임 입력 페이지에서 nickname을 받아와서 디비에 저장
+   * @param session
+   * @Body nickname
+   */
+  @Post('register')
+  @Redirect('/')
+  async getNickname(
+    @Session() session: Record<string, any>,
+    @Body('nickname') nickname: string,
+  ) {
+    const user: Users = await this.usersSerivce.findByNickname(nickname);
+    // 중복 체크
+    if (user) {
+    } else {
       const user: Users = new Users();
-      user.nickname = 'test';
+      user.nickname = nickname;
       user.platform = 'kakao';
-      user.kakaoId = authData.id;
+      user.kakaoId = session.authData.id;
       this.usersSerivce.save(user);
     }
-
-    return res.redirect(`http://localhost:3000/`);
   }
 
   @Get('logout')
