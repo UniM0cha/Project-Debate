@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(data);
 
     //let opinion = opinion_input;
-    add_agree_opinion('Hi', data.newmessage, 'time');
+    send_opinion('Hi', data.newmessage, 'time');
   });
 
   send.addEventListener('click', (e) => {
@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   send.addEventListener('keypress', (event) => {
     if (event.keyCode === 13) {
-      send_opinion('nickname', opinion_input.value, 'timeset');
+      socket.emit('new-message-to-server', { opinion_input: opinion_input });
+      document.querySelector('#message').value = '';
     }
   });
 
@@ -40,6 +41,5 @@ document.addEventListener('DOMContentLoaded', function () {
     li.innerHTML = dom;
     ul.appendChild(li);
     ul.scrollTop = ul.scrollHeight;
-    opinion_input.value = '';
   }
 });
