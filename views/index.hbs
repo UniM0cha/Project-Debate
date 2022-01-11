@@ -22,20 +22,24 @@
   </head>
 
   <body>
-
     <!-- 상단 메뉴 -->
     <nav class='navbar navbar-lg navbar-dark bg-dark'>
       <form class='form-ex-debatelist' action='/list'>
-        <button type='submit' class='btn btn-light btn-ex-debatelist'>이전
-          리스트</button>
+        <button type='submit' class='btn btn-light btn-ex-debatelist'>
+          이전 리스트
+        </button>
       </form>
 
       <a class='title' href='#'>
-        토론 사이트</a>
+        토론 사이트
+      </a>
 
-      {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
-      {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
-      {{! 지금은 임시로 로그아웃 버튼을 같이 나오게 생성함 }}
+      {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에
+      등록되어 있음 }}
+      {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을
+      표시하는 로직 구현해야함 }}
+      {{! 지금은 임시로 로그아웃 버튼을 같이 나오게
+      생성함 }}
 
       <form class='form-login expand' action='/auth'>
         <button type='submit' class='btn btn-light btn-login'>로그인</button>
@@ -43,16 +47,21 @@
       <form class='form-logout expand' action='/auth/logout'>
         <button type='submit' class='btn btn-light btn-logout'>로그아웃</button>
       </form>
+
+      <script>
+        const loginform = document.querySelector('.form-login'); const
+        logoutform = document.querySelector('.form-logout'); if({{isLogined}}
+        == true){ loginform.style.display = 'none'; logoutform.style.display =
+        'block';} else{ loginform.style.display = 'block'; logoutform.style.display =
+        'none'}
+      </script>
+
     </nav>
 
     <!-- 주제 -->
     <div class='time-topic-div'>
-      <div class='time'>
-        주제의 남은 시간 표시
-      </div>
-      <div class='topic'>
-        주제
-      </div>
+      <div class='time'>주제의 남은 시간 표시</div>
+      <div class='topic'>주제</div>
     </div>
 
     <!-- 찬성반대투표바 -->
@@ -68,12 +77,11 @@
     <div class='debate-wrapper'>
       <div class='debate-box'>
         <ul class='live-debate' id='messages'>
-
           <li class='agree'>
             <div class='nickname'>usernickname</div>
-            <div
-              class='user-opinion'
-            >찬성의견안녕하세요요요용요요요요요요용요요요요</div>
+            <div class='user-opinion'>
+              찬성의견안녕하세요요요용요요요요요요용요요요요
+            </div>
             <div class='opinion-time'>오후 01:36</div>
           </li>
 
@@ -82,7 +90,6 @@
             <div class='opinion-time'>오후 01:37</div>
             <div class='user-opinion'>반대의견</div>
           </li>
-
         </ul>
       </div>
       <div class='input-box'>
@@ -90,11 +97,7 @@
         <button class='send' type='button'>전송</button>
       </div>
     </div>
-    <script src='./js/index.js'></script>
-  </body>
 
-  <script>
-    Handlerbars.registerHelper('logincheck' )
-  </script>
+  </body>
 
 </html>
