@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const loginform = document.querySelector('.form-login');
   const logoutform = document.querySelector('.form-logout');
 
-  loginform.style.display = 'none';
-  logoutform.style.display = 'block';
+  loginform.style.display = 'block';
+  logoutform.style.display = 'none';
 
   //토론 주제 시간
   const time = document.querySelector('.time');
@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function () {
       //반대 시 반대를 세션에 저장해줘야함
     });
   }
+
+  //채팅 입력 스크롤 제어
+  const debate_wrapper = document.querySelector;
 
   //채팅 입력 부분
   const ul = document.querySelector('.live-debate');
