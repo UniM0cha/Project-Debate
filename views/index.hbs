@@ -45,11 +45,16 @@
       </form>
 
       <script>
-        const loginform = document.querySelector('.form-login'); const
-        logoutform = document.querySelector('.form-logout'); if({{isLogined}}
-        == true){ loginform.style.display = 'none'; logoutform.style.display =
-        'block';} else{ loginform.style.display = 'block'; logoutform.style.display =
-        'none'}
+        const loginform = document.querySelector('.form-login'); 
+        const logoutform = document.querySelector('.form-logout');
+
+        //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
+        if({{isLogined}}== true)
+        { loginform.style.display = 'none';
+          logoutform.style.display ='block';}
+        else
+        { loginform.style.display = 'block';
+          logoutform.style.display ='none'}
       </script>
     </nav>
 
@@ -72,6 +77,58 @@
       <button class='bar-button disagree-btn'>반대</button>
     </div>
 
+    <script>
+      //로그인에 따른 찬성반대 버튼 및 찬반 비율
+      const agree_bar = document.querySelector('.agree-bar');
+      const disagree_bar = document.querySelector('.disagree-bar');
+      const agree_btn = document.querySelector('.agree-btn');
+      const disagree_btn = document.querySelector('.disagree-btn');
+
+      let agree = 50;
+      let disagree = 50;
+
+      if({{isLogined}} == true){
+        agree_bar.style.display = 'none';
+        disagree_bar.style.display = 'none';
+
+        agree_btn.addEventListener('click', () => {
+        agree = agree + 1;
+        disagree = disagree - 1;
+        console.log(agree);
+        console.log(disagree);
+        //찬성 반대 선택 이후 버튼 숨기기
+        agree_btn.style.display = 'none';
+        disagree_btn.style.display = 'none';
+        //찬성 반대 비율 변경
+        agree_bar.style.width = agree + '%';
+        disagree_bar.style.width = disagree + '%';
+        //찬성 반대 비율 바 보여주기
+        agree_bar.style.display = 'block';
+        disagree_bar.style.display = 'block';
+      });
+
+      disagree_btn.addEventListener('click', () => {
+      agree = agree - 1;
+      disagree = disagree + 1;
+      console.log(agree);
+      console.log(disagree);
+      //찬성 반대 선택 이후 버튼 숨기기
+      agree_btn.style.display = 'none';
+      disagree_btn.style.display = 'none';
+      //찬성 반대 비율 변경
+      agree_bar.style.width = agree + '%';
+      disagree_bar.style.width = disagree + '%';
+      //찬성 반대 비율 바 보여주기
+      agree_bar.style.display = 'block';
+      disagree_bar.style.display = 'block';
+      });
+
+      }else{
+        agree_btn.style.display = 'none';
+        disagree_btn.style.display = 'none';
+      }
+    </script>
+
     <!-- 실시간 토론 하는 곳 -->
     <div class='debate-wrapper'>
       <div class='debate-box'>
@@ -91,13 +148,134 @@
             <div class='user-opinion'>반대의견</div>
           </li>
 
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
+
+          <li class='disagree'>
+            <div class='nickname'>usernickname</div>
+            <div class='opinion-time'>오후 01:37</div>
+            <div class='user-opinion'>반대의견</div>
+          </li>
         </ul>
       </div>
+
       <div class='input-box'>
         <input class='opinion-input' type='text' />
         <button class='send' type='button'>전송</button>
       </div>
+
+{{!-- 로그인 시 채팅 가능/아닐 시 채팅 못 침 --}}
+      <script>
+        const input_box = document.querySelector('.opinion-input');
+        const send_btn = document.querySelector('.send');
+        const live_debate = document.querySelector('.live-debate');
+        //스크롤 아래 고정
+        live_debate.scrollTop = live_debate.scrollHeight
+
+        //로그인에 따른 채팅 가능 불가능 설정
+        if({{isLogined}} == true){
+          input_box.style.display = 'block';
+          send_btn.style.display = 'block';
+        }else{
+          input_box.style.display = 'none';
+          send_btn.style.display = 'none';
+          live_debate.style.height = "100%";
+        }
+      </script>
     </div>
   </body>
-
+  <script src="js/index.js"></script>
 </html>
