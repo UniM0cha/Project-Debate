@@ -1,21 +1,30 @@
+let socket = io.connect('http://localhost:3000/message');
+
 document.addEventListener('DOMContentLoaded', function () {
-  
   //채팅 입력 부분
   const ul = document.querySelector('.live-debate');
-  const opinion_input = document.querySelector('.opinion-input');
-  const send = document.querySelector('.send');
+  const send = document.querySelector('#send');
 
-  send.addEventListener('click', () => {
-    send_opinion('nickname', opinion_input.value, 'timeset');
+  socket.on('new-message-to-client', (data) => {
+    console.log(data);
 
+    //let opinion = opinion_input;
+    add_agree_opinion('Hi', data.newmessage, 'time');
+  });
+
+  send.addEventListener('click', (e) => {
+    e.preventDefault();
+    const opinion_input = document.querySelector('#message').value;
+    socket.emit('new-message-to-server', { opinion_input: opinion_input });
+    console.log(opinion_input);
+    document.querySelector('#message').value = '';
   });
 
   send.addEventListener('keypress', (event) => {
     if (event.keyCode === 13) {
       send_opinion('nickname', opinion_input.value, 'timeset');
     }
-  })
-
+  });
 
   function send_opinion(nickname, opinion, time) {
     const li = document.createElement('li');
@@ -30,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     li.innerHTML = dom;
     ul.appendChild(li);
-    ul.scrollTop = ul.scrollHeight
-    opinion_input.value = "";
+    ul.scrollTop = ul.scrollHeight;
+    opinion_input.value = '';
   }
-
 });

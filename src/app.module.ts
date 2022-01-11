@@ -8,17 +8,19 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ListModule } from './list/list.module';
 import { typeORMConfig } from 'src/configs/typeorm.config';
+import { ChatGateway } from './app.gateway';
 
 @Module({
   imports: [
     // mysql config
     TypeOrmModule.forRoot(typeORMConfig),
+    ListModule,
     UsersModule,
     HttpModule,
     AuthModule,
     ListModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule {}
