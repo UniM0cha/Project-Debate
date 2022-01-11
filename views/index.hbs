@@ -1,98 +1,19 @@
-<html>
+<html lang='en'>
   <head>
-    <meta charset='utf-8' />
-    <title>실시간 토론 페이지</title>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <script
-      src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
-      integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
-      crossorigin='anonymous'
+      src='https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js'
     ></script>
     <script
       src='https://cdn.socket.io/4.4.0/socket.io.min.js'
       integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
       crossorigin='anonymous'
     ></script>
-    <link
-      href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'
-      rel='stylesheet'
-      integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3'
-      crossorigin='anonymous'
-    />
-    <link rel='stylesheet' href='css/index.css' />
+    <title>Document</title>
   </head>
-
   <body>
-
-    <!-- 상단 메뉴 -->
-    <nav class='navbar navbar-lg navbar-dark bg-dark'>
-      <form class='form-ex-debatelist' action='/list'>
-        <button type='submit' class='btn btn-light btn-ex-debatelist'>이전
-          리스트</button>
-      </form>
-
-      <a class='title' href='#'>
-        토론 사이트 / 로그인:
-        {{isLogined}}, id:
-        {{id}}</a>
-
-      {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
-      {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
-      {{! 지금은 임시로 로그아웃 버튼을 같이 나오게 생성함 }}
-
-      <form class='form-login expand' action='/auth'>
-        <button type='submit' class='btn btn-light btn-login'>로그인</button>
-      </form>
-      <form class='form-logout expand' action='/auth/logout'>
-        <button type='submit' class='btn btn-light btn-logout'>로그아웃</button>
-      </form>
-    </nav>
-
-    <!-- 주제 -->
-    <div class='time-topic-div'>
-      <div class='time'>
-        주제의 남은 시간 표시
-      </div>
-      <div class='topic'>
-        주제
-      </div>
-    </div>
-
-    <!-- 찬성반대투표바 -->
-    <div class='age-dis-bar-wrapper'>
-      <div class='agree-bar'>찬성: {{agree-persent}}</div>
-      <div class='disagree-bar'>반대: {{disagree-persent}}</div>
-
-      <button class='bar-button agree-btn'>찬성</button>
-      <button class='bar-button disagree-btn'>반대</button>
-    </div>
-
-    <!-- 실시간 토론 하는 곳 -->
-    <div class='debate-wrapper'>
-      <div class='debate-box'>
-        <ul class='live-debate' id='messages'>
-
-          <li class='agree'>
-            <div class='nickname'>usernickname</div>
-            <div
-              class='user-opinion'
-            >찬성의견안녕하세요요요용요요요요요요용요요요요</div>
-            <div class='opinion-time'>오후 01:36</div>
-          </li>
-
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-
-        </ul>
-      </div>
-      <div class='input-box'>
-        <input class='opinion-input' type='text' />
-        <button class='send' type='button'>전송</button>
-      </div>
-    </div>
-    <script src='./js/index.js'></script>
+    <div>{{doesWhat}}</div>
   </body>
-
 </html>
