@@ -41,4 +41,11 @@ export class UsersService {
   async save(user: Users) {
     await this.userRepository.save(user);
   }
+
+  async findUser(platform: string, id: string): Promise<Users> {
+    if (platform === 'kakao') {
+      const user = await this.userRepository.findByKakaoId(id);
+      return user;
+    }
+  }
 }

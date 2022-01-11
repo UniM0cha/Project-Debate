@@ -14,13 +14,13 @@ async function bootstrap() {
   const FileStore = require('session-file-store')(session);
   app.use(
     session({
-      secret: process.env.SESSION_SECRET,
+      secret: 'mochamocha',
       resave: true,
       saveUninitialized: false,
       store: new FileStore(),
     }),
   );
 
-  await app.listen(process.env.PORT);
+  await app.listen(3000);
 }
 bootstrap();

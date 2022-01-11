@@ -3,17 +3,20 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
-  id: string;
+  userId: string;
 
   @Column()
-  password: string;
+  nickname: string;
 
   @Column()
-  firstName: string;
+  platform: string;
 
-  @Column()
-  lastName: string;
+  @Column({ nullable: true })
+  kakaoId: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ nullable: true })
+  naverId: string;
+
+  @Column({ nullable: true })
+  googleId: string;
 }
