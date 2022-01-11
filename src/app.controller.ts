@@ -18,8 +18,5 @@ export class AppController {
     } else {
       return { isLogined: false };
     }
-    // return {
-    //   message: 'Hello world! hihis',
-    // };
   }
 }
