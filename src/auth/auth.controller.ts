@@ -151,11 +151,27 @@ export class AuthController {
     // 중복 체크
     if (user) {
     } else {
+      // 데이터베이스 저장
       const user: Users = new Users();
       user.nickname = nickname;
       user.platform = 'kakao';
       user.kakaoId = session.authData.id;
       this.usersSerivce.save(user);
+
+      // 세션 등록
+      const userData = {
+        userId: user.userId,
+        nickname: user.nickname,
+      };
+      session.userData = userData;
+      session.isLogined = true;
+
+      session.regenerate((err) => {
+        if (err) throw err;
+        this.logger.debug(
+          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
+        );
+      });
     }
   }
 
