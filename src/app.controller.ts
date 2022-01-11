@@ -13,6 +13,7 @@ export class AppController {
       return {
         isLogined: true,
         nickname: session.userData.nickname,
+        userId: session.userData.userId,
       };
     } else {
       return { isLogined: false };

@@ -38,8 +38,9 @@ export class UsersService {
     });
   }
 
-  async save(user: Users) {
-    await this.userRepository.save(user);
+  async save(user: Users): Promise<Users> {
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
   }
 
   async findUser(platform: string, id: string): Promise<Users> {

@@ -156,12 +156,12 @@ export class AuthController {
       user.nickname = nickname;
       user.platform = 'kakao';
       user.kakaoId = session.authData.id;
-      this.usersSerivce.save(user);
+      const savedUser = await this.usersSerivce.save(user);
 
       // 세션 등록
       const userData = {
-        userId: user.userId,
-        nickname: user.nickname,
+        userId: savedUser.userId,
+        nickname: savedUser.nickname,
       };
       session.userData = userData;
       session.isLogined = true;
