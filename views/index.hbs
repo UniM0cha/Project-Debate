@@ -31,9 +31,7 @@
       </form>
 
       <a class='title' href='#'>
-        토론 사이트 / 로그인:
-        {{isLogined}}, id:
-        {{id}}</a>
+        토론 사이트</a>
 
       {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
       {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
@@ -45,6 +43,14 @@
       <form class='form-logout expand' action='/auth/logout'>
         <button type='submit' class='btn btn-light btn-logout'>로그아웃</button>
       </form>
+
+      <script>
+        const loginform = document.querySelector('.form-login'); const
+        logoutform = document.querySelector('.form-logout'); if({{isLogined}}
+        == true){ loginform.style.display = 'none'; logoutform.style.display =
+        'block';} else{ loginform.style.display = 'block'; logoutform.style.display =
+        'none'}
+      </script>
     </nav>
 
     <!-- 주제 -->
@@ -92,7 +98,6 @@
         <button class='send' type='button'>전송</button>
       </div>
     </div>
-    <script src='./js/index.js'></script>
   </body>
 
 </html>
