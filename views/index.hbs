@@ -22,13 +22,13 @@
   </head>
 
   <body>
-
-    <!-- 상단 메뉴 -->
+    {{!-- index.js파일에서 사용할 script선언 --}}
     <script>
       let isLogined = {{isLogined}};
       let nickname = "{{nickname}}";
     </script>
 
+    {{!-- 상단 메뉴 --}}
     <nav class='navbar navbar-lg navbar-dark bg-dark'>
       <form class='form-ex-debatelist' action='/list'>
         <button type='submit' class='btn btn-light btn-ex-debatelist'>이전
@@ -36,7 +36,7 @@
       </form>
 
       <a class='title' href='#'>
-        토론 사이트{{nickname}}{{userId}}</a>
+        토론 사이트{{nickname}}{{userID}}</a>
 
       {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
       {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
@@ -48,19 +48,6 @@
       <form class='form-logout expand' action='/auth/logout'>
         <button type='submit' class='btn btn-light btn-logout'>로그아웃</button>
       </form>
-
-      <script>
-        const loginform = document.querySelector('.form-login'); 
-        const logoutform = document.querySelector('.form-logout');
-
-        //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
-        if({{isLogined}}== true)
-        { loginform.style.display = 'none';
-          logoutform.style.display ='block';}
-        else
-        { loginform.style.display = 'block';
-          logoutform.style.display ='none'}
-      </script>
     </nav>
 
     <!-- 주제 -->
@@ -75,17 +62,12 @@
 
     <!-- 찬성반대투표바 -->
     <div class='age-dis-bar-wrapper'>
-      <div class='agree-bar'>찬성: {{agree-persent}}</div>
-      <div class='disagree-bar'>반대: {{disagree-persent}}</div>
+      <div class='agree-bar'>찬성: </div>
+      <div class='disagree-bar'>반대: </div>
 
       <button class='bar-button agree-btn'>찬성</button>
       <button class='bar-button disagree-btn'>반대</button>
     </div>
-
-    <script>
-      //로그인에 따른 찬성반대 버튼 및 찬반 비율
-      
-    </script>
 
     <!-- 실시간 토론 하는 곳 -->
     <div class='debate-wrapper'>
@@ -112,26 +94,8 @@
         <input id='message' class='opinion-input' type='text' />
         <button id='send' class='send' type='button'>전송</button>
       </div>
-
-{{!-- 로그인 시 채팅 가능/아닐 시 채팅 못 침 --}}
-      <script>
-        const input_box = document.querySelector('.opinion-input');
-        const send_btn = document.querySelector('.send');
-        const live_debate = document.querySelector('.live-debate');
-        //스크롤 아래 고정
-        live_debate.scrollTop = live_debate.scrollHeight
-
-        //로그인에 따른 채팅 가능 불가능 설정
-        if({{isLogined}} == true){
-          input_box.style.display = 'block';
-          send_btn.style.display = 'block';
-        }else{
-          input_box.style.display = 'none';
-          send_btn.style.display = 'none';
-          live_debate.style.height = "100%";
-        }
-      </script>
     </div>
+
     <script src='./js/index.js'></script>
   </body>
 </html>
