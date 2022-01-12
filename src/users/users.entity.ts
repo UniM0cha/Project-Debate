@@ -6,10 +6,10 @@ export class Users {
   userId: string;
 
   @Column()
-  nickname: string;
+  email: string;
 
   @Column()
-  platform: string;
+  nickname: string;
 
   @Column({ nullable: true })
   kakaoId: string;
