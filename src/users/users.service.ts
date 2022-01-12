@@ -38,13 +38,24 @@ export class UsersService {
     });
   }
 
-  async save(user: Users) {
-    await this.userRepository.save(user);
+  async save(user: Users): Promise<Users> {
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
   }
 
-  async findUser(platform: string, id: string): Promise<Users> {
-    if (platform === 'kakao') {
+  async findUser(method: string, id: string): Promise<Users> {
+    if (method === 'kakao') {
       const user = await this.userRepository.findByKakaoId(id);
+      return user;
+    }
+
+    if (method === 'naver') {
+      const user = await this.userRepository.findByNaverId(id);
+      return user;
+    }
+
+    if (method === 'email') {
+      const user = await this.userRepository.findByEmail(id);
       return user;
     }
   }
@@ -52,5 +63,26 @@ export class UsersService {
   async findByNickname(nickname: string): Promise<Users> {
     const user = await this.userRepository.findByNickname(nickname);
     return user;
+  }
+
+  async updatePlatformId(
+    platform: string,
+    email: string,
+    platformId: string,
+  ): Promise<void> {
+    switch (platform) {
+      case 'kakao':
+        await this.userRepository.updateKakaoId(email, platformId);
+        break;
+
+      case 'naver':
+        await this.userRepository.updateNaverId(email, platformId);
+        break;
+
+      case 'google':
+        await this.userRepository.updateGoogleId(email, platformId);
+        break;
+    }
+    return;
   }
 }

@@ -3,20 +3,16 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Query,
-  Redirect,
-  Render,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
-import session from 'express-session';
-import { retryWhen } from 'rxjs';
+import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
@@ -29,168 +25,264 @@ export class AuthController {
     private usersSerivce: UsersService,
   ) {}
 
+  /**
+   * GET /auth
+   * 로그인 페이지 렌더
+   */
   @Get('/')
-  @Render('login')
-  loginPage() {}
+  loginPage(@Session() session, @Res() res) {
+    if (session.isLogined) {
+      return res.redirect('/');
+    } else {
+      res.render('login');
+    }
+  }
 
-  @Get('login')
-  @Redirect()
-  login() {
-    this.logger.debug(`Kakao Login Request`);
-    const url = this.authService.getAccessCode();
-    return { url: url };
+  /**
+   * GET /auth/login/:platform
+   * 로그인 페이지에서 플랫폼 로그인 클릭
+   * @returns
+   */
+  @Get('login/:platform')
+  login(@Session() session, @Param('platform') platform, @Res() res) {
+    if (session.isLogined) {
+      return res.redirect('/');
+    }
+
+    switch (platform) {
+      case 'kakao':
+        this.logger.debug(`Kakao Login Request`);
+        return res.redirect(this.authService.getAccessCodeUrl('kakao'));
+      case 'naver':
+        this.logger.debug(`Naver Login Request`);
+        return res.redirect(this.authService.getAccessCodeUrl('naver'));
+      case 'google':
+        this.logger.debug(`Google Login Request`);
+        return res.redirect(this.authService.getAccessCodeUrl('google'));
+      default:
+        throw new NotFoundException();
+    }
 
     // TODO : 구글
     // TODO : 네이버
   }
 
-  @Get('redirect')
+  /**
+   * GET /auth/redirect/:platform
+   * @param qs 플랫폼으로부터 받아온 엑세스 코드
+   * @param res 리다이렉트를 위한 response
+   * @param session 세션
+   * @returns
+   */
+  @Get('redirect/:platform')
   async loginRedirect(
     @Query() qs,
     @Res() res: Response,
     @Session() session: Record<string, any>,
+    @Param('platform') platform,
   ) {
-    const accessCode = qs.code;
-    this.logger.debug(`Response Access_Token from Kakao: ${accessCode}`);
+    let accessCode: string;
+    let token: any;
+    let accessToken: string;
+    let userInfo: any;
+    let platformId: string;
+    let idUser: Users;
+    let email: string;
+    let emailUser: Users;
 
-    // Get Access Token
-    const token = await this.authService.getAccessToken(accessCode);
-    this.logger.debug(
-      `Response Token_Data from Kakao: ${JSON.stringify(token.data, null, 4)}`,
-    );
-    const accessToken = token.data['access_token'];
+    switch (platform) {
+      /** 카카오 */
+      case 'kakao':
+        accessCode = qs.code;
+        this.logger.debug(`Response Access_Code from Kakao: ${accessCode}`);
 
-    // Get User Info
-    const userInfo = await this.authService.getUserInfo(accessToken);
-    this.logger.debug(
-      `Response User_Data from Kakao: ${JSON.stringify(
-        userInfo.data,
-        null,
-        4,
-      )}`,
-    );
-
-    const authData = {
-      ...token.data,
-      ...userInfo.data,
-    };
-
-    // 인증내용 세션등록
-    session.authData = authData;
-
-    /**
-     * 받아온 카카오id가 중복되는 사람이 있으면 로그인이다. -> 그 사람의 user_id를 받아와서 세션에 등록한다.
-     * 등록된 카카오id가 없다면 회원가입이다. -> 닉네임을 입력하게 한다. -> 닉네임과 함께 db에 저장하고 세션에 등록한다.
-     */
-
-    const user: Users = await this.usersSerivce.findUser('kakao', authData.id);
-
-    // 회원가입 여부 확인
-    if (user) {
-      this.logger.debug('User Exist!');
-
-      const userData = {
-        userId: user.userId,
-        nickname: user.nickname,
-      };
-
-      // 유저 정보 세션 등록
-      session.userData = userData;
-      session.isLogined = true;
-      session.regenerate((err) => {
-        if (err) throw err;
+        token = await this.authService.getAccessToken(platform, accessCode);
         this.logger.debug(
-          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
+          `Response Token_Data from Kakao: ${JSON.stringify(
+            token.data,
+            null,
+            4,
+          )}`,
         );
-      });
+        accessToken = token.data['access_token'];
 
-      return res.redirect(`http://localhost:3000/`);
+        userInfo = await this.authService.getUserInfo(platform, accessToken);
+        this.logger.debug(
+          `Response User_Info from Kakao: ${JSON.stringify(
+            userInfo.data,
+            null,
+            4,
+          )}`,
+        );
+
+        platformId = userInfo.data.id;
+        idUser = await this.usersSerivce.findUser(platform, platformId);
+
+        email = userInfo.data.kakao_account.email;
+        emailUser = await this.usersSerivce.findUser('email', email);
+
+        break;
+
+      /** 네이버 */
+      case 'naver':
+        accessCode = qs.code;
+        this.logger.debug(`Response Access_Code from Naver: ${accessCode}`);
+
+        token = await this.authService.getAccessToken(platform, accessCode);
+        this.logger.debug(
+          `Response Token_Data from Naver: ${JSON.stringify(
+            token.data,
+            null,
+            4,
+          )}`,
+        );
+        accessToken = token.data['access_token'];
+
+        userInfo = await this.authService.getUserInfo(platform, accessToken);
+        this.logger.debug(
+          `Response User_Info from Kakao: ${JSON.stringify(
+            userInfo.data,
+            null,
+            4,
+          )}`,
+        );
+
+        platformId = userInfo.data.response.id;
+        idUser = await this.usersSerivce.findUser(platform, platformId);
+
+        email = userInfo.data.response.email;
+        emailUser = await this.usersSerivce.findUser('email', email);
+
+        break;
+
+      /** 구글 */
+      case 'google':
+        break;
+
+      default:
+        throw new NotFoundException();
+    }
+
+    this.logger.debug(`emailUser: ${emailUser}`);
+    this.logger.debug(`idUser: ${idUser}`);
+
+    if (emailUser) {
+      if (idUser) {
+        // 로그인
+        const userData = new UserDataDto(idUser.userId, idUser.nickname);
+        this.authService.login(session, userData);
+
+        return res.redirect('/');
+      } else {
+        // 플랫폼 아이디 추가 후 로그인
+        await this.usersSerivce.updatePlatformId(platform, email, platformId);
+
+        const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
+        this.authService.login(session, userData);
+
+        return res.redirect('/');
+      }
     } else {
-      this.logger.debug('User NonExist!');
-
+      // 회원가입
+      // 이메일과 platform, platformId를 세션에 등록 후 회원가입 페이지로 이동
+      const registerData = {
+        email: email,
+        platform: platform,
+        platformId: platformId,
+      };
+      session.registerData = registerData;
       session.regenerate((err) => {
         if (err) throw err;
         this.logger.debug(
           `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
         );
       });
-      return res.redirect(`http://localhost:3000/auth/register`);
+      res.redirect('/auth/register');
     }
   }
 
   /**
+   * GET /auth/register
    * 닉네임을 입력하기 위한 페이지 컨트롤러
    * @param session
    * @returns
-   *
-   * 들어오면 안되는 경우 :
-   * 1. 이미 로그인중일 때
-   * 2. 이미 유저 정보가 존재할 때
    */
   @Get('register')
-  @Render('register')
-  async register(@Session() session: Record<string, any>) {
-    if (session.isLogined) {
-      return new BadRequestException();
+  async register(@Session() session: Record<string, any>, @Res() res) {
+    // 플랫폼 로그인을 했는지 확인
+    if (session.registerData && !session.isLogined) {
+      res.render('register');
     } else {
+      res.redirect('/');
     }
   }
 
   /**
+   * POST /auth/register
    * 닉네임 입력 페이지에서 nickname을 받아와서 디비에 저장
    * @param session
    * @Body nickname
    */
   @Post('register')
-  @Redirect('/')
   async getNickname(
     @Session() session: Record<string, any>,
     @Body('nickname') nickname: string,
+    @Res() res,
   ) {
-    const user: Users = await this.usersSerivce.findByNickname(nickname);
+    // 회원가입에 필요한 데이터가 없다면 메인페이지로
+    if (!session.registerData) {
+      res.redirect('/');
+    }
+
+    const email = session.registerData.email;
+    const platform = session.registerData.platform;
+    const platformId = session.registerData.platformId;
+
+    // 들어오자마자 세션 데이터를 삭제해서 뒤끝 없게...
+    delete session.registerData;
+
     // 중복 체크
+    const user: Users = await this.usersSerivce.findByNickname(nickname);
     if (user) {
+      // 중복된 닉네임의 유저가 있을 때에 여기로 들어옴.
+      // 프론트쪽에서 닉네임 중복체크를 확실하게 해줘야함... 여기로 들어오면 안돼
+      throw new BadRequestException(null, 'Nickname has overlapped!!!');
     } else {
       // 데이터베이스 저장
       const user: Users = new Users();
       user.nickname = nickname;
-      user.platform = 'kakao';
-      user.kakaoId = session.authData.id;
-      this.usersSerivce.save(user);
+      user.email = email;
 
-      // 세션 등록
-      const userData = {
-        userId: user.userId,
-        nickname: user.nickname,
-      };
-      session.userData = userData;
-      session.isLogined = true;
+      switch (platform) {
+        case 'kakao':
+          user.kakaoId = platformId;
+          break;
+        case 'naver':
+          user.naverId = platformId;
+          break;
+        case 'google':
+          user.googleId = platformId;
+          break;
+      }
 
-      session.regenerate((err) => {
-        if (err) throw err;
-        this.logger.debug(
-          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
-        );
-      });
+      const savedUser = await this.usersSerivce.save(user);
+
+      // 로그인
+      const userData = new UserDataDto(savedUser.userId, savedUser.nickname);
+      this.authService.login(session, userData);
+
+      // 사실 여기서 회원가입을 환영하는 페이지를 주는게 좋을 듯...
+      res.redirect('/');
     }
   }
 
+  /**
+   * GET /auth/logout
+   */
   @Get('logout')
-  @Redirect('/')
-  async logout(@Session() session: Record<string, any>) {
-    this.logger.debug(`Kakao Logout Request`);
-
-    // TODO : 카카오측에 요청하여 토큰 만료시킴
-    const accessToken = session.authData.access_token;
-    this.logger.debug(accessToken);
-    await this.authService.logout(accessToken);
-
-    // TODO : 세션에 등록된 사용자 정보 삭제
-    session.destroy((err) => {
-      if (err) throw err;
-    });
+  async logout(@Session() session: Record<string, any>, @Res() res) {
+    this.logger.debug(`Logout Request`);
+    await this.authService.logout(session);
+    res.redirect('/');
   }
-
-  @Get('status')
-  status() {}
 }
