@@ -161,8 +161,18 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = new Date(st);
     let hour = today.getHours();
     let min = today.getMinutes();
-    if (hour < 10) {
-      hour = '0' + hour;
+    if (hour / 12 >= 1) {
+      hour = '오후 ' + (hour - 12);
+      console.log(hour);
+      if (hour.slice(3, 5) - 12 < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+        console.log(hour);
+      }
+    } else {
+      hour = '오전 ' + hour;
+      if (hour.slice(3, 5) < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+      }
     }
     if (min < 10) {
       min = '0' + min;
@@ -183,8 +193,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = new Date(st);
     let hour = today.getHours();
     let min = today.getMinutes();
-    if (hour < 10) {
-      hour = '0' + hour;
+    if (hour / 12 >= 1) {
+      hour = '오후 ' + (hour - 12);
+      if (hour - 12 < 10) {
+        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      }
+    } else {
+      hour = '오전 ' + hour;
+      if (hour < 10) {
+        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      }
     }
     if (min < 10) {
       min = '0' + min;
