@@ -43,7 +43,7 @@ const countDownTimer = function (id, date) {
 
       //
       return;
-    } else {
+    } else if ((isLogined = false && distDt > 0)) {
       input_box.style.display = 'block';
       send_btn.style.display = 'block';
     }
@@ -218,6 +218,9 @@ document.addEventListener('DOMContentLoaded', function () {
   //실시간 채팅 구현
 
   //로그인 시 채팅 가능
+  const input_box = document.querySelector('.opinion-input');
+  const send_btn = document.querySelector('.send');
+  const live_debate = document.querySelector('.live-debate');
 
   //스크롤 아래 고정
   live_debate.scrollTop = live_debate.scrollHeight;
