@@ -1,19 +1,79 @@
 let socket = io.connect('http://localhost:3000/message');
+//서버시간 가져오기
+let xmlHttpRequest;
+function getTime() {
+  if (window.XMLHttpRequest) {
+    xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
+    xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
+    xmlHttpRequest.send('');
+    return xmlHttpRequest.getResponseHeader('date');
+  } else if (window.ActiveXObject) {
+    xmlHttpRequest = new ActiveXObject('Microsoft.XMLHTTP');
+    xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
+    xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
+    xmlHttpRequest.send('');
+    return xmlHttpRequest.getResponseHeader('date');
+  }
+}
+
+//채팅 타이머
+const input_box = document.querySelector('.opinion-input');
+const send_btn = document.querySelector('.send');
+const live_debate = document.querySelector('.live-debate');
+const countDownTimer = function (id, date) {
+  let _vDate = new Date(date); // 전달 받은 일자
+  let _second = 1000;
+  let _minute = _second * 60;
+  let _hour = _minute * 60;
+  let _day = _hour * 24;
+  let timer;
+  function showRemaining() {
+    let now = new Date();
+    let distDt = _vDate - now;
+    if (distDt < 0) {
+      clearInterval(timer);
+      document.getElementById(id).textContent =
+        '해당 이벤트가 종료 되었습니다!';
+      input_box.style.display = 'none';
+      send_btn.style.display = 'none';
+      live_debate.style.height = '100%';
+
+      //이 부분에 서버시간 받아서 데베에 집어넣기
+
+      //
+      return;
+    } else if ((isLogined = false && distDt > 0)) {
+      input_box.style.display = 'block';
+      send_btn.style.display = 'block';
+    }
+    let days = Math.floor(distDt / _day);
+    let hours = Math.floor((distDt % _day) / _hour);
+    let minutes = Math.floor((distDt % _hour) / _minute);
+    let seconds = Math.floor((distDt % _minute) / _second);
+    //document.getElementById(id).textContent = date.toLocaleString() + "까지 : ";
+    document.getElementById(id).textContent = days + '일 ';
+    document.getElementById(id).textContent += hours + '시간 ';
+    document.getElementById(id).textContent += minutes + '분 ';
+    document.getElementById(id).textContent += seconds + '초';
+  }
+  timer = setInterval(showRemaining, 1000);
+};
+
+countDownTimer('sample01', '02/27/2022 04:22 PM'); // 이부분 수정하면 시간 변경 가능
 
 document.addEventListener('DOMContentLoaded', function () {
-
   //로그인, 로그아웃 버튼 구현
-  const loginform = document.querySelector('.form-login'); 
+  const loginform = document.querySelector('.form-login');
   const logoutform = document.querySelector('.form-logout');
 
   //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
-  if(isLogined== true)
-  { loginform.style.display = 'none';
+  if (isLogined == true) {
+    loginform.style.display = 'none';
     logoutform.style.display = 'block';
-  }
-  else
-  { loginform.style.display = 'block';
-    logoutform.style.display = 'none'
+  } else {
+    loginform.style.display = 'block';
+    logoutform.style.display = 'none';
   }
   //로그인, 로그아웃 버튼 구현
 
@@ -46,71 +106,114 @@ document.addEventListener('DOMContentLoaded', function () {
     agreebar_width = 100 - disagreebar_width;
   }
 
-  if(isLogined == true){
-      agree_bar.style.display = 'none';
-      disagree_bar.style.display = 'none';
+  if (isLogined == true) {
+    agree_bar.style.display = 'none';
+    disagree_bar.style.display = 'none';
 
     agree_btn.addEventListener('click', () => {
-        //찬성 반대 선택 이후 버튼 숨기기
-        agree_btn.style.display = 'none';
-        disagree_btn.style.display = 'none';
-        agree = agree + 1;
-        //찬성비율 계산
-        agree_calculate(agree, disagree);
-        //찬성 반대 바 비율 변경
-        agree_bar.style.width = agreebar_width + '%';
-        disagree_bar.style.width = disagreebar_width + '%';
-        //찬성 반대 비율 바 보여주기
-        agree_bar.style.display = 'block';
-        disagree_bar.style.display = 'block';
-      });
+      //찬성 반대 선택 이후 버튼 숨기기
+      agree_btn.style.display = 'none';
+      disagree_btn.style.display = 'none';
+      agree = agree + 1;
+      //찬성비율 계산
+      agree_calculate(agree, disagree);
+      //찬성 반대 바 비율 변경
+      agree_bar.style.width = agreebar_width + '%';
+      disagree_bar.style.width = disagreebar_width + '%';
+      //찬성 반대 비율 바 보여주기
+      agree_bar.style.display = 'block';
+      disagree_bar.style.display = 'block';
+    });
 
     disagree_btn.addEventListener('click', () => {
-        //찬성 반대 선택 이후 버튼 숨기기
-        agree_btn.style.display = 'none';
-        disagree_btn.style.display = 'none';
-        disagree = disagree + 1;
-        //반대 비율 계산
-        disagree_calculate(agree, disagree);
-        //찬성 반대 바 비율 변경
-        agree_bar.style.width = agreebar_width + '%';
-        disagree_bar.style.width = disagreebar_width + '%';
-        //찬성 반대 비율 바 보여주기
-        agree_bar.style.display = 'block';
-        disagree_bar.style.display = 'block';
-      });
-  }
-  else {
+      //찬성 반대 선택 이후 버튼 숨기기
+      agree_btn.style.display = 'none';
+      disagree_btn.style.display = 'none';
+      disagree = disagree + 1;
+      //반대 비율 계산
+      disagree_calculate(agree, disagree);
+      //찬성 반대 바 비율 변경
+      agree_bar.style.width = agreebar_width + '%';
+      disagree_bar.style.width = disagreebar_width + '%';
+      //찬성 반대 비율 바 보여주기
+      agree_bar.style.display = 'block';
+      disagree_bar.style.display = 'block';
+    });
+  } else {
     agree_btn.style.display = 'none';
     disagree_btn.style.display = 'none';
   }
   //찬성반대 비율바 구현
-    
-    
+
   //실시간 채팅 구현
   const ul = document.querySelector('.live-debate');
   const send = document.querySelector('#send');
 
   socket.on('new-message-to-client', (data) => {
-    console.log(data);
-
-    //let opinion = opinion_input;
-    send_opinion(nickname, data.newmessage, 'time');
-    console.log(isLogined);
-    console.log(nickname);
+    send_opinion(data.nickname, data.newmessage, data.date);
   });
 
   send.addEventListener('click', (e) => {
     e.preventDefault();
+
+    // 현재 날짜 조회
+    let st = getTime();
+    let today = new Date(st);
+    let hour = today.getHours();
+    let min = today.getMinutes();
+    if (hour / 12 >= 1) {
+      hour = '오후 ' + (hour - 12);
+      console.log(hour);
+      if (hour.slice(3, 5) - 12 < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+        console.log(hour);
+      }
+    } else {
+      hour = '오전 ' + hour;
+      if (hour.slice(3, 5) < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+      }
+    }
+    if (min < 10) {
+      min = '0' + min;
+    }
+
     const opinion_input = document.querySelector('#message').value;
-    socket.emit('new-message-to-server', { opinion_input: opinion_input });
-    console.log(opinion_input);
+    socket.emit('new-message-to-server', {
+      nickname: nickname,
+      opinion_input: opinion_input,
+      date: hour + ':' + min,
+    });
     document.querySelector('#message').value = '';
   });
 
   send.addEventListener('keypress', (event) => {
+    // 현재 날짜 조회
+    let st = getTime();
+    let today = new Date(st);
+    let hour = today.getHours();
+    let min = today.getMinutes();
+    if (hour / 12 >= 1) {
+      hour = '오후 ' + (hour - 12);
+      if (hour - 12 < 10) {
+        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      }
+    } else {
+      hour = '오전 ' + hour;
+      if (hour < 10) {
+        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      }
+    }
+    if (min < 10) {
+      min = '0' + min;
+    }
+
     if (event.keyCode === 13) {
-      socket.emit('new-message-to-server', { opinion_input: opinion_input });
+      socket.emit('new-message-to-server', {
+        nickname: nickname,
+        opinion_input: opinion_input,
+        date: hour + ':' + min,
+      });
       document.querySelector('#message').value = '';
     }
   });
@@ -136,19 +239,18 @@ document.addEventListener('DOMContentLoaded', function () {
   const input_box = document.querySelector('.opinion-input');
   const send_btn = document.querySelector('.send');
   const live_debate = document.querySelector('.live-debate');
+
   //스크롤 아래 고정
-  live_debate.scrollTop = live_debate.scrollHeight
+  live_debate.scrollTop = live_debate.scrollHeight;
 
   //로그인에 따른 채팅 가능 불가능 설정
-  if(isLogined == true){
+  if (isLogined == true) {
     input_box.style.display = 'block';
     send_btn.style.display = 'block';
-  }
-  else {
+  } else {
     input_box.style.display = 'none';
     send_btn.style.display = 'none';
-    live_debate.style.height = "100%";
+    live_debate.style.height = '100%';
   }
   //로그인 시 채팅 가능
-  
 });
