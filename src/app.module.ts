@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ListModule } from './list/list.module';
 import { typeORMConfig } from 'src/configs/typeorm.config';
 import { ChatGateway } from './app.gateway';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ChatGateway } from './app.gateway';
     HttpModule,
     AuthModule,
     ListModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

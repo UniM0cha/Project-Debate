@@ -37,8 +37,7 @@ export class AuthController {
     if (session.isLogined) {
       return res.redirect('/');
     } else {
-      let sessionDto = new SessionDto(session);
-      return res.render('login', sessionDto);
+      return res.render('login');
     }
   }
 

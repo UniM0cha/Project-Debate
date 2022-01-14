@@ -183,7 +183,9 @@ document.addEventListener('DOMContentLoaded', function () {
       userId: userId,
       nickname: nickname,
       opinion_input: opinion_input,
-      date: hour + ':' + min,
+      // date: hour + ':' + min,
+      // date 객체로 수정
+      date: today,
     });
     document.querySelector('#message').value = '';
   });
@@ -220,6 +222,28 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function send_opinion(nickname, opinion, time) {
+    let today = new Date(time);
+    let hour = today.getHours();
+    let min = today.getMinutes();
+    if (hour / 12 >= 1) {
+      hour = '오후 ' + (hour - 12);
+      console.log(hour);
+      if (hour.slice(3, 5) - 12 < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+        console.log(hour);
+      }
+    } else {
+      hour = '오전 ' + hour;
+      if (hour.slice(3, 5) < 10) {
+        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+      }
+    }
+    if (min < 10) {
+      min = '0' + min;
+    }
+
+    time = hour + ':' + min;
+
     const li = document.createElement('li');
     li.classList.add('agree');
     //클래스 agree와 disagree추가
