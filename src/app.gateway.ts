@@ -12,8 +12,11 @@ export class ChatGateway {
 
   @SubscribeMessage('new-message-to-server')
   handleMessage(@MessageBody() data): void {
+    console.log(data.date);
     this.Server.emit('new-message-to-client', {
+      nickname: data.nickname,
       newmessage: data.opinion_input,
+      date: data.date,
     });
   }
 }
