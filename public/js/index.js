@@ -180,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const opinion_input = document.querySelector('#message').value;
     socket.emit('new-message-to-server', {
+      userId: userId,
       nickname: nickname,
       opinion_input: opinion_input,
       date: hour + ':' + min,

@@ -8,10 +8,13 @@ import {
   Param,
   Post,
   Query,
+  Redirect,
+  Render,
   Res,
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { SessionDto } from 'src/dto/session.dto';
 import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -34,7 +37,8 @@ export class AuthController {
     if (session.isLogined) {
       return res.redirect('/');
     } else {
-      res.render('login');
+      let sessionDto = new SessionDto(session);
+      return res.render('login', sessionDto);
     }
   }
 
