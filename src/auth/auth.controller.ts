@@ -14,7 +14,6 @@ import {
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { SessionDto } from 'src/dto/session.dto';
 import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -118,10 +117,10 @@ export class AuthController {
         );
 
         platformId = userInfo.data.id;
-        idUser = await this.usersSerivce.findUser(platform, platformId);
+        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
 
         email = userInfo.data.kakao_account.email;
-        emailUser = await this.usersSerivce.findUser('email', email);
+        emailUser = await this.usersSerivce.findByPlatform('email', email);
 
         break;
 
@@ -150,10 +149,10 @@ export class AuthController {
         );
 
         platformId = userInfo.data.response.id;
-        idUser = await this.usersSerivce.findUser(platform, platformId);
+        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
 
         email = userInfo.data.response.email;
-        emailUser = await this.usersSerivce.findUser('email', email);
+        emailUser = await this.usersSerivce.findByPlatform('email', email);
 
         break;
 
@@ -182,10 +181,10 @@ export class AuthController {
         );
 
         platformId = userInfo.aud;
-        idUser = await this.usersSerivce.findUser(platform, platformId);
+        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
 
         email = userInfo.email;
-        emailUser = await this.usersSerivce.findUser('email', email);
+        emailUser = await this.usersSerivce.findByPlatform('email', email);
 
         break;
 
@@ -193,18 +192,18 @@ export class AuthController {
         throw new NotFoundException();
     }
 
-    this.logger.debug(`emailUser: ${emailUser}`);
-    this.logger.debug(`idUser: ${idUser}`);
-
     if (emailUser) {
       if (idUser) {
         // 로그인
+        this.logger.debug(`Login Request`);
+
         const userData = new UserDataDto(idUser.userId, idUser.nickname);
         this.authService.login(session, userData);
 
         return res.redirect('/');
       } else {
         // 플랫폼 아이디 추가 후 로그인
+        this.logger.debug(`Add Platform Request`);
         await this.usersSerivce.updatePlatformId(platform, email, platformId);
 
         const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
@@ -214,6 +213,7 @@ export class AuthController {
       }
     } else {
       // 회원가입
+      this.logger.debug(`Register Request`);
       // 이메일과 platform, platformId를 세션에 등록 후 회원가입 페이지로 이동
       const registerData = {
         email: email,
@@ -241,9 +241,9 @@ export class AuthController {
   async register(@Session() session: Record<string, any>, @Res() res) {
     // 플랫폼 로그인을 했는지 확인
     if (session.registerData && !session.isLogined) {
-      res.render('register');
+      return res.render('register');
     } else {
-      res.redirect('/');
+      return res.redirect('/');
     }
   }
 
