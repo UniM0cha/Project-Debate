@@ -44,7 +44,7 @@ export class UsersService {
     return savedUser;
   }
 
-  async findUser(method: string, id: string): Promise<Users> {
+  async findByPlatform(method: string, id: string): Promise<Users> {
     if (method === 'kakao') {
       const user = await this.usersRepository.findByKakaoId(id);
       return user;

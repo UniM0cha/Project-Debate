@@ -1,5 +1,11 @@
 import { Chat } from 'src/chat/chat.entity';
+import { TopicUsers } from 'src/topic/topic-users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+
+export enum UserRole {
+  ADMIN = 'admin',
+  MEMBER = 'member',
+}
 
 @Entity()
 export class Users {
@@ -12,6 +18,9 @@ export class Users {
   @Column()
   nickname: string;
 
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.MEMBER })
+  role: UserRole;
+
   @Column({ nullable: true })
   kakaoId: string;
 
@@ -21,6 +30,12 @@ export class Users {
   @Column({ nullable: true })
   googleId: string;
 
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  registerDate: Date;
+
   @OneToMany(() => Chat, (chat) => chat.chatId)
   chat: Chat[];
+
+  @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
+  topicUsers: TopicUsers[];
 }

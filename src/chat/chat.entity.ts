@@ -1,3 +1,4 @@
+import { Topic } from 'src/topic/topic.entity';
 import { Users } from 'src/users/users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
@@ -6,14 +7,17 @@ export class Chat {
   @PrimaryGeneratedColumn()
   chatId: number;
 
-  @ManyToOne(() => Users, (user) => user.userId)
-  user: Users;
-
   @Column()
   chatDate: Date;
 
   @Column({ type: 'text' })
   chatMessage: string;
+
+  @ManyToOne(() => Users, (user) => user.userId)
+  user: Users;
+
+  @ManyToOne(() => Topic, (topic) => topic.topicId)
+  topic: Topic;
 
   createChat(data: any, user: Users) {
     this.user = user;
