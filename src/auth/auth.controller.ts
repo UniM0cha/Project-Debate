@@ -8,10 +8,13 @@ import {
   Param,
   Post,
   Query,
+  Redirect,
+  Render,
   Res,
   Session,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { SessionDto } from 'src/dto/session.dto';
 import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -34,7 +37,7 @@ export class AuthController {
     if (session.isLogined) {
       return res.redirect('/');
     } else {
-      res.render('login');
+      return res.render('login');
     }
   }
 
@@ -64,7 +67,6 @@ export class AuthController {
     }
 
     // TODO : 구글
-    // TODO : 네이버
   }
 
   /**
@@ -157,6 +159,34 @@ export class AuthController {
 
       /** 구글 */
       case 'google':
+        accessCode = qs.code;
+        this.logger.debug(`Response Access_Code from Google: ${accessCode}`);
+
+        token = await this.authService.getAccessToken(platform, accessCode);
+        this.logger.debug(
+          `Response Token_Data from Google: ${JSON.stringify(
+            token.data,
+            null,
+            4,
+          )}`,
+        );
+        let IdToken = token.data['id_token'];
+
+        userInfo = await this.authService.getUserInfo(platform, null, IdToken);
+        this.logger.debug(
+          `Response User_Info from Google: ${JSON.stringify(
+            userInfo,
+            null,
+            4,
+          )}`,
+        );
+
+        platformId = userInfo.aud;
+        idUser = await this.usersSerivce.findUser(platform, platformId);
+
+        email = userInfo.email;
+        emailUser = await this.usersSerivce.findUser('email', email);
+
         break;
 
       default:

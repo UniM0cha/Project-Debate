@@ -27,12 +27,15 @@ export class UsersRepository extends Repository<Users> {
   async findByEmail(email: string): Promise<Users> {
     return this.findOne({ email: email });
   }
+
   async findByNickname(nickname: string): Promise<Users> {
     return this.findOne({ nickname: nickname });
   }
+
   async findByKakaoId(id: string): Promise<Users> {
     return this.findOne({ kakaoId: id });
   }
+
   async findByNaverId(id: string): Promise<Users> {
     return this.findOne({ naverId: id });
   }

@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Chat } from 'src/chat/chat.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Users {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   userId: string;
 
   @Column()
@@ -19,4 +20,7 @@ export class Users {
 
   @Column({ nullable: true })
   googleId: string;
+
+  @OneToMany(() => Chat, (chat) => chat.chatId)
+  chat: Chat[];
 }

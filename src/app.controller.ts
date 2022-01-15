@@ -1,5 +1,6 @@
 import { Controller, Get, Render, Session } from '@nestjs/common';
 import { AppService } from './app.service';
+import { SessionDto } from './dto/session.dto';
 
 @Controller()
 export class AppController {
@@ -9,14 +10,7 @@ export class AppController {
   //사용할 템플릿 지정
   @Render('index')
   root(@Session() session: Record<string, any>) {
-    if (session.isLogined) {
-      return {
-        isLogined: true,
-        nickname: session.userData.nickname,
-        userId: session.userData.userId,
-      };
-    } else {
-      return { isLogined: false };
-    }
+    let sessionDto = new SessionDto(session);
+    return sessionDto;
   }
 }
