@@ -1,0 +1,27 @@
+.title {
+    text-decoration: none;
+    color: white;
+    font-size: 30px;
+    display: block;
+    margin: 0 auto;
+}
+  
+.title img {
+    vertical-align: middle;
+}
+  
+.title:hover {
+    color: white;
+}
+  
+.nickname_register{
+    margin-top: 20px;
+    display: flex;
+}
+
+/* 닉네임 생성 */
+
+#submit{
+
+}
+

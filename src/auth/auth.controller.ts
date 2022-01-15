@@ -241,7 +241,7 @@ export class AuthController {
   async register(@Session() session: Record<string, any>, @Res() res) {
     // 플랫폼 로그인을 했는지 확인
     if (session.registerData && !session.isLogined) {
-      res.render('register');
+      return res.render('register');
     } else {
       res.redirect('/');
     }
