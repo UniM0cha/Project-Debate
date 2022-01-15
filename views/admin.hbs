@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지</title>
+  <script src="/js/admin.js"></script>
+</head>
+<body>
+  {{!-- TODO : 닉네임 중복 확인 후 데이터베이스 전송 --}}
+  <form action="/topic/new" method="post">
+    주제 입력: <input type="text" name="topic" id='topic' placeholder="주제 입력"><p/>
+    시작 날짜: <input type="date" name="start" id="start"><p/>
+    종료 날짜: <input type="date" name="end" id="end"><p/>
+    {{!-- 종료 시간: <input type="time" name="endTime" id="endTime"><p/> --}}
+    비밀번호: <input type="password" name="password" id="password"><p/>
+    <input type="submit" id="submit" value="확인">
+  </form>
+</body>
+</html>

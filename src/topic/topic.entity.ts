@@ -11,16 +11,10 @@ export class Topic {
   topicName: string;
 
   @Column()
-  topicCreateDate: Date;
+  topicStartDate: Date;
 
   @Column()
   topicEndDate: Date;
-
-  @Column()
-  opinionAgree: number;
-
-  @Column()
-  opinionDisagree: number;
 
   @Column()
   topicActivate: boolean;
@@ -30,4 +24,10 @@ export class Topic {
 
   @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
   topicUsers: TopicUsers[];
+
+  setTopic(topic: string, start: Date, end: Date) {
+    this.topicName = topic;
+    this.topicStartDate = start;
+    this.topicEndDate = end;
+  }
 }

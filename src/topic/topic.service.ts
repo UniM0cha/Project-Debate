@@ -16,6 +16,19 @@ export class TopicService {
   ) {}
   private readonly logger = new Logger(TopicService.name);
 
+  async createNewTopic(topic: string, start: Date, end: Date): Promise<Topic> {
+    let newTopic = new Topic();
+    newTopic.setTopic(topic, start, end);
+
+    const createdTopic = await this.topicRepository.save(newTopic);
+
+    return createdTopic;
+  }
+
+  async updateOpinion(type: OpinionType) {}
+
+  async deleteTopic(topicId: number) {}
+
   async checkParticipant(_userId: string): Promise<OpinionType | null> {
     const user: Users = await this.usersService.findOne(_userId);
     const topic: Topic = await this.topicRepository.findActivateTopic();

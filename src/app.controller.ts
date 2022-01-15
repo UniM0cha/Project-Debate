@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Render, Session } from '@nestjs/common';
+import { Controller, Get, Logger, Render, Res, Session } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ViewDto } from './dto/view.dto';
 
@@ -8,14 +8,16 @@ export class AppController {
   private readonly logger = new Logger(AppController.name);
 
   @Get('/')
-  //사용할 템플릿 지정
   @Render('index')
   async root(@Session() session: Record<string, any>) {
     const viewDto = await this.appService.createViewDto(session);
     this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
     return viewDto;
+  }
 
-    // let sessionDto = new ViewDto(session);
-    // return sessionDto;
+  /** admin 권한 가진 사람만 들어가도록 수정해야함 */
+  @Get('admin')
+  async admin(@Res() res) {
+    res.render('admin');
   }
 }
