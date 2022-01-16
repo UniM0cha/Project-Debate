@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
   submit.disabled = true;
 
   document.addEventListener('input', async () => {
-    const inputNickname = document.querySelector('#nickname').value;
+    let inputNickname = document.querySelector('#nickname').value;
     const response = await fetch(`${SERVER_URL}/users/list`, {
       method: 'POST',
     });
     const list = await response.json();
 
     // !!!!!입력한 닉네임이 중복임을 확인하는 부분!!!!!!
+    inputNickname = inputNickname.replace(/(\s*)/g, '');
     if (inputNickname === '') {
       // 빈칸일 때
       message.innerHTML = '닉네임을 입력해주세요.';
