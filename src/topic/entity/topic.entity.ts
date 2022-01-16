@@ -10,10 +10,10 @@ export class Topic {
   @Column()
   topicName: string;
 
-  @Column()
+  @Column({ nullable: true })
   topicStartDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   topicEndDate: Date;
 
   @Column()

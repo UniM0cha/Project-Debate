@@ -20,19 +20,54 @@ export class TopicService {
   ) {}
   private readonly logger = new Logger(TopicService.name);
 
-  @Cron('* * * * * *')
+  @Cron('0 * * * * *')
   async cycleTopic() {
-    this.logger.debug('hello');
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    this.logger.debug(`Today: ${today}`);
+
+    // const addCycle = new TopicCycle();
+    // addCycle.cycleDate = today;
+    // addCycle.cycled = false;
+    // addCycle.topicId = 1;
+    // await this.topicCycleRepository.save(addCycle);
+
     // 오늘에 해당하는 cycle을 가져와서
     const todayCycle: TopicCycle = await this.topicCycleRepository.findOne({
       cycleDate: today,
     });
+    this.logger.debug(`Today Cycle: ${JSON.stringify(todayCycle, null, 4)}`);
+
+    // cycle이 있다면
     if (todayCycle) {
-      // 그 cycle이 이미 발동되었다면
-      // 무시하고
-      // 아니라면
-      // 순환을 시킨다
+      // 그 cycle이 발동되지 않았다면
+      if (!todayCycle.cycled) {
+        // 주제 활성화 - 주제 테이블에 activate true, 생성시간 기록
+        const topicId = todayCycle.topicId;
+
+        await this.topicRepository.update(
+          { topicId: topicId },
+          { topicActivate: true, topicStartDate: today },
+        );
+
+        // 이전 주제는 비활성화 - 주제 테이블에 actovate false, 종료시간 기록
+        const beforeTopic = await this.topicRepository.findOne({
+          topicId: topicId - 1,
+        });
+        this.logger.debug(
+          `beforTopic: ${JSON.stringify(beforeTopic, null, 4)}`,
+        );
+
+        if (beforeTopic) {
+          await this.topicRepository.update(beforeTopic, {
+            topicActivate: false,
+            topicEndDate: today,
+          });
+        }
+
+        // cycled를 true로
+        await this.topicCycleRepository.update(todayCycle, { cycled: true });
+      }
     }
   }
 
