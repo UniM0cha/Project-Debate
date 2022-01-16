@@ -1,5 +1,5 @@
 import { Chat } from 'src/chat/chat.entity';
-import { TopicUsers } from 'src/topic/topic-users.entity';
+import { TopicUsers } from 'src/topic/entity/topic-users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 export enum UserRole {

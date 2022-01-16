@@ -1,35 +1,27 @@
-import { Controller } from '@nestjs/common';
-import { Users } from 'src/users/users.entity';
-import { OpinionType } from './topic-users.entity';
-import { TopicUsersRepository } from './topic-users.repository';
-import { Topic } from './topic.entity';
-import { TopicRepository } from './topic.repository';
+import { Body, Controller, Logger, Post, Res } from '@nestjs/common';
+import { Topic } from './entity/topic.entity';
+import { TopicService } from './topic.service';
 
 @Controller('topic')
 export class TopicController {
-  constructor(
-    private readonly topicRepository: TopicRepository,
-    private readonly topicUsersRepository: TopicUsersRepository,
-  ) {}
+  constructor(private readonly topicService: TopicService) {}
+  private readonly logger = new Logger(TopicController.name);
 
-  async createNewTopic(topic: Topic): Promise<Topic> {
-    const createdTopic = await this.topicRepository.save(topic);
-    return createdTopic;
-  }
+  @Post('new')
+  async createNewTopic(@Body() body, @Res() res) {
+    const password = body.password;
 
-  async updateOpinion(type: OpinionType) {}
+    if (password === '456789') {
+      const topic = body.topic;
+      const start = new Date(Date.parse(body.start));
 
-  async deleteTopic(topicId: number) {}
+      await this.topicService.createNewTopic(topic, start);
+      return res.redirect('/admin');
+    }
 
-  async checkParticipant(
-    userId: string,
-    topicId: number,
-  ): Promise<OpinionType> {
-    const topic = new Topic();
-    const users = new Users();
-    this.topicUsersRepository.find({ users: users, topic: topic });
-
-    return OpinionType.DISAGREE;
-    return OpinionType.AGREE;
+    //
+    else {
+      return res.redirect('/');
+    }
   }
 }

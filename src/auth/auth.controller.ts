@@ -208,8 +208,13 @@ export class AuthController {
 
         const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
         this.authService.login(session, userData);
-
-        return res.redirect('/');
+        return res.send(
+          `<script>
+            alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
+            location.href='/';
+          </script>`,
+        );
+        // return res.redirect('/');
       }
     } else {
       // 회원가입
@@ -227,7 +232,7 @@ export class AuthController {
           `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
         );
       });
-      res.redirect('/auth/register');
+      return res.redirect('/auth/register');
     }
   }
 
@@ -313,6 +318,6 @@ export class AuthController {
   async logout(@Session() session: Record<string, any>, @Res() res) {
     this.logger.debug(`Logout Request`);
     await this.authService.logout(session);
-    res.redirect('/');
+    return res.redirect('/');
   }
 }

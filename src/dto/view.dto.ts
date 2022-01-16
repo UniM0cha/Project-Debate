@@ -1,4 +1,4 @@
-import { OpinionType } from 'src/topic/topic-users.entity';
+import { OpinionType } from 'src/topic/entity/topic-users.entity';
 
 export class ViewDto {
   constructor(

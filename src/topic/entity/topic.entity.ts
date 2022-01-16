@@ -10,17 +10,11 @@ export class Topic {
   @Column()
   topicName: string;
 
-  @Column()
-  topicCreateDate: Date;
+  @Column({ nullable: true })
+  topicStartDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   topicEndDate: Date;
-
-  @Column()
-  opinionAgree: number;
-
-  @Column()
-  opinionDisagree: number;
 
   @Column()
   topicActivate: boolean;
@@ -30,4 +24,9 @@ export class Topic {
 
   @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
   topicUsers: TopicUsers[];
+
+  setTopic(topic: string, start: Date) {
+    this.topicName = topic;
+    this.topicStartDate = start;
+  }
 }
