@@ -12,9 +12,9 @@
   <form action="/topic/new" method="post">
     주제 입력: <input type="text" name="topic" id='topic' placeholder="주제 입력"><p/>
     시작 날짜: <input type="date" name="start" id="start"><p/>
-    종료 날짜: <input type="date" name="end" id="end"><p/>
+    {{!-- 종료 날짜: <input type="date" name="end" id="end"><p/> --}}
     {{!-- 종료 시간: <input type="time" name="endTime" id="endTime"><p/> --}}
-    비밀번호: <input type="password" name="password" id="password"><p/>
+    비밀번호: <input type="password" name="password" id="password" placeholder="456789"><p/>
     <input type="submit" id="submit" value="확인">
   </form>
 </body>

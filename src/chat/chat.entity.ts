@@ -1,4 +1,4 @@
-import { Topic } from 'src/topic/topic.entity';
+import { Topic } from 'src/topic/entity/topic.entity';
 import { Users } from 'src/users/users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 

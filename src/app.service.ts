@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ViewDto } from './dto/view.dto';
-import { OpinionType } from './topic/topic-users.entity';
-import { Topic } from './topic/topic.entity';
+import { OpinionType } from './topic/entity/topic-users.entity';
+import { Topic } from './topic/entity/topic.entity';
 import { TopicService } from './topic/topic.service';
 
 @Injectable()
