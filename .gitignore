@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # Session File
 /sessions
+src/configs/typeorm.config.ts
