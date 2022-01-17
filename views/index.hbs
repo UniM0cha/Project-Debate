@@ -18,14 +18,10 @@
       integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3'
       crossorigin='anonymous'
     />
-    <link rel='stylesheet' href='css/index.css' />
+    <link rel='stylesheet' href='/css/index.css' />
   </head>
 
   <body>
-    
-    <h1>Sample01 : 카운트 다운</h1> 
-    <h2 id="sample01"></h2> 
-
     {{!-- index.js파일에서 사용할 script선언 --}}
     <script>
       let isLogined = {{isLogined}};
@@ -41,7 +37,7 @@
       </form>
 
       <a class='title' href='#'>
-        토론 사이트{{nickname}}{{userID}}</a>
+        토론 사이트</a>
 
       {{! isLogined(:boolean) 라는 이름으로 로그인 되었는지 안되었는지 세션에 등록되어 있음 }}
       {{! isLogined 변수를 통해서 로그인/로그아웃 버튼을 표시하는 로직 구현해야함 }}
@@ -57,8 +53,7 @@
 
     <!-- 주제 -->
     <div class='time-topic-div'>
-      <div class='time'>
-        주제의 남은 시간 표시
+      <div class='time'  id="topic-time">
       </div>
       <div class='topic'>
         주제
@@ -67,8 +62,8 @@
 
     <!-- 찬성반대투표바 -->
     <div class='age-dis-bar-wrapper'>
-      <div class='agree-bar'>찬성: </div>
-      <div class='disagree-bar'>반대: </div>
+      <div class='agree-bar'>찬성:</div>
+      <div class='disagree-bar'>반대:</div>
 
       <button class='bar-button agree-btn'>찬성</button>
       <button class='bar-button disagree-btn'>반대</button>
