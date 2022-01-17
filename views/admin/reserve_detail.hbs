@@ -1,0 +1,52 @@
+<html lang='ko'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>주제 세부사항</title>
+  </head>
+  <body>
+    <h1>주제 예약 세부사항</h1>
+    <form name="topic_form" method="POST">
+      <table border="1">
+        <tr>
+          <td>예약 번호</td>
+          <td align="center">{{reserve.reserveId}}</td>
+        </tr>
+        <tr>
+          <td>시작 날짜</td>
+          <td><input type="date" value="{{dateFormat reserveDate "YYYY-MM-DD"}}"></td>
+        </tr>
+        <tr>
+          <td>주제 번호</td>
+          <td><input type='text' name='topicId' id="topic-id" placeholder='주제 번호 입력' list="topic-options" value="{{reserve.topic.topicId}}"></td>
+          <datalist id="topic-options">
+            {{#each topics}}
+              <option value="{{topicId}}" label="{{topicName}}"/>
+            {{/each}}
+          </datalist>
+        </tr>
+      </table>
+      <p/>
+      <input type="submit" id="btn_update" value="수정">
+      <input type="submit" id="btn_delete" value="삭제">
+    </form>
+
+    <script>
+      const form = document.topic_form;
+      document.querySelector('#btn_update').addEventListener('click', () => {
+        if(form.checkValidity()){
+          form.action = '/admin/update-reserve/{{topic.topicId}}'
+          form.submit();
+        }
+      })
+
+      document.querySelector('#btn_delete').addEventListener('click', () => {
+        form.action = '/admin/delete-reserve/{{topic.topicId}}'
+        form.submit();
+      })
+
+    </script>
+
+  </body>
+</html>

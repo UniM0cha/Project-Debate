@@ -11,6 +11,7 @@ import { ChatGateway } from './app.gateway';
 import { ChatModule } from './chat/chat.module';
 import { TopicModule } from './topic/topic.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ListModule,
     ChatModule,
     TopicModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

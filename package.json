@@ -33,6 +33,7 @@
     "@nestjs/websockets": "^8.2.4",
     "@types/cron": "^1.7.3",
     "express-session": "^1.17.2",
+    "handlebars-dateformat": "^1.1.2",
     "hbs": "^4.2.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",

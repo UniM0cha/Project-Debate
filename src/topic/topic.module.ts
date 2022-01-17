@@ -5,14 +5,14 @@ import { TopicUsersRepository } from './repository/topic-users.repository';
 import { TopicController } from './topic.controller';
 import { TopicRepository } from './repository/topic.repository';
 import { TopicService } from './topic.service';
-import { TopicCycleRepository } from './repository/topic-cycle.repository';
+import { TopicReserveRepository } from './repository/topic-reserve.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       TopicRepository,
       TopicUsersRepository,
-      TopicCycleRepository,
+      TopicReserveRepository,
     ]),
     UsersModule,
   ],

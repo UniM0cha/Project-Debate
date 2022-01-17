@@ -7,8 +7,10 @@ import { TopicUsersRepository } from './repository/topic-users.repository';
 import { Topic } from './entity/topic.entity';
 import { TopicRepository } from './repository/topic.repository';
 import { Cron } from '@nestjs/schedule';
-import { TopicCycleRepository } from './repository/topic-cycle.repository';
-import { TopicCycle } from './entity/topic-cycle.entity';
+import { TopicReserveRepository } from './repository/topic-reserve.repository';
+import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
+import { throws } from 'assert';
+import { CreateTopicDto } from 'src/admin/dto/create-topic.dto';
 
 @Injectable()
 export class TopicService {
@@ -16,21 +18,34 @@ export class TopicService {
     private readonly topicRepository: TopicRepository,
     private readonly usersService: UsersService,
     private readonly topicUsersRepository: TopicUsersRepository,
-    private readonly topicCycleRepository: TopicCycleRepository,
+    private readonly topicReserveRepository: TopicReserveRepository,
   ) {}
   private readonly logger = new Logger(TopicService.name);
 
+  async findAllTopics(): Promise<Topic[]> {
+    return this.topicRepository.find();
+  }
+
+  async findOneTopic(id: number): Promise<Topic> {
+    return await this.topicRepository.findOne(id);
+  }
+
+  async findAllTopicReserves(): Promise<TopicReserve[]> {
+    return this.topicReserveRepository.find({ relations: ['topic'] });
+  }
+
+  async findOneTopicReserve(id: number): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findOne(id, {
+      relations: ['topic'],
+    });
+  }
+
+  /*
   @Cron('0 * * * * *')
   async cycleTopic() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     this.logger.debug(`Today: ${today}`);
-
-    // const addCycle = new TopicCycle();
-    // addCycle.cycleDate = today;
-    // addCycle.cycled = false;
-    // addCycle.topicId = 1;
-    // await this.topicCycleRepository.save(addCycle);
 
     // 오늘에 해당하는 cycle을 가져와서
     const todayCycle: TopicCycle = await this.topicCycleRepository.findOne({
@@ -43,40 +58,39 @@ export class TopicService {
       // 그 cycle이 발동되지 않았다면
       if (!todayCycle.cycled) {
         // 주제 활성화 - 주제 테이블에 activate true, 생성시간 기록
-        const topicId = todayCycle.topicId;
+        const topic = todayCycle.topic;
 
-        await this.topicRepository.update(
-          { topicId: topicId },
-          { topicActivate: true, topicStartDate: today },
-        );
+        await this.topicRepository.update(topic, {
+          topicActivate: true,
+          topicStartDate: today,
+        });
 
         // 이전 주제는 비활성화 - 주제 테이블에 actovate false, 종료시간 기록
-        const beforeTopic = await this.topicRepository.findOne({
-          topicId: topicId - 1,
-        });
-        this.logger.debug(
-          `beforTopic: ${JSON.stringify(beforeTopic, null, 4)}`,
-        );
+        // const beforeTopic = await this.topicRepository.findOne({
+        //   topicId: topicId - 1,
+        // });
+        // this.logger.debug(
+        //   `beforTopic: ${JSON.stringify(beforeTopic, null, 4)}`,
+        // );
 
-        if (beforeTopic) {
-          await this.topicRepository.update(beforeTopic, {
-            topicActivate: false,
-            topicEndDate: today,
-          });
-        }
+        // if (beforeTopic) {
+        //   await this.topicRepository.update(beforeTopic, {
+        //     topicActivate: false,
+        //     topicEndDate: today,
+        //   });
+        // }
 
         // cycled를 true로
         await this.topicCycleRepository.update(todayCycle, { cycled: true });
       }
     }
   }
+  */
 
-  async createNewTopic(topic: string, start: Date): Promise<Topic> {
-    let newTopic = new Topic();
-    newTopic.setTopic(topic, start);
-
+  async createNewTopic(topic: CreateTopicDto): Promise<Topic> {
+    const newTopic = new Topic();
+    newTopic.setTopic(topic.topicName);
     const createdTopic = await this.topicRepository.save(newTopic);
-
     return createdTopic;
   }
 
@@ -99,4 +113,31 @@ export class TopicService {
   async updateOpinion(type: OpinionType) {}
 
   async deleteTopic(topicId: number) {}
+
+  async addTestData() {
+    const topic1 = new Topic();
+    topic1.topicName = 'topic1';
+
+    const topic2 = new Topic();
+    topic2.topicName = 'topic2';
+
+    const topic3 = new Topic();
+    topic3.topicName = 'topic3';
+
+    await this.topicRepository.save([topic1, topic2, topic3]);
+
+    const topicReserve1 = new TopicReserve();
+    const date1 = new Date('2022-02-04');
+    topicReserve1.reserveDate = date1;
+    topicReserve1.topic = topic1;
+    topicReserve1.reserveState = ReserveType.PENDING;
+
+    const topicReserve2 = new TopicReserve();
+    const date2 = new Date('2022-02-05');
+    topicReserve2.reserveDate = date2;
+    topicReserve2.topic = topic2;
+    topicReserve2.reserveState = ReserveType.PENDING;
+
+    await this.topicReserveRepository.save([topicReserve1, topicReserve2]);
+  }
 }

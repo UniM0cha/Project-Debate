@@ -141,7 +141,7 @@ export class AuthController {
 
         userInfo = await this.authService.getUserInfo(platform, accessToken);
         this.logger.debug(
-          `Response User_Info from Kakao: ${JSON.stringify(
+          `Response User_Info from Naver: ${JSON.stringify(
             userInfo.data,
             null,
             4,
@@ -198,22 +198,48 @@ export class AuthController {
         this.logger.debug(`Login Request`);
 
         const userData = new UserDataDto(idUser.userId, idUser.nickname);
-        this.authService.login(session, userData);
+        session.userData = userData;
+        session.isLogined = true;
+        session.save((err) => {
+          if (err) throw err;
 
-        return res.redirect('/');
+          this.logger.debug(
+            `Generated Session Data After Login: ${JSON.stringify(
+              session,
+              null,
+              4,
+            )}`,
+          );
+          return res.redirect('/');
+        });
       } else {
         // 플랫폼 아이디 추가 후 로그인
         this.logger.debug(`Add Platform Request`);
         await this.usersSerivce.updatePlatformId(platform, email, platformId);
 
         const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
-        this.authService.login(session, userData);
-        return res.send(
-          `<script>
-            alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
-            location.href='/';
-          </script>`,
-        );
+        // await this.authService.login(session, userData);
+        session.userData = userData;
+        session.isLogined = true;
+        session.save((err) => {
+          if (err) throw err;
+
+          this.logger.debug(
+            `Generated Session Data After Login: ${JSON.stringify(
+              session,
+              null,
+              4,
+            )}`,
+          );
+
+          return res.send(
+            `<script>
+              alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
+              location.href='/';
+            </script>`,
+          );
+        });
+
         // return res.redirect('/');
       }
     } else {
@@ -226,13 +252,10 @@ export class AuthController {
         platformId: platformId,
       };
       session.registerData = registerData;
-      session.regenerate((err) => {
+      session.save((err) => {
         if (err) throw err;
-        this.logger.debug(
-          `Generated Session Data: ${JSON.stringify(session, null, 4)}`,
-        );
+        return res.redirect('/auth/register');
       });
-      return res.redirect('/auth/register');
     }
   }
 
@@ -244,6 +267,14 @@ export class AuthController {
    */
   @Get('register')
   async register(@Session() session: Record<string, any>, @Res() res) {
+    this.logger.debug(
+      `Received Session Data Before Register: ${JSON.stringify(
+        session,
+        null,
+        4,
+      )}`,
+    );
+
     // 플랫폼 로그인을 했는지 확인
     if (session.registerData && !session.isLogined) {
       return res.render('register');
@@ -304,10 +335,20 @@ export class AuthController {
 
       // 로그인
       const userData = new UserDataDto(savedUser.userId, savedUser.nickname);
-      this.authService.login(session, userData);
+      session.userData = userData;
+      session.isLogined = true;
+      session.save((err) => {
+        if (err) throw err;
 
-      // 사실 여기서 회원가입을 환영하는 페이지를 주는게 좋을 듯...
-      res.redirect('/');
+        this.logger.debug(
+          `Generated Session Data After Login: ${JSON.stringify(
+            session,
+            null,
+            4,
+          )}`,
+        );
+        return res.redirect('/');
+      });
     }
   }
 
@@ -317,7 +358,11 @@ export class AuthController {
   @Get('logout')
   async logout(@Session() session: Record<string, any>, @Res() res) {
     this.logger.debug(`Logout Request`);
-    await this.authService.logout(session);
-    return res.redirect('/');
+    delete session.userData;
+    session.isLogined = false;
+    session.save((err) => {
+      if (err) throw err;
+      return res.redirect('/');
+    });
   }
 }

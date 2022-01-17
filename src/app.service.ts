@@ -9,6 +9,7 @@ export class AppService {
   constructor(private topicService: TopicService) {}
 
   async createViewDto(session: Record<string, any>): Promise<ViewDto> {
+    session.save();
     let _isLogined: boolean = session.isLogind;
     let _nickname: string,
       _userId: string,

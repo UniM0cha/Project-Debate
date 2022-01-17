@@ -1,0 +1,42 @@
+<html lang='ko'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>주제 세부사항</title>
+  </head>
+  <body>
+    <h1>주제 세부사항</h1>
+    <form name="topic_form" method="POST">
+      <table border="1">
+        <tr>
+          <td>주제 번호</td>
+          <td align="center">{{topic.topicId}}</td>
+        </tr>
+        <tr>
+          <td>주제</td>
+          <td><input type="text" name="topicName" value="{{topic.topicName}}" placeholder="주제 입력" required></td>
+        </tr>
+      </table>
+      <p/>
+      <input type="submit" id="btn_update" value="수정">
+      <input type="submit" id="btn_delete" value="삭제">
+    </form>
+
+    <script>
+      const form = document.topic_form;
+      document.querySelector('#btn_update').addEventListener('click', () => {
+        if(form.checkValidity()){
+          form.action = '/admin/update-topic/{{topic.topicId}}'
+          form.submit();
+        }
+      })
+
+      document.querySelector('#btn_delete').addEventListener('click', () => {
+        form.action = '/admin/delete-topic/{{topic.topicId}}'
+        form.submit();
+      })
+    </script>
+
+  </body>
+</html>
