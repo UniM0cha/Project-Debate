@@ -43,7 +43,7 @@ const countDownTimer = function (id, date) {
 
       //
       return;
-    } else if ((isLogined = false && distDt > 0)) {
+    } else if (isLogined === false && distDt > 0) {
       input_box.style.display = 'block';
       send_btn.style.display = 'block';
     }
@@ -58,6 +58,7 @@ const countDownTimer = function (id, date) {
     document.getElementById(id).textContent += minutes + '분 ';
     document.getElementById(id).textContent += seconds + '초';
   }
+  showRemaining();
   timer = setInterval(showRemaining, 1000);
 };
 
