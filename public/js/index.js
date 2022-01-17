@@ -58,6 +58,7 @@ const countDownTimer = function (id, date) {
     document.getElementById(id).textContent += minutes + '분 ';
     document.getElementById(id).textContent += seconds + '초';
   }
+  showRemaining();
   timer = setInterval(showRemaining, 1000);
 };
 
