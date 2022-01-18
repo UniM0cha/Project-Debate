@@ -217,6 +217,12 @@
     width: 60%;
     height: 40px;
   }
+  .agree-bar{
+    height: 40px;
+  }
+  .disagree-bar{
+    height: 40px;
+  }
   .debate-wrapper {
     width: 60%;
     height: 75vh;
