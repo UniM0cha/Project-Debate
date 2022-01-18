@@ -1,6 +1,18 @@
 import { OpinionType } from 'src/topic/entity/topic-users.entity';
 
 export class ViewDto {
+  readonly isLogined: boolean;
+  readonly nickname: string;
+  readonly userId: string;
+  readonly isParticipant: boolean;
+  readonly opinion: OpinionType;
+  readonly topic: {
+    id: number;
+    name: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
   constructor(
     isLogind: boolean,
     nickname: string,
@@ -14,16 +26,4 @@ export class ViewDto {
     this.isParticipant = isParticipant;
     this.opinion = opinion;
   }
-
-  readonly isLogined: boolean;
-  readonly nickname: string;
-  readonly userId: string;
-  readonly isParticipant: boolean;
-  readonly opinion: OpinionType;
-  readonly topic: {
-    id: number;
-    name: string;
-    startDate: Date;
-    endDate: Date;
-  };
 }
