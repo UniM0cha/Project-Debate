@@ -8,8 +8,8 @@
   <body>
     <h1>예약 추가</h1>
     <form action='/admin/new-reserve' method='post'>
-      주제 번호: <input type='number' name='topicId' placeholder='주제 번호 입력' list="topic-options"><p/>
-      시작 날짜: <input type='date' name='reserveDate'><p/>
+      주제 번호: <input type='number' name='topicId' placeholder='주제 번호 입력' list="topic-options" required><p/>
+      시작 날짜: <input type='date' name='reserveDate' required><p/>
       <input type='submit' value='추가' />
     </form>
 
@@ -29,6 +29,7 @@
     <table border="1">
       <th>예약 번호</th>
       <th>시작 날짜</th>
+      <th>상태</th>
       <th>주제 번호</th>
       <th>주제</th>
       {{#if topicReserves}}
@@ -36,6 +37,7 @@
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
+            <td>{{reserveState}}</td>
             <td align="center">{{topic.topicId}}</td>
             <td>{{topic.topicName}}</td>
           </tr>

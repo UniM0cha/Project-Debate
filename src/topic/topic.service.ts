@@ -10,10 +10,19 @@ import { Cron } from '@nestjs/schedule';
 import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { throws } from 'assert';
-import { CreateTopicDto } from 'src/admin/dto/create-topic.dto';
+import { TopicDto } from 'src/admin/dto/topic.dto';
+import { ReserveDto } from 'src/admin/dto/reserve.dto';
 
 @Injectable()
 export class TopicService {
+  // if (beforeTopic) {
+  //   await this.topicRepository.update(beforeTopic, {
+  //     topicActivate: false,
+  //     topicEndDate: today,
+  //   });
+  // }
+  // cycled를 true로
+
   constructor(
     private readonly topicRepository: TopicRepository,
     private readonly usersService: UsersService,
@@ -87,11 +96,45 @@ export class TopicService {
   }
   */
 
-  async createNewTopic(topic: CreateTopicDto): Promise<Topic> {
+  async createTopic(topic: TopicDto): Promise<Topic> {
     const newTopic = new Topic();
     newTopic.setTopic(topic.topicName);
     const createdTopic = await this.topicRepository.save(newTopic);
     return createdTopic;
+  }
+
+  async updateTopic(id: number, topic: TopicDto): Promise<any> {
+    return await this.topicRepository.update(
+      { topicId: id },
+      { topicName: topic.topicName },
+    );
+  }
+
+  async deleteTopic(id: number): Promise<any> {
+    return await this.topicRepository.delete(id);
+  }
+
+  async createReserve(reserve: ReserveDto): Promise<TopicReserve> {
+    const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
+
+    const newReserve = new TopicReserve();
+    const date = new Date(reserve.reserveDate);
+    newReserve.setReserve(date, topic);
+
+    const createdReserve = await this.topicReserveRepository.save(newReserve);
+    return createdReserve;
+  }
+
+  async updateReserve(id: number, reserve: ReserveDto): Promise<any> {
+    const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
+    return await this.topicReserveRepository.update(
+      { reserveId: id },
+      { reserveDate: reserve.reserveDate, topic: topic },
+    );
+  }
+
+  async deleteReserve(id: number) {
+    return await this.topicReserveRepository.delete(id);
   }
 
   async checkParticipant(_userId: string): Promise<OpinionType | null> {
@@ -111,8 +154,6 @@ export class TopicService {
   }
 
   async updateOpinion(type: OpinionType) {}
-
-  async deleteTopic(topicId: number) {}
 
   async addTestData() {
     const topic1 = new Topic();
