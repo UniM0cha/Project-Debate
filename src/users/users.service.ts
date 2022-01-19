@@ -14,9 +14,6 @@ export class UsersService {
 
     // 커스텀 레포지토리 사용(주입)
     private usersRepository: UsersRepository,
-
-    // 커넥션 생성
-    private connection: Connection,
   ) {}
 
   findAll(): Promise<Users[]> {
@@ -29,14 +26,6 @@ export class UsersService {
 
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
-  }
-
-  // 트랜잭션 처리방법
-  async createMany(users: Users[]) {
-    await this.connection.transaction(async (manager) => {
-      await manager.save(users[0]);
-      await manager.save(users[1]);
-    });
   }
 
   async save(user: Users): Promise<Users> {

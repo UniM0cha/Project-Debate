@@ -15,11 +15,11 @@
         </tr>
         <tr>
           <td>시작 날짜</td>
-          <td><input type="date" value="{{dateFormat reserveDate "YYYY-MM-DD"}}"></td>
+          <td><input type="date" name="reserveDate" value="{{dateFormat reserve.reserveDate "YYYY-MM-DD"}}" required></td>
         </tr>
         <tr>
           <td>주제 번호</td>
-          <td><input type='text' name='topicId' id="topic-id" placeholder='주제 번호 입력' list="topic-options" value="{{reserve.topic.topicId}}"></td>
+          <td><input type='text' name='topicId' id="topic-id" placeholder='주제 번호 입력' list="topic-options" value="{{reserve.topic.topicId}}" required></td>
           <datalist id="topic-options">
             {{#each topics}}
               <option value="{{topicId}}" label="{{topicName}}"/>
@@ -28,21 +28,21 @@
         </tr>
       </table>
       <p/>
-      <input type="submit" id="btn_update" value="수정">
-      <input type="submit" id="btn_delete" value="삭제">
+      <input type="submit" id="btn-update" value="수정">
+      <input type="submit" id="btn-delete" value="삭제">
     </form>
 
     <script>
       const form = document.topic_form;
-      document.querySelector('#btn_update').addEventListener('click', () => {
+      document.querySelector('#btn-update').addEventListener('click', () => {
         if(form.checkValidity()){
-          form.action = '/admin/update-reserve/{{topic.topicId}}'
+          form.action = '/admin/update-reserve/{{reserve.reserveId}}'
           form.submit();
         }
       })
 
-      document.querySelector('#btn_delete').addEventListener('click', () => {
-        form.action = '/admin/delete-reserve/{{topic.topicId}}'
+      document.querySelector('#btn-delete').addEventListener('click', () => {
+        form.action = '/admin/delete-reserve/{{reserve.reserveId}}'
         form.submit();
       })
 

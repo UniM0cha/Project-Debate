@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Users } from 'src/users/users.entity';
-import { UsersRepository } from 'src/users/users.repository';
 import { UsersService } from 'src/users/users.service';
 import { OpinionType, TopicUsers } from './entity/topic-users.entity';
 import { TopicUsersRepository } from './repository/topic-users.repository';
@@ -9,8 +8,10 @@ import { TopicRepository } from './repository/topic.repository';
 import { Cron } from '@nestjs/schedule';
 import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
-import { throws } from 'assert';
-import { CreateTopicDto } from 'src/admin/dto/create-topic.dto';
+import { TopicDto } from 'src/admin/dto/topic.dto';
+import { ReserveDto } from 'src/admin/dto/reserve.dto';
+import { toNamespacedPath } from 'path/posix';
+import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class TopicService {
@@ -21,6 +22,74 @@ export class TopicService {
     private readonly topicReserveRepository: TopicReserveRepository,
   ) {}
   private readonly logger = new Logger(TopicService.name);
+
+  /** 주제 순환 코드 */
+  @Cron('0 * * * * *')
+  async cycleTopic() {
+    this.logger.debug(`Start Cycling....`);
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+
+    // 현재 진행중인 주제를 가져온다
+    const currentReserve: TopicReserve = await this.findCurrentReserve();
+
+    // 오늘에 해당하는 예약을 가져온다.
+    const todayReserve: TopicReserve =
+      await this.topicReserveRepository.findOne({
+        reserveDate: today,
+        reserveState: ReserveType.PENDING,
+      });
+
+    this.logger.debug(`Today: ${today}`);
+    this.logger.debug(
+      `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
+    );
+    this.logger.debug(
+      `Today Reserve: ${JSON.stringify(todayReserve, null, 4)}`,
+    );
+
+    // 오늘 교체되기로 한 주제가 있음
+    if (todayReserve) {
+      // 교체되기로 한 것은 PROCCEING으로 변경
+      if (todayReserve.reserveState === ReserveType.PENDING) {
+        this.topicReserveRepository.update(
+          { reserveId: todayReserve.reserveId },
+          { reserveState: ReserveType.PROCEEDING },
+        );
+      }
+
+      // 일단 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
+      if (currentReserve) {
+        // 먼저 진행중인것은 PASSED로 변경
+        if (currentReserve.reserveState === ReserveType.PROCEEDING) {
+          this.topicReserveRepository.update(
+            { reserveId: currentReserve.reserveId },
+            { reserveState: ReserveType.PASSED },
+          );
+        }
+      }
+    }
+  }
+
+  async findAfterReserve(): Promise<TopicReserve> {
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+
+    return await this.topicReserveRepository.findOne({
+      where: { reserveDate: MoreThan(today) },
+      relations: ['topic'],
+      order: { reserveDate: 'ASC' },
+    });
+  }
+
+  async findCurrentReserve(): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findOne(
+      {
+        reserveState: ReserveType.PROCEEDING,
+      },
+      { relations: ['topic'] },
+    );
+  }
 
   async findAllTopics(): Promise<Topic[]> {
     return this.topicRepository.find();
@@ -40,58 +109,45 @@ export class TopicService {
     });
   }
 
-  /*
-  @Cron('0 * * * * *')
-  async cycleTopic() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    this.logger.debug(`Today: ${today}`);
-
-    // 오늘에 해당하는 cycle을 가져와서
-    const todayCycle: TopicCycle = await this.topicCycleRepository.findOne({
-      cycleDate: today,
-    });
-    this.logger.debug(`Today Cycle: ${JSON.stringify(todayCycle, null, 4)}`);
-
-    // cycle이 있다면
-    if (todayCycle) {
-      // 그 cycle이 발동되지 않았다면
-      if (!todayCycle.cycled) {
-        // 주제 활성화 - 주제 테이블에 activate true, 생성시간 기록
-        const topic = todayCycle.topic;
-
-        await this.topicRepository.update(topic, {
-          topicActivate: true,
-          topicStartDate: today,
-        });
-
-        // 이전 주제는 비활성화 - 주제 테이블에 actovate false, 종료시간 기록
-        // const beforeTopic = await this.topicRepository.findOne({
-        //   topicId: topicId - 1,
-        // });
-        // this.logger.debug(
-        //   `beforTopic: ${JSON.stringify(beforeTopic, null, 4)}`,
-        // );
-
-        // if (beforeTopic) {
-        //   await this.topicRepository.update(beforeTopic, {
-        //     topicActivate: false,
-        //     topicEndDate: today,
-        //   });
-        // }
-
-        // cycled를 true로
-        await this.topicCycleRepository.update(todayCycle, { cycled: true });
-      }
-    }
-  }
-  */
-
-  async createNewTopic(topic: CreateTopicDto): Promise<Topic> {
+  async createTopic(topic: TopicDto): Promise<Topic> {
     const newTopic = new Topic();
     newTopic.setTopic(topic.topicName);
     const createdTopic = await this.topicRepository.save(newTopic);
     return createdTopic;
+  }
+
+  async updateTopic(id: number, topic: TopicDto): Promise<any> {
+    return await this.topicRepository.update(
+      { topicId: id },
+      { topicName: topic.topicName },
+    );
+  }
+
+  async deleteTopic(id: number): Promise<any> {
+    return await this.topicRepository.delete(id);
+  }
+
+  async createReserve(reserve: ReserveDto): Promise<TopicReserve> {
+    const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
+
+    const newReserve = new TopicReserve();
+    const date = new Date(reserve.reserveDate);
+    newReserve.setReserve(date, topic);
+
+    const createdReserve = await this.topicReserveRepository.save(newReserve);
+    return createdReserve;
+  }
+
+  async updateReserve(id: number, reserve: ReserveDto): Promise<any> {
+    const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
+    return await this.topicReserveRepository.update(
+      { reserveId: id },
+      { reserveDate: reserve.reserveDate, topic: topic },
+    );
+  }
+
+  async deleteReserve(id: number) {
+    return await this.topicReserveRepository.delete(id);
   }
 
   async checkParticipant(_userId: string): Promise<OpinionType | null> {
@@ -112,32 +168,61 @@ export class TopicService {
 
   async updateOpinion(type: OpinionType) {}
 
-  async deleteTopic(topicId: number) {}
-
   async addTestData() {
     const topic1 = new Topic();
-    topic1.topicName = 'topic1';
+    topic1.topicName = 'Topic1';
 
     const topic2 = new Topic();
-    topic2.topicName = 'topic2';
+    topic2.topicName = 'Topic2';
 
     const topic3 = new Topic();
-    topic3.topicName = 'topic3';
+    topic3.topicName = 'Topic3';
 
     await this.topicRepository.save([topic1, topic2, topic3]);
 
     const topicReserve1 = new TopicReserve();
-    const date1 = new Date('2022-02-04');
+    const date1 = new Date('2022-01-17');
     topicReserve1.reserveDate = date1;
     topicReserve1.topic = topic1;
-    topicReserve1.reserveState = ReserveType.PENDING;
+    topicReserve1.reserveState = ReserveType.PASSED;
 
     const topicReserve2 = new TopicReserve();
-    const date2 = new Date('2022-02-05');
+    const date2 = new Date('2022-01-18');
     topicReserve2.reserveDate = date2;
     topicReserve2.topic = topic2;
-    topicReserve2.reserveState = ReserveType.PENDING;
+    topicReserve2.reserveState = ReserveType.PROCEEDING;
 
-    await this.topicReserveRepository.save([topicReserve1, topicReserve2]);
+    const topicReserve3 = new TopicReserve();
+    const date3 = new Date('2022-01-19');
+    topicReserve3.reserveDate = date3;
+    topicReserve3.topic = topic3;
+    topicReserve3.reserveState = ReserveType.PENDING;
+
+    const topicReserve4 = new TopicReserve();
+    const date4 = new Date('2022-01-20');
+    topicReserve4.reserveDate = date4;
+    topicReserve4.topic = topic1;
+    topicReserve4.reserveState = ReserveType.PENDING;
+
+    const topicReserve5 = new TopicReserve();
+    const date5 = new Date('2022-01-21');
+    topicReserve5.reserveDate = date5;
+    topicReserve5.topic = topic2;
+    topicReserve5.reserveState = ReserveType.PENDING;
+
+    const topicReserve6 = new TopicReserve();
+    const date6 = new Date('2022-01-22');
+    topicReserve6.reserveDate = date6;
+    topicReserve6.topic = topic3;
+    topicReserve6.reserveState = ReserveType.PENDING;
+
+    await this.topicReserveRepository.save([
+      topicReserve1,
+      topicReserve2,
+      topicReserve3,
+      topicReserve4,
+      topicReserve5,
+      topicReserve6,
+    ]);
   }
 }
