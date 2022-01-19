@@ -13,8 +13,6 @@ export class ChatService {
 
   async saveChat(data: any) {
     const user = await this.usersService.findOne(data.userId);
-    this.logger.debug(`user find by id: ${JSON.stringify(user, null, 4)}`);
-
     const chat = new Chat();
     chat.createChat(data, user);
     this.chatRepository.save(chat);

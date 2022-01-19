@@ -56,7 +56,10 @@
       <div class='time'  id="topic-time">
       </div>
       <div class='topic'>
-        주제
+        주제 : {{topic.currentTopicName}}<br>
+        다음주제 : {{topic.afterTopicName}}<br>
+        끝나는날 : {{dateFormat topic.endDate "YYYY년 MM월 DD일"}}<br>
+        끝나는날 : {{topic.endDate}}
       </div>
     </div>
 

@@ -19,20 +19,20 @@
         </tr>
       </table>
       <p/>
-      <input type="submit" id="btn_update" value="수정">
-      <input type="submit" id="btn_delete" value="삭제">
+      <input type="submit" id="btn-update" value="수정">
+      <input type="submit" id="btn-delete" value="삭제">
     </form>
 
     <script>
       const form = document.topic_form;
-      document.querySelector('#btn_update').addEventListener('click', () => {
+      document.querySelector('#btn-update').addEventListener('click', () => {
         if(form.checkValidity()){
           form.action = '/admin/update-topic/{{topic.topicId}}'
           form.submit();
         }
       })
 
-      document.querySelector('#btn_delete').addEventListener('click', () => {
+      document.querySelector('#btn-delete').addEventListener('click', () => {
         form.action = '/admin/delete-topic/{{topic.topicId}}'
         form.submit();
       })
