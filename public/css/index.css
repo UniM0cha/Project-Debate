@@ -48,8 +48,10 @@
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  border: 2px solid black;
   border-radius: 10px;
+  background: #ffffff;
+  box-shadow:  12px 12px 100px #919191,
+             -12px -12px 100px #ffffff;
   height: auto;
 }
 
@@ -145,13 +147,16 @@
 }
 
 .user-opinion {
-  border: solid 2px black;
   padding: 5px;
   width: fit-content;
   max-width: 70%;
   display: inline-flex;
   border-radius: 7px;
   font-size: 13px;
+  background: #ffffff;
+  box-shadow:  12px 12px 36px #b8b8b8,
+             -12px -12px 36px #ffffff;
+
 }
 
 .opinion-time {

@@ -44,8 +44,8 @@ const countDownTimer = function (id, date) {
       //
       return;
     } else if ((isLogined === false && distDt > 0)) {
-      input_box.style.display = 'block';
-      send_btn.style.display = 'block';
+      input_box.style.display = 'none';
+      send_btn.style.display = 'none';
     }
     let days = Math.floor(distDt / _day);
     let hours = Math.floor((distDt % _day) / _hour);
