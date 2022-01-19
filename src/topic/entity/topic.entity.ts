@@ -1,12 +1,5 @@
 import { Chat } from 'src/chat/chat.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TopicReserve } from './topic-reservation.entity';
 import { TopicUsers } from './topic-users.entity';
 
@@ -17,12 +10,6 @@ export class Topic {
 
   @Column()
   topicName: string;
-
-  @Column({ nullable: true })
-  topicStartDate: Date;
-
-  @Column({ nullable: true })
-  topicEndDate: Date;
 
   @OneToMany(() => Chat, (chat) => chat.chatId)
   chat: Chat[];
