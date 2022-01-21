@@ -253,21 +253,24 @@ document.addEventListener('DOMContentLoaded', function () {
   //실시간 채팅 구현
 
   //로그인 시 채팅 가능
-  const input_box = document.querySelector('.opinion-input');
+  const opinion_input = document.querySelector('.opinion-input');
   const send_btn = document.querySelector('.send');
   const live_debate = document.querySelector('.live-debate');
+  const input_box = document.querySelector('.input-box');
 
   //스크롤 아래 고정
   live_debate.scrollTop = live_debate.scrollHeight;
 
   //로그인에 따른 채팅 가능 불가능 설정
   if (isLogined == true) {
-    input_box.style.display = 'block';
+    opinion_input.style.display = 'block';
     send_btn.style.display = 'block';
+    input_box.style.display = 'flex';
   } else {
-    input_box.style.display = 'none';
+    opinion_input.style.display = 'none';
     send_btn.style.display = 'none';
     live_debate.style.height = '100%';
+    input_box.style.display = 'none';
   }
   //로그인 시 채팅 가능
 });

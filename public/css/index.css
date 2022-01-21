@@ -25,7 +25,7 @@ body{
   padding: 10px;
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 /* 이전 리스트 버튼 */
@@ -39,18 +39,18 @@ body{
   font-size: 20px;
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
   font-family: Cafe24Ssurround;
 }
 
 .btn-ex-debatelist:hover{
   box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 .btn-ex-debatelist:active{
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 /* 사이트 로고 */
@@ -77,18 +77,18 @@ body{
   padding: 15px 15px;
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
   font-family: Cafe24Ssurround;
 }
 
 .btn-login:hover{
   box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 .btn-login:active{
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 
@@ -105,12 +105,13 @@ body{
   height: auto;
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 5px 0px;
 }
 
 .time {
   font-size: x-small;
+  margin-bottom: 10px;
 }
 
 .topic {
@@ -120,7 +121,7 @@ body{
 /* 찬성반대바 */
 .age-dis-bar-wrapper {
   width: 90%;
-  background-color: rgb(238, 238, 238);
+  background-color: transparent;
   margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
@@ -132,8 +133,13 @@ body{
   background-color: #4aa8d8;
   color: white;
   text-align: center;
-  border-radius: 7px 0px 0px 7px;
+  border-radius: 10px 0px 0px 10px;
   height: 26px;
+  line-height: 26px;
+}
+
+.agree-bar span{
+  vertical-align: middle;
 }
 
 .disagree-bar {
@@ -141,8 +147,9 @@ body{
   background-color: #ff4040;
   color: white;
   text-align: center;
-  border-radius: 0px 7px 7px 0px;
+  border-radius: 0px 10px 7px 0px;
   height: 26px;
+  line-height: 26px;
 }
 
 /* 찬성반대버튼*/
@@ -154,11 +161,13 @@ body{
 .agree-btn {
   border: none;
   background-color: #4aa8d8;
+  height: 26px;
 }
 
 .disagree-btn {
   border: none;
   background-color: #ff4040;
+  height: 26px;
 }
 
 /* 실시간 토론 상자 */
@@ -172,9 +181,9 @@ body{
   background-color: transparent;
   border-radius: 7px;
   padding-top: 10px;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
-  border-radius: 5px;
+  background-color: white;
+  border-radius: 15px;
+  padding-bottom: 5px;
 }
 
 .debate-wrapper ul {
@@ -200,6 +209,7 @@ body{
 .nickname {
   font-size: x-small;
   margin-bottom: 5px;
+  font-family: none;
 }
 
 .user-opinion {
@@ -213,22 +223,25 @@ body{
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 5px;
+  font-family: none;
 }
 
 .opinion-time {
   display: inline-flex;
   vertical-align: bottom;
   font-size: x-small;
+  font-family: none;
 }
 
 .agree {
   margin-left: 7px;
+  margin-bottom: 5px;
 }
 
 .disagree {
   text-align: right;
   margin-right: 7px;
+  margin-bottom: 5px;
 }
 
 .agree .nickname {
@@ -244,24 +257,27 @@ body{
   margin-right: 0px;
 }
 
-.input-box {
+.input-box{
   display: flex;
   height: 10%;
 }
 
 .opinion-input {
   width: 80%;
-  height: 100%;
   border-radius: 7px;
   word-break: break-all;
+  margin: 0px;
+  border: black solid 1px;
 }
 
 .send {
   width: 20%;
-  height: 100%;
   border-radius: 7px;
   border: none;
-  background-color: white;
+  font-family: 'Cafe24Ssurround';
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  font-size: 20px;
 }
 
 /*휴대폰*/
@@ -283,8 +299,16 @@ body{
   }
   .agree-bar{
     height: 40px;
+    line-height: 40px;
   }
   .disagree-bar{
+    height: 40px;
+    line-height: 40px;
+  }
+  .agree-btn{
+    height: 40px;
+  }
+  .disagree-btn{
     height: 40px;
   }
   .debate-wrapper {
