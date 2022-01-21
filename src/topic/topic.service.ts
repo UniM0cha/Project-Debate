@@ -22,7 +22,7 @@ export class TopicService {
   private readonly logger = new Logger(TopicService.name);
 
   /** 주제 순환 코드 */
-  @Cron('0 0 * * * *')
+  //@Cron('0 * * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
 

@@ -1,44 +1,97 @@
-/*위의 메뉴바*/
-.form-ex-debatelist {
+@font-face {
+  font-family: 'Cafe24Ssurround';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
   margin: 0px;
 }
 
-.btn-ex-debatelist {
-  width: 120px;
-  margin-left: 10px;
+body{
+  margin: 0px;
+  background-color: rgb(224, 229, 236);
+  font-family: Cafe24Ssurround;
 }
 
-.title {
+/* 상단 메뉴바 */
+.menu{
+  margin: 10px;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  border-radius: 15px;
+}
+
+/* 이전 리스트 버튼 */
+.div-ex-debatelist{
+  flex: 1;
+}
+
+.btn-ex-debatelist{
+  border: none;
+  padding: 15px 15px;
+  font-size: 20px;
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  border-radius: 15px;
+  font-family: Cafe24Ssurround;
+}
+
+.btn-ex-debatelist:hover{
+  box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
+  border-radius: 15px;
+}
+
+.btn-ex-debatelist:active{
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
+  border-radius: 15px;
+}
+
+/* 사이트 로고 */
+.div-title{
+  flex: 1;
+  text-align: center;
+}
+.title{
   text-decoration: none;
-  color: white;
   font-size: 30px;
+  font-weight: bold;
+  color: black;
+
 }
 
-.title img {
-  vertical-align: middle;
+/* 로그인 버튼 */
+.div-login{
+  flex: 1;
+  text-align: right;
+}
+.btn-login{
+  border: none;
+  font-size: 20px;
+  padding: 15px 15px;
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  border-radius: 15px;
+  font-family: Cafe24Ssurround;
 }
 
-.title:hover {
-  color: white;
+.btn-login:hover{
+  box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
+  border-radius: 15px;
 }
 
-.form-login {
-  margin: 0px;
+.btn-login:active{
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
+  border-radius: 15px;
 }
 
-.form-logout {
-  margin: 0px;
-}
 
-.btn-login {
-  width: 120px;
-  margin-right: 10px;
-}
-
-.btn-logout {
-  width: 120px;
-  margin-right: 10px;
-}
 
 /*중간 토론 주제*/
 .time-topic-div {
@@ -48,13 +101,17 @@
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  border: 2px solid black;
   border-radius: 10px;
   height: auto;
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  border-radius: 15px;
+  padding: 5px 0px;
 }
 
 .time {
   font-size: x-small;
+  margin-bottom: 10px;
 }
 
 .topic {
@@ -64,7 +121,7 @@
 /* 찬성반대바 */
 .age-dis-bar-wrapper {
   width: 90%;
-  background-color: white;
+  background-color: transparent;
   margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
@@ -76,8 +133,13 @@
   background-color: #4aa8d8;
   color: white;
   text-align: center;
-  border-radius: 7px 0px 0px 7px;
+  border-radius: 10px 0px 0px 10px;
   height: 26px;
+  line-height: 26px;
+}
+
+.agree-bar span{
+  vertical-align: middle;
 }
 
 .disagree-bar {
@@ -85,8 +147,9 @@
   background-color: #ff4040;
   color: white;
   text-align: center;
-  border-radius: 0px 7px 7px 0px;
+  border-radius: 0px 10px 7px 0px;
   height: 26px;
+  line-height: 26px;
 }
 
 /* 찬성반대버튼*/
@@ -98,11 +161,13 @@
 .agree-btn {
   border: none;
   background-color: #4aa8d8;
+  height: 26px;
 }
 
 .disagree-btn {
   border: none;
   background-color: #ff4040;
+  height: 26px;
 }
 
 /* 실시간 토론 상자 */
@@ -114,8 +179,11 @@
   width: 90%;
   height: 70vh;
   background-color: transparent;
-  border: solid 2px black;
   border-radius: 7px;
+  padding-top: 10px;
+  background-color: white;
+  border-radius: 15px;
+  padding-bottom: 5px;
 }
 
 .debate-wrapper ul {
@@ -126,8 +194,6 @@
   height: 90%;
   padding-bottom: 5px;
 }
-
-
 
 .debate-wrapper ::-webkit-scrollbar {
   background-color: #adacac;
@@ -142,31 +208,40 @@
 
 .nickname {
   font-size: x-small;
+  margin-bottom: 5px;
+  font-family: none;
 }
 
 .user-opinion {
-  border: solid 2px black;
   padding: 5px;
   width: fit-content;
   max-width: 70%;
   display: inline-flex;
   border-radius: 7px;
   font-size: 13px;
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: none;
 }
 
 .opinion-time {
   display: inline-flex;
   vertical-align: bottom;
   font-size: x-small;
+  font-family: none;
 }
 
 .agree {
-  margin-left: 5px;
+  margin-left: 7px;
+  margin-bottom: 5px;
 }
 
 .disagree {
   text-align: right;
-  margin-right: 5px;
+  margin-right: 7px;
+  margin-bottom: 5px;
 }
 
 .agree .nickname {
@@ -182,22 +257,27 @@
   margin-right: 0px;
 }
 
-.input-box {
+.input-box{
   display: flex;
   height: 10%;
 }
 
 .opinion-input {
   width: 80%;
-  height: 100%;
   border-radius: 7px;
   word-break: break-all;
+  margin: 0px;
+  border: black solid 1px;
 }
 
 .send {
   width: 20%;
-  height: 100%;
   border-radius: 7px;
+  border: none;
+  font-family: 'Cafe24Ssurround';
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  font-size: 20px;
 }
 
 /*휴대폰*/
@@ -215,6 +295,20 @@
   }
   .age-dis-bar-wrapper {
     width: 60%;
+    height: 40px;
+  }
+  .agree-bar{
+    height: 40px;
+    line-height: 40px;
+  }
+  .disagree-bar{
+    height: 40px;
+    line-height: 40px;
+  }
+  .agree-btn{
+    height: 40px;
+  }
+  .disagree-btn{
     height: 40px;
   }
   .debate-wrapper {
