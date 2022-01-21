@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { TopicUsers } from './topic-users.entity';
 import { Topic } from './topic.entity';
 
 export enum ReserveType {
@@ -20,6 +27,9 @@ export class TopicReserve {
 
   @ManyToOne(() => Topic, (topic) => topic.topicId)
   topic: Topic;
+
+  @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.topicUsersId)
+  topicUsers: TopicUsers[];
 
   setReserve(_reserveDate: Date, _topic: Topic) {
     this.reserveDate = _reserveDate;

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ViewDto } from './dto/view.dto';
+import { stringify } from 'querystring';
+import { ViewDto, ViewOpinionDto, ViewTopicDto } from './dto/view.dto';
 import { TopicReserve } from './topic/entity/topic-reservation.entity';
 import { OpinionType } from './topic/entity/topic-users.entity';
 import { Topic } from './topic/entity/topic.entity';
@@ -12,28 +13,30 @@ export class AppService {
 
   async createViewDto(session: Record<string, any>): Promise<ViewDto> {
     session.save();
-    let _isLogined: boolean = session.isLogined,
-      _nickname: string = null,
-      _userId: string = null,
-      _isParticipant: boolean = null,
-      _opinion: OpinionType = null,
-      _currentTopicName: string = null,
-      _afterTopicName: string = null,
-      _endDate: Date = null;
+    let isLogined: boolean = session.isLogined;
+    let nickname: string = null;
+    let userId: string = null;
+
+    let topic: ViewTopicDto = new ViewTopicDto();
+
+    let hasOpinion: boolean = null;
+    let opinion: ViewOpinionDto = new ViewOpinionDto();
 
     // 로그인 체크
     if (session.isLogined) {
-      _isLogined = true;
-      _nickname = session.userData.nickname;
-      _userId = session.userData.userId;
+      isLogined = true;
+      nickname = session.userData.nickname;
+      userId = session.userData.userId;
 
-      _opinion = await this.topicService.checkParticipant(_userId);
-      _isParticipant = _opinion ? true : false;
+      // 사용자의 의견 받아오기
+      let userOpinion: OpinionType = await this.topicService.getOpinion(userId);
+      hasOpinion = userOpinion ? true : false;
+      opinion.setViewOpinionType(userOpinion);
     } else {
-      _isLogined = false;
-      _nickname = null;
-      _userId = null;
-      _isParticipant = false;
+      isLogined = false;
+      nickname = null;
+      userId = null;
+      hasOpinion = false;
     }
 
     // 주제 체크
@@ -41,19 +44,24 @@ export class AppService {
       await this.topicService.findCurrentReserve();
     let afterReserve: TopicReserve = await this.topicService.findAfterReserve();
 
-    _currentTopicName = currentReserve ? currentReserve.topic.topicName : null;
-    _afterTopicName = afterReserve ? afterReserve.topic.topicName : null;
-    _endDate = afterReserve ? afterReserve.reserveDate : null;
+    let currentTopicName = currentReserve
+      ? currentReserve.topic.topicName
+      : null;
+    let afterTopicName = afterReserve ? afterReserve.topic.topicName : null;
+    let endDate = afterReserve ? afterReserve.reserveDate : null;
 
-    return new ViewDto(
-      _isLogined,
-      _nickname,
-      _userId,
-      _isParticipant,
-      _opinion,
-      _currentTopicName,
-      _afterTopicName,
-      _endDate,
-    );
+    let agree: number = await this.topicService.getAgree(currentReserve);
+    let disagree: number = await this.topicService.getDisagree(currentReserve);
+
+    topic.setViewTopicDto(currentTopicName, afterTopicName, endDate);
+    opinion.setViewOpinionNumber(agree, disagree);
+
+    return new ViewDto(isLogined, nickname, userId, topic, hasOpinion, opinion);
+  }
+
+  async getCurrentReserveId(): Promise<number> {
+    const currentReserve: TopicReserve =
+      await this.topicService.findCurrentReserve();
+    return currentReserve ? currentReserve.reserveId : null;
   }
 }

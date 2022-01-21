@@ -44,8 +44,8 @@ const countDownTimer = function (id, date) {
       //
       return;
     } else if (isLogined === false && distDt > 0) {
-      input_box.style.display = 'block';
-      send_btn.style.display = 'block';
+      input_box.style.display = 'none';
+      send_btn.style.display = 'none';
     }
     let days = Math.floor(distDt / _day);
     let hours = Math.floor((distDt % _day) / _hour);
@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
         agree_bar.style.borderRadius = '7px';
         disagree_bar.style.display = 'none';
       }
+      sendAgreeToServer();
     });
 
     //반대 선택시
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         disagree_bar.style.borderRadius = '7px';
         agree_bar.style.display = 'none';
       }
+      sendDisagreeToServer();
     });
   } else {
     agree_btn.style.display = 'none';
@@ -271,3 +273,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //로그인 시 채팅 가능
 });
+
+function sendAgreeToServer() {
+  fetch(`/topic/agree`, {
+    method: 'POST',
+  });
+}
+
+function sendDisagreeToServer() {
+  fetch(`/topic/disagree`, {
+    method: 'POST',
+  });
+}

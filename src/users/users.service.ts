@@ -16,12 +16,12 @@ export class UsersService {
     private usersRepository: UsersRepository,
   ) {}
 
-  findAll(): Promise<Users[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<Users[]> {
+    return await this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<Users> {
-    return this.usersRepository.findOne(id);
+  async findOne(id: string): Promise<Users> {
+    return await this.usersRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {

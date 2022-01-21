@@ -14,8 +14,8 @@ export class Topic {
   @OneToMany(() => Chat, (chat) => chat.chatId)
   chat: Chat[];
 
-  @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
-  topicUsers: TopicUsers[];
+  // @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
+  // topicUsers: TopicUsers[];
 
   @OneToMany(() => TopicReserve, (topicReserve) => topicReserve.reserveId)
   topicReserve: TopicReserve[];
