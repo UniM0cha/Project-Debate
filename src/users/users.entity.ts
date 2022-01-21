@@ -36,6 +36,6 @@ export class Users {
   @OneToMany(() => Chat, (chat) => chat.chatId)
   chat: Chat[];
 
-  @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
+  @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.topicUsersId)
   topicUsers: TopicUsers[];
 }

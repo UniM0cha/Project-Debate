@@ -1,5 +1,6 @@
 import { Users } from 'src/users/users.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TopicReserve } from './topic-reservation.entity';
 import { Topic } from './topic.entity';
 
 export enum OpinionType {
@@ -10,7 +11,7 @@ export enum OpinionType {
 @Entity()
 export class TopicUsers {
   @PrimaryGeneratedColumn()
-  infoId: number;
+  topicUsersId: number;
 
   @Column({ type: 'enum', enum: OpinionType })
   opinionType: OpinionType;
@@ -18,6 +19,6 @@ export class TopicUsers {
   @ManyToOne(() => Users, (users) => users.userId)
   users: Users;
 
-  @ManyToOne(() => Topic, (topic) => topic.topicId)
-  topic: Topic;
+  @ManyToOne(() => TopicReserve, (topicReserve) => topicReserve.reserveId)
+  topicReserve: TopicReserve;
 }

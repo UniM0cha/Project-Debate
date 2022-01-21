@@ -10,7 +10,6 @@ import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
-import { toNamespacedPath } from 'path/posix';
 import { MoreThan } from 'typeorm';
 
 @Injectable()
@@ -150,23 +149,83 @@ export class TopicService {
     return await this.topicReserveRepository.delete(id);
   }
 
-  async checkParticipant(_userId: string): Promise<OpinionType | null> {
+  /**
+   * userId를 받아오고 현재 진행중인 주제를 가져와서
+   * 해당 유저가 어떤 의견인지 반환한다.
+   */
+  async getOpinion(_userId: string): Promise<OpinionType> {
     const user: Users = await this.usersService.findOne(_userId);
-    const topic: Topic = await this.topicRepository.findActivateTopic();
-
+    const topicReserve: TopicReserve = await this.findCurrentReserve();
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
       users: user,
-      topic: topic,
+      topicReserve: topicReserve,
+    });
+    return topicUsers ? topicUsers.opinionType : null;
+  }
+
+  async addAgree(userId: string, reserveId: number) {
+    const user: Users = await this.usersService.findOne(userId);
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findOne(reserveId);
+
+    let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+      users: user,
+      topicReserve: topicReserve,
     });
 
-    if (topicUsers) {
-      return topicUsers.opinionType;
+    // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
+    if (topicUser) {
+      await this.topicUsersRepository.update(topicUser, {
+        opinionType: OpinionType.AGREE,
+      });
     } else {
-      return null;
+      topicUser = new TopicUsers();
+      topicUser.users = user;
+      topicUser.topicReserve = topicReserve;
+      topicUser.opinionType = OpinionType.AGREE;
+      await this.topicUsersRepository.save(topicUser);
     }
   }
 
-  async updateOpinion(type: OpinionType) {}
+  async addDisagree(userId: string, reserveId: number) {
+    const user: Users = await this.usersService.findOne(userId);
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findOne(reserveId);
+
+    let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+      users: user,
+      topicReserve: topicReserve,
+    });
+
+    // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
+    if (topicUser) {
+      await this.topicUsersRepository.update(topicUser, {
+        opinionType: OpinionType.DISAGREE,
+      });
+    } else {
+      topicUser = new TopicUsers();
+      topicUser.users = user;
+      topicUser.topicReserve = topicReserve;
+      topicUser.opinionType = OpinionType.DISAGREE;
+      await this.topicUsersRepository.save(topicUser);
+    }
+  }
+
+  async getAgree(currentReserve: TopicReserve): Promise<number> {
+    const agree: number = await this.topicUsersRepository.count({
+      topicReserve: currentReserve,
+      opinionType: OpinionType.AGREE,
+    });
+    return agree;
+  }
+
+  async getDisagree(currentReserve: TopicReserve): Promise<number> {
+    const agree: number = await this.topicUsersRepository.count({
+      topicReserve: currentReserve,
+      opinionType: OpinionType.DISAGREE,
+    });
+    return agree;
+  }
 
   async addTestData() {
     const topic1 = new Topic();

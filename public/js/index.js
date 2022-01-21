@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
         agree_bar.style.borderRadius = '7px';
         disagree_bar.style.display = 'none';
       }
+      sendAgreeToServer();
     });
 
     //반대 선택시
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         disagree_bar.style.borderRadius = '7px';
         agree_bar.style.display = 'none';
       }
+      sendDisagreeToServer();
     });
   } else {
     agree_btn.style.display = 'none';
@@ -274,3 +276,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //로그인 시 채팅 가능
 });
+
+function sendAgreeToServer() {
+  fetch(`/topic/agree`, {
+    method: 'POST',
+  });
+}
+
+function sendDisagreeToServer() {
+  fetch(`/topic/disagree`, {
+    method: 'POST',
+  });
+}
