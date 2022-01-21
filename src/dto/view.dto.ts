@@ -4,9 +4,7 @@ export class ViewDto {
   readonly isLogined: boolean;
   readonly nickname: string;
   readonly userId: string;
-
   readonly topic: ViewTopicDto;
-
   readonly hasOpinion: boolean;
   readonly opinion: ViewOpinionDto;
 
@@ -14,9 +12,7 @@ export class ViewDto {
     _isLogined: boolean,
     _nickname: string,
     _userId: string,
-
     _topic: ViewTopicDto,
-
     _hasOpinion: boolean,
     _opinion: ViewOpinionDto,
   ) {

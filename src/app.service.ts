@@ -42,13 +42,13 @@ export class AppService {
     // 주제 체크
     let currentReserve: TopicReserve =
       await this.topicService.findCurrentReserve();
-    let afterReserve: TopicReserve = await this.topicService.findAfterReserve();
+    let nextReserve: TopicReserve = await this.topicService.findNextReserve();
 
     let currentTopicName = currentReserve
       ? currentReserve.topic.topicName
       : null;
-    let afterTopicName = afterReserve ? afterReserve.topic.topicName : null;
-    let endDate = afterReserve ? afterReserve.reserveDate : null;
+    let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
+    let endDate = nextReserve ? nextReserve.reserveDate : null;
 
     let agree: number = await this.topicService.getAgree(currentReserve);
     let disagree: number = await this.topicService.getDisagree(currentReserve);

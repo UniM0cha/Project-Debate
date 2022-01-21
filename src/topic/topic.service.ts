@@ -10,7 +10,6 @@ import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
-import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class TopicService {
@@ -26,20 +25,15 @@ export class TopicService {
   @Cron('0 0 * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
-    const today = new Date();
-    today.setHours(9, 0, 0, 0);
 
-    // 현재 진행중인 주제를 가져온다
-    const currentReserve: TopicReserve = await this.findCurrentReserve();
+    // 현재 진행중인 주제
+    const currentReserve: TopicReserve =
+      await this.topicReserveRepository.findCurrentReserve();
 
-    // 오늘에 해당하는 예약을 가져온다.
+    // 오늘 교체되야야하는 주제
     const todayReserve: TopicReserve =
-      await this.topicReserveRepository.findOne({
-        reserveDate: today,
-        reserveState: ReserveType.PENDING,
-      });
+      await this.topicReserveRepository.findTodayTopicReserve();
 
-    this.logger.debug(`Today: ${today}`);
     this.logger.debug(
       `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
     );
@@ -51,43 +45,25 @@ export class TopicService {
     if (todayReserve) {
       // 교체되기로 한 것은 PROCCEING으로 변경
       if (todayReserve.reserveState === ReserveType.PENDING) {
-        this.topicReserveRepository.update(
-          { reserveId: todayReserve.reserveId },
-          { reserveState: ReserveType.PROCEEDING },
-        );
+        this.topicReserveRepository.updateToProceeding(todayReserve.reserveId);
       }
 
-      // 일단 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
+      // 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
       if (currentReserve) {
-        // 먼저 진행중인것은 PASSED로 변경
+        // 먼저 진행되었던 것은 PASSED로 변경
         if (currentReserve.reserveState === ReserveType.PROCEEDING) {
-          this.topicReserveRepository.update(
-            { reserveId: currentReserve.reserveId },
-            { reserveState: ReserveType.PASSED },
-          );
+          this.topicReserveRepository.updateToPassed(currentReserve.reserveId);
         }
       }
     }
   }
 
-  async findAfterReserve(): Promise<TopicReserve> {
-    const today = new Date();
-    today.setHours(9, 0, 0, 0);
-
-    return await this.topicReserveRepository.findOne({
-      where: { reserveDate: MoreThan(today) },
-      relations: ['topic'],
-      order: { reserveDate: 'ASC' },
-    });
+  async findNextReserve(): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findNextReserve();
   }
 
   async findCurrentReserve(): Promise<TopicReserve> {
-    return await this.topicReserveRepository.findOne(
-      {
-        reserveState: ReserveType.PROCEEDING,
-      },
-      { relations: ['topic'] },
-    );
+    return await this.topicReserveRepository.findCurrentReserve();
   }
 
   async findAllTopics(): Promise<Topic[]> {
@@ -155,7 +131,8 @@ export class TopicService {
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
     const user: Users = await this.usersService.findOne(_userId);
-    const topicReserve: TopicReserve = await this.findCurrentReserve();
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findCurrentReserve();
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
       users: user,
       topicReserve: topicReserve,

@@ -1,7 +1,5 @@
-import { Chat } from 'src/chat/chat.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TopicReserve } from './topic-reservation.entity';
-import { TopicUsers } from './topic-users.entity';
 
 @Entity()
 export class Topic {
@@ -11,8 +9,8 @@ export class Topic {
   @Column()
   topicName: string;
 
-  @OneToMany(() => Chat, (chat) => chat.chatId)
-  chat: Chat[];
+  // @OneToMany(() => Chat, (chat) => chat.chatId)
+  // chat: Chat[];
 
   // @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.infoId)
   // topicUsers: TopicUsers[];

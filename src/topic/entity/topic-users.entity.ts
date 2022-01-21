@@ -1,7 +1,6 @@
 import { Users } from 'src/users/users.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TopicReserve } from './topic-reservation.entity';
-import { Topic } from './topic.entity';
 
 export enum OpinionType {
   AGREE = 'agree',
