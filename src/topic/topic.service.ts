@@ -223,6 +223,70 @@ export class TopicService {
     return topicUser ? topicUser.opinionType : null;
   }
 
+  async getAgreeDisagree(reserveId: number): Promise<any> {
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findOne(reserveId);
+
+    if (topicReserve) {
+      const agree: number = await this.topicUsersRepository.count({
+        topicReserve: topicReserve,
+        opinionType: OpinionType.AGREE,
+      });
+      const disagree: number = await this.topicUsersRepository.count({
+        topicReserve: topicReserve,
+        opinionType: OpinionType.DISAGREE,
+      });
+      this.logger.debug(
+        `찬성/반대 값 가져오기 성공: agree = ${agree}, disagree = ${disagree}`,
+      );
+      return { agree: agree, disagree: disagree };
+    } else {
+      this.logger.error(
+        '찬성/반대 값 가져오기 실패: 주제가 존재하지 않습니다.',
+      );
+      return null;
+    }
+  }
+
+  async validateAndSaveOpinionType(data: any): Promise<number> {
+    /**상태코드
+     * 0 : 저장 성공
+     * 1 : 존재하지 않는 유저
+     * 2 : 유효하지 않는 주제
+     * 3 : 이미 의견을 설정한 유저
+     */
+
+    const userId: string = data.userId;
+    const reserveId: number = data.reserveId;
+    const opinionType: OpinionType = data.opinionType;
+
+    const user = await this.usersService.findOneById(userId);
+    if (user) {
+      const reserve = await this.topicReserveRepository.findOne(reserveId);
+      if (reserve) {
+        const hasOpinionType = await this.findUserOpinionType(user, reserve);
+        if (!hasOpinionType) {
+          const newOpinion = new TopicUsers();
+          newOpinion.setTopicUsers(opinionType, user, reserve);
+          await this.topicUsersRepository.save(newOpinion);
+          this.logger.debug(`유저 의견 저장 성공`);
+          return 0;
+        } else {
+          this.logger.error(
+            `유저 의견 저장 실패: 이미 의견을 설정한 유저입니다.`,
+          );
+          return 3;
+        }
+      } else {
+        this.logger.error(`유저 의견 저장 실패: 유효하지 않은 주제입니다.`);
+        return 2;
+      }
+    } else {
+      this.logger.error(`유저 의견 저장 실패: 존재하지 않는 유저입니다.`);
+      return 1;
+    }
+  }
+
   async addTestData() {
     const topic1 = new Topic();
     topic1.topicName = 'Topic1';

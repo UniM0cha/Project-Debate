@@ -1,6 +1,7 @@
-let socket = io.connect('http://localhost:3000/message');
+let chatSocket = io.connect('http://localhost:3000/message');
+let topicSocket = io.connect('/topic');
 //서버시간 가져오기
-let xmlHttpRequest;
+// let xmlHttpRequest;
 async function getTime() {
   const res = await fetch('/time', { method: 'post' });
   return res.headers.get('date');
@@ -68,6 +69,9 @@ const countDownTimer = function (id, date) {
 countDownTimer('topic-time', '02/27/2022 04:22 PM'); // 이부분 수정하면 시간 변경 가능
 
 document.addEventListener('DOMContentLoaded', function () {
+  // 맨 처음 찬성 반대 비율 요청
+  topicSocket.emit('request-refresh-opinion-type', { reserveId: reserveId });
+
   //로그인, 로그아웃 버튼 구현
   const loginform = document.querySelector('.form-login');
   const logoutform = document.querySelector('.form-logout');
@@ -168,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const send = document.querySelector('#send');
 
   /**서버로부터 상태코드 도착 이벤트 등록 */
-  socket.on('chat-state-to-client', ({ state }) => {
+  chatSocket.on('chat-state-to-client', ({ state }) => {
     switch (state) {
       // 메시지 전송 성공
       case 0:
@@ -189,10 +193,37 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /**서버로부터 메시지 도착 이벤트 등록 */
-  socket.on('new-message-to-client', (data) => {
+  chatSocket.on('new-message-to-client', (data) => {
     send_opinion(data.nickname, data.newmessage, data.date, data.opinionType);
   });
   const opinion = document.querySelector('#message');
+
+  /**서버로부터 찬성/반대 비율 새로고침 이벤트 등록 */
+  topicSocket.on('refresh-opinion-type', ({ agree, disagree }) => {
+    console.log('agree: ' + agree);
+    console.log('disagree: ' + disagree);
+  });
+
+  /**찬성/반대 요청을 한 후 서버로부터 받는 상태코드 */
+  topicSocket.on('option-type-state-to-client', ({ state }) => {
+    switch (state) {
+      // 메시지 전송 성공
+      case 0:
+        break;
+      // 존재하지 않는 유저
+      case 1:
+        alert(`로그인 후 이용해 주세요.`);
+        break;
+      // 유효하지 않은 주제
+      case 2:
+        alert(`주제가 설정되지 않았습니다.`);
+        break;
+      // 유저가 의견을 제시하지 않음
+      case 3:
+        alert(`이미 투표하셨습니다.`);
+        break;
+    }
+  });
 
   /**전송버튼 클릭 이벤트 등록 */
   send.addEventListener('click', (e) => {
@@ -232,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // }
 
       console.log('sending message to server');
-      socket.emit('new-message-to-server', {
+      chatSocket.emit('new-message-to-server', {
         reserveId: reserveId,
         userId: userId,
         opinion_input: opinion_input,
@@ -318,14 +349,27 @@ document.addEventListener('DOMContentLoaded', function () {
   //로그인 시 채팅 가능
 });
 
+// 찬성 버튼 클릭 시 서버로 요청 전송
 function sendAgreeToServer() {
-  fetch(`/topic/agree`, {
-    method: 'POST',
+  // fetch(`/topic/agree`, {
+  //   method: 'POST',
+  // });
+  // socket 이벤트로 전환
+  topicSocket.emit('opinion-type-to-server', {
+    userId: userId,
+    reserveId: reserveId,
+    opinionType: 'agree',
   });
 }
 
+// 반대 버튼 클릭 시 서버로 요청 전송
 function sendDisagreeToServer() {
-  fetch(`/topic/disagree`, {
-    method: 'POST',
+  // fetch(`/topic/disagree`, {
+  //   method: 'POST',
+  // });
+  topicSocket.emit('opinion-type-to-server', {
+    userId: userId,
+    reserveId: reserveId,
+    opinionType: 'disagree',
   });
 }

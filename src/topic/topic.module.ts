@@ -6,6 +6,7 @@ import { TopicController } from './topic.controller';
 import { TopicRepository } from './repository/topic.repository';
 import { TopicService } from './topic.service';
 import { TopicReserveRepository } from './repository/topic-reserve.repository';
+import { TopicGateway } from './topic.gateway';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { TopicReserveRepository } from './repository/topic-reserve.repository';
     UsersModule,
   ],
   controllers: [TopicController],
-  providers: [TopicService],
+  providers: [TopicService, TopicGateway],
   exports: [TopicService],
 })
 export class TopicModule {}

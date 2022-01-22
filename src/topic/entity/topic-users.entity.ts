@@ -20,4 +20,14 @@ export class TopicUsers {
 
   @ManyToOne(() => TopicReserve, (topicReserve) => topicReserve.reserveId)
   topicReserve: TopicReserve;
+
+  setTopicUsers(
+    opinionType: OpinionType,
+    users: Users,
+    topicReserve: TopicReserve,
+  ) {
+    this.opinionType = opinionType;
+    this.users = users;
+    this.topicReserve = topicReserve;
+  }
 }
