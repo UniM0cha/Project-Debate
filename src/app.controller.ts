@@ -1,4 +1,12 @@
-import { Controller, Get, Logger, Render, Res, Session } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Render,
+  Res,
+  Session,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { ViewDto } from './dto/view.dto';
 
@@ -15,4 +23,7 @@ export class AppController {
     this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
     return viewDto;
   }
+
+  @Post('/time')
+  sendTime() {}
 }

@@ -1,4 +1,5 @@
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
+import { OpinionType } from 'src/topic/entity/topic-users.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { Users } from 'src/users/users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
@@ -14,15 +15,24 @@ export class Chat {
   @Column({ type: 'text' })
   chatMessage: string;
 
+  @Column({ type: 'enum', enum: OpinionType })
+  opinionType: OpinionType;
+
   @ManyToOne(() => Users, (user) => user.userId)
   user: Users;
 
   @ManyToOne(() => TopicReserve, (topicReserve) => topicReserve.reserveId)
   topicReserve: TopicReserve;
 
-  createChat(data: any, user: Users) {
+  createChat(
+    date: Date,
+    message: string,
+    user: Users,
+    topicReserve: TopicReserve,
+  ) {
     this.user = user;
-    this.chatDate = data.date;
-    this.chatMessage = data.opinion_input;
+    this.chatDate = date;
+    this.chatMessage = message;
+    this.topicReserve = topicReserve;
   }
 }

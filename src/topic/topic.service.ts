@@ -22,7 +22,7 @@ export class TopicService {
   private readonly logger = new Logger(TopicService.name);
 
   /** 주제 순환 코드 */
-  //@Cron('0 * * * * *')
+  @Cron('0 0 * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
 
@@ -74,14 +74,18 @@ export class TopicService {
     return await this.topicRepository.findOne(id);
   }
 
-  async findAllTopicReserves(): Promise<TopicReserve[]> {
+  async findAllTopicReservesWithTopic(): Promise<TopicReserve[]> {
     return this.topicReserveRepository.find({ relations: ['topic'] });
   }
 
-  async findOneTopicReserve(id: number): Promise<TopicReserve> {
+  async findOneTopicReserveWithTopic(id: number): Promise<TopicReserve> {
     return await this.topicReserveRepository.findOne(id, {
       relations: ['topic'],
     });
+  }
+
+  async findOneTopicReserve(id: number): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findOne(id);
   }
 
   async createTopic(topic: TopicDto): Promise<Topic> {
@@ -130,7 +134,7 @@ export class TopicService {
    * 해당 유저가 어떤 의견인지 반환한다.
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
-    const user: Users = await this.usersService.findOne(_userId);
+    const user: Users = await this.usersService.findOneById(_userId);
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findCurrentReserve();
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
@@ -141,7 +145,7 @@ export class TopicService {
   }
 
   async addAgree(userId: string, reserveId: number) {
-    const user: Users = await this.usersService.findOne(userId);
+    const user: Users = await this.usersService.findOneById(userId);
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findOne(reserveId);
 
@@ -155,17 +159,19 @@ export class TopicService {
       await this.topicUsersRepository.update(topicUser, {
         opinionType: OpinionType.AGREE,
       });
+      this.logger.debug(`Agree Opinion Update Success`);
     } else {
       topicUser = new TopicUsers();
       topicUser.users = user;
       topicUser.topicReserve = topicReserve;
       topicUser.opinionType = OpinionType.AGREE;
       await this.topicUsersRepository.save(topicUser);
+      this.logger.debug(`Agree Opinion Save Success`);
     }
   }
 
   async addDisagree(userId: string, reserveId: number) {
-    const user: Users = await this.usersService.findOne(userId);
+    const user: Users = await this.usersService.findOneById(userId);
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findOne(reserveId);
 
@@ -179,12 +185,14 @@ export class TopicService {
       await this.topicUsersRepository.update(topicUser, {
         opinionType: OpinionType.DISAGREE,
       });
+      this.logger.debug(`Disagree Opinion Update Success`);
     } else {
       topicUser = new TopicUsers();
       topicUser.users = user;
       topicUser.topicReserve = topicReserve;
       topicUser.opinionType = OpinionType.DISAGREE;
       await this.topicUsersRepository.save(topicUser);
+      this.logger.debug(`Disagree Opinion Save Success`);
     }
   }
 
@@ -202,6 +210,17 @@ export class TopicService {
       opinionType: OpinionType.DISAGREE,
     });
     return agree;
+  }
+
+  async findUserOpinionType(
+    user: Users,
+    reserve: TopicReserve,
+  ): Promise<OpinionType> {
+    const topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+      users: user,
+      topicReserve: reserve,
+    });
+    return topicUser ? topicUser.opinionType : null;
   }
 
   async addTestData() {

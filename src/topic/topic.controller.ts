@@ -8,9 +8,7 @@ import {
   Res,
   Session,
 } from '@nestjs/common';
-import session from 'express-session';
 import { TopicReserve } from './entity/topic-reservation.entity';
-import { Topic } from './entity/topic.entity';
 import { TopicService } from './topic.service';
 
 @Controller('topic')
@@ -38,6 +36,7 @@ export class TopicController {
         throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
       }
     } else {
+      this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
       throw new BadRequestException();
     }
   }
@@ -61,6 +60,7 @@ export class TopicController {
         throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
       }
     } else {
+      this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
       throw new BadRequestException();
     }
   }

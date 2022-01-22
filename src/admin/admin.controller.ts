@@ -30,7 +30,7 @@ export class AdminController {
     await this.topicService.addTestData();
 
     const topicReserves: TopicReserve[] =
-      await this.topicService.findAllTopicReserves();
+      await this.topicService.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicService.findAllTopics();
 
     return res.render('admin/topic', {
@@ -76,9 +76,8 @@ export class AdminController {
   /** 예약 조회 */
   @Get('/reserve/:id')
   async getReserve(@Param('id') id: number, @Res() res) {
-    const reserve: TopicReserve = await this.topicService.findOneTopicReserve(
-      id,
-    );
+    const reserve: TopicReserve =
+      await this.topicService.findOneTopicReserveWithTopic(id);
     this.logger.debug(`reserve: ${JSON.stringify(reserve)}`);
     const topics: Topic[] = await this.topicService.findAllTopics();
     return res.render('admin/reserve_detail', {
