@@ -16,6 +16,10 @@
       let isLogined = {{isLogined}};
       const nickname = "{{nickname}}";
       const userId = "{{userId}}";
+      const hasOpinion = {{hasOpinion}};
+      const type = "{{opinion.type}}";
+      let agree = {{opinion.agree}};
+      let disagree = {{opinion.disagree}};
       const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
     </script>
 
@@ -48,7 +52,7 @@
       <div class='time'  id="topic-time">
       </div>
       <div class='topic'>
-        주제 : {{topic.currentTopicName}}안녕하세요?<br>
+        주제 : {{topic.currentTopicName}}<br>
       </div>
     </div>
 

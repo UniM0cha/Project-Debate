@@ -91,13 +91,19 @@ document.addEventListener('DOMContentLoaded', function () {
   const disagree_bar = document.querySelector('.disagree-bar');
   const agree_btn = document.querySelector('.agree-btn');
   const disagree_btn = document.querySelector('.disagree-btn');
+  //로그인 시 채팅 가능
+  const opinion_input = document.querySelector('.opinion-input');
+  const send_btn = document.querySelector('.send');
+  const live_debate = document.querySelector('.live-debate');
+  const input_box = document.querySelector('.input-box');
+  //스크롤 아래 고정
+  live_debate.scrollTop = live_debate.scrollHeight;
 
   //지금 그냥 초기화 해놨는데 데베에서 가져와야 될듯
-  let sum = 0;
-  let agree = 0;
-  let disagree = 0;
+  let sum = agree + disagree;
   let agreebar_width = 0;
   let disagreebar_width = 0;
+  console.log(sum);
 
   //찬성 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
   function agree_calculate(agree, disagree) {
@@ -115,9 +121,12 @@ document.addEventListener('DOMContentLoaded', function () {
     agreebar_width = 100 - disagreebar_width;
   }
 
-  if (isLogined == true) {
+  if (isLogined === true && hasOpinion === false) {
     agree_bar.style.display = 'none';
     disagree_bar.style.display = 'none';
+    opinion_input.style.display = 'none';
+    send_btn.style.display = 'none';
+    input_box.style.display = 'none';
 
     //찬성 선택시
     agree_btn.addEventListener('click', () => {
@@ -138,6 +147,9 @@ document.addEventListener('DOMContentLoaded', function () {
         agree_bar.style.borderRadius = '7px';
         disagree_bar.style.display = 'none';
       }
+      opinion_input.style.display = 'block';
+      send_btn.style.display = 'block';
+      input_box.style.display = 'flex';
       sendAgreeToServer();
     });
 
@@ -159,6 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
         disagree_bar.style.borderRadius = '7px';
         agree_bar.style.display = 'none';
       }
+      opinion_input.style.display = 'block';
+      send_btn.style.display = 'block';
+      input_box.style.display = 'flex';
       sendDisagreeToServer();
     });
   } else {
@@ -324,29 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ul.appendChild(li);
     ul.scrollTop = ul.scrollHeight;
   }
-  //실시간 채팅 구현
 
-  //로그인 시 채팅 가능
-  const opinion_input = document.querySelector('.opinion-input');
-  const send_btn = document.querySelector('.send');
-  const live_debate = document.querySelector('.live-debate');
-  const input_box = document.querySelector('.input-box');
-
-  //스크롤 아래 고정
-  live_debate.scrollTop = live_debate.scrollHeight;
-
-  //로그인에 따른 채팅 가능 불가능 설정
-  if (isLogined == true) {
-    opinion_input.style.display = 'block';
-    send_btn.style.display = 'block';
-    input_box.style.display = 'flex';
-  } else {
-    opinion_input.style.display = 'none';
-    send_btn.style.display = 'none';
-    live_debate.style.height = '100%';
-    input_box.style.display = 'none';
-  }
-  //로그인 시 채팅 가능
 });
 
 // 찬성 버튼 클릭 시 서버로 요청 전송
