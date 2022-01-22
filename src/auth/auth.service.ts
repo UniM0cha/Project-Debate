@@ -116,32 +116,4 @@ export class AuthService {
       this.httpService.post(_url, '', { headers: _header }),
     );
   }
-
-  // async login(
-  //   session: Record<string, any>,
-  //   userData: UserDataDto,
-  // ): Promise<Record<string, any>> {
-  //   session.userData = userData;
-  //   session.isLogined = true;
-  //   session.save((err) => {
-  //     if (err) throw err;
-
-  //     this.logger.debug(
-  //       `Generated Session Data After Login: ${JSON.stringify(
-  //         session,
-  //         null,
-  //         4,
-  //       )}`,
-  //     );
-  //     return session;
-  //   });
-  // }
-
-  //   async logout(session: Record<string, any>): Promise<any> {
-  //     // 세션 삭제
-  //     await session.destroy((err) => {
-  //       if (err) throw err;
-  //     });
-  //     return;
-  //   }
 }

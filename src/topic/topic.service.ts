@@ -10,7 +10,6 @@ import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
-import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class TopicService {
@@ -23,23 +22,18 @@ export class TopicService {
   private readonly logger = new Logger(TopicService.name);
 
   /** 주제 순환 코드 */
-  //@Cron('0 * * * * *')
+  @Cron('0 0 * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
-    const today = new Date();
-    today.setHours(9, 0, 0, 0);
 
-    // 현재 진행중인 주제를 가져온다
-    const currentReserve: TopicReserve = await this.findCurrentReserve();
+    // 현재 진행중인 주제
+    const currentReserve: TopicReserve =
+      await this.topicReserveRepository.findCurrentReserve();
 
-    // 오늘에 해당하는 예약을 가져온다.
+    // 오늘 교체되야야하는 주제
     const todayReserve: TopicReserve =
-      await this.topicReserveRepository.findOne({
-        reserveDate: today,
-        reserveState: ReserveType.PENDING,
-      });
+      await this.topicReserveRepository.findTodayTopicReserve();
 
-    this.logger.debug(`Today: ${today}`);
     this.logger.debug(
       `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
     );
@@ -51,43 +45,25 @@ export class TopicService {
     if (todayReserve) {
       // 교체되기로 한 것은 PROCCEING으로 변경
       if (todayReserve.reserveState === ReserveType.PENDING) {
-        this.topicReserveRepository.update(
-          { reserveId: todayReserve.reserveId },
-          { reserveState: ReserveType.PROCEEDING },
-        );
+        this.topicReserveRepository.updateToProceeding(todayReserve.reserveId);
       }
 
-      // 일단 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
+      // 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
       if (currentReserve) {
-        // 먼저 진행중인것은 PASSED로 변경
+        // 먼저 진행되었던 것은 PASSED로 변경
         if (currentReserve.reserveState === ReserveType.PROCEEDING) {
-          this.topicReserveRepository.update(
-            { reserveId: currentReserve.reserveId },
-            { reserveState: ReserveType.PASSED },
-          );
+          this.topicReserveRepository.updateToPassed(currentReserve.reserveId);
         }
       }
     }
   }
 
-  async findAfterReserve(): Promise<TopicReserve> {
-    const today = new Date();
-    today.setHours(9, 0, 0, 0);
-
-    return await this.topicReserveRepository.findOne({
-      where: { reserveDate: MoreThan(today) },
-      relations: ['topic'],
-      order: { reserveDate: 'ASC' },
-    });
+  async findNextReserve(): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findNextReserve();
   }
 
   async findCurrentReserve(): Promise<TopicReserve> {
-    return await this.topicReserveRepository.findOne(
-      {
-        reserveState: ReserveType.PROCEEDING,
-      },
-      { relations: ['topic'] },
-    );
+    return await this.topicReserveRepository.findCurrentReserve();
   }
 
   async findAllTopics(): Promise<Topic[]> {
@@ -98,14 +74,18 @@ export class TopicService {
     return await this.topicRepository.findOne(id);
   }
 
-  async findAllTopicReserves(): Promise<TopicReserve[]> {
+  async findAllTopicReservesWithTopic(): Promise<TopicReserve[]> {
     return this.topicReserveRepository.find({ relations: ['topic'] });
   }
 
-  async findOneTopicReserve(id: number): Promise<TopicReserve> {
+  async findOneTopicReserveWithTopic(id: number): Promise<TopicReserve> {
     return await this.topicReserveRepository.findOne(id, {
       relations: ['topic'],
     });
+  }
+
+  async findOneTopicReserve(id: number): Promise<TopicReserve> {
+    return await this.topicReserveRepository.findOne(id);
   }
 
   async createTopic(topic: TopicDto): Promise<Topic> {
@@ -154,8 +134,9 @@ export class TopicService {
    * 해당 유저가 어떤 의견인지 반환한다.
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
-    const user: Users = await this.usersService.findOne(_userId);
-    const topicReserve: TopicReserve = await this.findCurrentReserve();
+    const user: Users = await this.usersService.findOneById(_userId);
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findCurrentReserve();
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
       users: user,
       topicReserve: topicReserve,
@@ -164,7 +145,7 @@ export class TopicService {
   }
 
   async addAgree(userId: string, reserveId: number) {
-    const user: Users = await this.usersService.findOne(userId);
+    const user: Users = await this.usersService.findOneById(userId);
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findOne(reserveId);
 
@@ -178,17 +159,19 @@ export class TopicService {
       await this.topicUsersRepository.update(topicUser, {
         opinionType: OpinionType.AGREE,
       });
+      this.logger.debug(`Agree Opinion Update Success`);
     } else {
       topicUser = new TopicUsers();
       topicUser.users = user;
       topicUser.topicReserve = topicReserve;
       topicUser.opinionType = OpinionType.AGREE;
       await this.topicUsersRepository.save(topicUser);
+      this.logger.debug(`Agree Opinion Save Success`);
     }
   }
 
   async addDisagree(userId: string, reserveId: number) {
-    const user: Users = await this.usersService.findOne(userId);
+    const user: Users = await this.usersService.findOneById(userId);
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findOne(reserveId);
 
@@ -202,12 +185,14 @@ export class TopicService {
       await this.topicUsersRepository.update(topicUser, {
         opinionType: OpinionType.DISAGREE,
       });
+      this.logger.debug(`Disagree Opinion Update Success`);
     } else {
       topicUser = new TopicUsers();
       topicUser.users = user;
       topicUser.topicReserve = topicReserve;
       topicUser.opinionType = OpinionType.DISAGREE;
       await this.topicUsersRepository.save(topicUser);
+      this.logger.debug(`Disagree Opinion Save Success`);
     }
   }
 
@@ -225,6 +210,81 @@ export class TopicService {
       opinionType: OpinionType.DISAGREE,
     });
     return agree;
+  }
+
+  async findUserOpinionType(
+    user: Users,
+    reserve: TopicReserve,
+  ): Promise<OpinionType> {
+    const topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+      users: user,
+      topicReserve: reserve,
+    });
+    return topicUser ? topicUser.opinionType : null;
+  }
+
+  async getAgreeDisagree(reserveId: number): Promise<any> {
+    const topicReserve: TopicReserve =
+      await this.topicReserveRepository.findOne(reserveId);
+
+    if (topicReserve) {
+      const agree: number = await this.topicUsersRepository.count({
+        topicReserve: topicReserve,
+        opinionType: OpinionType.AGREE,
+      });
+      const disagree: number = await this.topicUsersRepository.count({
+        topicReserve: topicReserve,
+        opinionType: OpinionType.DISAGREE,
+      });
+      this.logger.debug(
+        `찬성/반대 값 가져오기 성공: agree = ${agree}, disagree = ${disagree}`,
+      );
+      return { agree: agree, disagree: disagree };
+    } else {
+      this.logger.error(
+        '찬성/반대 값 가져오기 실패: 주제가 존재하지 않습니다.',
+      );
+      return null;
+    }
+  }
+
+  async validateAndSaveOpinionType(data: any): Promise<number> {
+    /**상태코드
+     * 0 : 저장 성공
+     * 1 : 존재하지 않는 유저
+     * 2 : 유효하지 않는 주제
+     * 3 : 이미 의견을 설정한 유저
+     */
+
+    const userId: string = data.userId;
+    const reserveId: number = data.reserveId;
+    const opinionType: OpinionType = data.opinionType;
+
+    const user = await this.usersService.findOneById(userId);
+    if (user) {
+      const reserve = await this.topicReserveRepository.findOne(reserveId);
+      if (reserve) {
+        const hasOpinionType = await this.findUserOpinionType(user, reserve);
+        if (!hasOpinionType) {
+          const newOpinion = new TopicUsers();
+          newOpinion.setTopicUsers(opinionType, user, reserve);
+          await this.topicUsersRepository.save(newOpinion);
+          this.logger.debug(`유저 의견 저장 성공`);
+          return 0;
+        } else {
+          this.logger.error(
+            `유저 의견 저장 실패: 이미 의견을 설정한 유저입니다.`,
+          );
+          return 3;
+        }
+      } else {
+        this.logger.error(`유저 의견 저장 실패: 유효하지 않은 주제입니다.`);
+        return 2;
+      }
+    } else {
+      this.logger.error(`유저 의견 저장 실패: 존재하지 않는 유저입니다.`);
+      return 1;
+    }
   }
 
   async addTestData() {

@@ -20,6 +20,7 @@
       const type = "{{opinion.type}}";
       let agree = {{opinion.agree}};
       let disagree = {{opinion.disagree}};
+      const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
     </script>
 
     {{!-- 상단 메뉴 --}}

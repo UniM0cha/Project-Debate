@@ -1,20 +1,24 @@
-let socket = io.connect('http://localhost:3000/message');
+let chatSocket = io.connect('http://localhost:3000/message');
+let topicSocket = io.connect('/topic');
 //서버시간 가져오기
-let xmlHttpRequest;
-function getTime() {
-  if (window.XMLHttpRequest) {
-    xmlHttpRequest = new XMLHttpRequest();
-    xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
-    xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
-    xmlHttpRequest.send('');
-    return xmlHttpRequest.getResponseHeader('date');
-  } else if (window.ActiveXObject) {
-    xmlHttpRequest = new ActiveXObject('Microsoft.XMLHTTP');
-    xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
-    xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
-    xmlHttpRequest.send('');
-    return xmlHttpRequest.getResponseHeader('date');
-  }
+// let xmlHttpRequest;
+async function getTime() {
+  const res = await fetch('/time', { method: 'post' });
+  return res.headers.get('date');
+
+  // if (window.XMLHttpRequest) {
+  //   xmlHttpRequest = new XMLHttpRequest();
+  //   xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
+  //   xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
+  //   xmlHttpRequest.send('');
+  //   return xmlHttpRequest.getResponseHeader('date');
+  // } else if (window.ActiveXObject) {
+  //   xmlHttpRequest = new ActiveXObject('Microsoft.XMLHTTP');
+  //   xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
+  //   xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
+  //   xmlHttpRequest.send('');
+  //   return xmlHttpRequest.getResponseHeader('date');
+  // }
 }
 
 //채팅 타이머
@@ -65,6 +69,9 @@ const countDownTimer = function (id, date) {
 countDownTimer('topic-time', '02/27/2022 04:22 PM'); // 이부분 수정하면 시간 변경 가능
 
 document.addEventListener('DOMContentLoaded', function () {
+  // 맨 처음 찬성 반대 비율 요청
+  topicSocket.emit('request-refresh-opinion-type', { reserveId: reserveId });
+
   //로그인, 로그아웃 버튼 구현
   const loginform = document.querySelector('.form-login');
   const logoutform = document.querySelector('.form-logout');
@@ -175,83 +182,148 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   //찬성반대 비율바 구현
 
-  //실시간 채팅 구현
+  // 실시간 채팅 구현
   const ul = document.querySelector('.live-debate');
   const send = document.querySelector('#send');
 
-  socket.on('new-message-to-client', (data) => {
-    send_opinion(data.nickname, data.newmessage, data.date);
+  /**서버로부터 상태코드 도착 이벤트 등록 */
+  chatSocket.on('chat-state-to-client', ({ state }) => {
+    switch (state) {
+      // 메시지 전송 성공
+      case 0:
+        break;
+      // 존재하지 않는 유저
+      case 1:
+        alert(`로그인 후 이용해 주세요.`);
+        break;
+      // 유효하지 않은 주제
+      case 2:
+        alert(`주제가 설정되지 않았습니다.`);
+        break;
+      // 유저가 의견을 제시하지 않음
+      case 3:
+        alert(`의견 제시 후 이용해주세요.`);
+        break;
+    }
+  });
+
+  /**서버로부터 메시지 도착 이벤트 등록 */
+  chatSocket.on('new-message-to-client', (data) => {
+    send_opinion(data.nickname, data.newmessage, data.date, data.opinionType);
   });
   const opinion = document.querySelector('#message');
 
+  /**서버로부터 찬성/반대 비율 새로고침 이벤트 등록 */
+  topicSocket.on('refresh-opinion-type', ({ agree, disagree }) => {
+    console.log('agree: ' + agree);
+    console.log('disagree: ' + disagree);
+  });
+
+  /**찬성/반대 요청을 한 후 서버로부터 받는 상태코드 */
+  topicSocket.on('option-type-state-to-client', ({ state }) => {
+    switch (state) {
+      // 메시지 전송 성공
+      case 0:
+        break;
+      // 존재하지 않는 유저
+      case 1:
+        alert(`로그인 후 이용해 주세요.`);
+        break;
+      // 유효하지 않은 주제
+      case 2:
+        alert(`주제가 설정되지 않았습니다.`);
+        break;
+      // 유저가 의견을 제시하지 않음
+      case 3:
+        alert(`이미 투표하셨습니다.`);
+        break;
+    }
+  });
+
+  /**전송버튼 클릭 이벤트 등록 */
   send.addEventListener('click', (e) => {
     e.preventDefault();
-
     send_chat_socket_emit();
   });
 
+  /**엔터 이벤트 등록 */
   opinion.addEventListener('keypress', (event) => {
     if (event.keyCode === 13) {
       send_chat_socket_emit();
     }
   });
 
-  function send_chat_socket_emit() {
+  async function send_chat_socket_emit() {
     const opinion_input = document.querySelector('#message').value;
-    // 현재 날짜 조회
-    let st = getTime();
-    let today = new Date(st);
-    let hour = today.getHours();
-    let min = today.getMinutes();
-    if (hour / 12 >= 1) {
-      hour = '오후 ' + (hour - 12);
-      if (hour - 12 < 10) {
-        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
-      }
-    } else {
-      hour = '오전 ' + hour;
-      if (hour < 10) {
-        hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
-      }
-    }
-    if (min < 10) {
-      min = '0' + min;
-    }
 
     if (opinion_input != '') {
-      console.log('gd');
-      socket.emit('new-message-to-server', {
+      // 현재 날짜 조회
+      // let st = await getTime();
+      // let today = new Date(st);
+      // let hour = today.getHours();
+      // let min = today.getMinutes();
+      // if (hour / 12 >= 1) {
+      //   hour = '오후 ' + (hour - 12);
+      //   if (hour - 12 < 10) {
+      //     hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      //   }
+      // } else {
+      //   hour = '오전 ' + hour;
+      //   if (hour < 10) {
+      //     hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
+      //   }
+      // }
+      // if (min < 10) {
+      //   min = '0' + min;
+      // }
+
+      console.log('sending message to server');
+      chatSocket.emit('new-message-to-server', {
+        reserveId: reserveId,
         userId: userId,
-        nickname: nickname,
         opinion_input: opinion_input,
+        // nickname: nickname,
         // date: hour + ':' + min,
         // date 객체로 수정
-        date: today,
+        // date: today,
       });
     }
     document.querySelector('#message').value = '';
   }
 
-  function send_opinion(nickname, opinion, time) {
-    let today = new Date(time);
+  ////////////////// 정윤: opinionType 변수 넘겨줬으니까 처리 부탁드립니다요 ///////////////////////
+  function send_opinion(nickname, opinion, date, opinionType) {
+    console.log(opinionType);
+    const today = new Date(date);
     let hour = today.getHours();
     let min = today.getMinutes();
-    if (hour / 12 >= 1) {
-      hour = '오후 ' + (hour - 12);
-      if (hour.slice(3, 5) - 12 < 10) {
-        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
-      }
+    let ampm = '';
+    if (hour > 12) {
+      hour = hour - 12;
+      ampm = '오후';
     } else {
-      hour = '오전 ' + hour;
-      if (hour.slice(3, 5) < 10) {
-        hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
-      }
+      ampm = '오전';
     }
-    if (min < 10) {
-      min = '0' + min;
-    }
+    hour = hour.toString().padStart(2, '0');
+    min = min.toString().padStart(2, '0');
+    const time = ampm + ' ' + hour + ':' + min;
 
-    time = hour + ':' + min;
+    // if (hour / 12 >= 1) {
+    //   hour = '오후 ' + (hour - 12);
+    //   if (hour.slice(3, 5) - 12 < 10) {
+    //     hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+    //   }
+    // } else {
+    //   hour = '오전 ' + hour;
+    //   if (hour.slice(3, 5) < 10) {
+    //     hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
+    //   }
+    // }
+    // if (min < 10) {
+    //   min = '0' + min;
+    // }
+
+    // time = hour + ':' + min;
 
     const li = document.createElement('li');
     li.classList.add('agree');
@@ -270,14 +342,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// 찬성 버튼 클릭 시 서버로 요청 전송
 function sendAgreeToServer() {
-  fetch(`/topic/agree`, {
-    method: 'POST',
+  // fetch(`/topic/agree`, {
+  //   method: 'POST',
+  // });
+  // socket 이벤트로 전환
+  topicSocket.emit('opinion-type-to-server', {
+    userId: userId,
+    reserveId: reserveId,
+    opinionType: 'agree',
   });
 }
 
+// 반대 버튼 클릭 시 서버로 요청 전송
 function sendDisagreeToServer() {
-  fetch(`/topic/disagree`, {
-    method: 'POST',
+  // fetch(`/topic/disagree`, {
+  //   method: 'POST',
+  // });
+  topicSocket.emit('opinion-type-to-server', {
+    userId: userId,
+    reserveId: reserveId,
+    opinionType: 'disagree',
   });
 }

@@ -4,9 +4,7 @@ export class ViewDto {
   readonly isLogined: boolean;
   readonly nickname: string;
   readonly userId: string;
-
   readonly topic: ViewTopicDto;
-
   readonly hasOpinion: boolean;
   readonly opinion: ViewOpinionDto;
 
@@ -14,9 +12,7 @@ export class ViewDto {
     _isLogined: boolean,
     _nickname: string,
     _userId: string,
-
     _topic: ViewTopicDto,
-
     _hasOpinion: boolean,
     _opinion: ViewOpinionDto,
   ) {
@@ -30,15 +26,18 @@ export class ViewDto {
 }
 
 export class ViewTopicDto {
+  private currentReserveId: number;
   private currentTopicName: string;
   private afterTopicName: string;
   private endDate: Date;
 
   setViewTopicDto(
+    _currentReserveId: number,
     _currentTopicName: string,
     _afterTopicName: string,
     _endDate: Date,
   ) {
+    this.currentReserveId = _currentReserveId;
     this.currentTopicName = _currentTopicName;
     this.afterTopicName = _afterTopicName;
     this.endDate = _endDate;

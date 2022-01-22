@@ -16,9 +16,7 @@ export class AppService {
     let isLogined: boolean = session.isLogined;
     let nickname: string = null;
     let userId: string = null;
-
     let topic: ViewTopicDto = new ViewTopicDto();
-
     let hasOpinion: boolean = null;
     let opinion: ViewOpinionDto = new ViewOpinionDto();
 
@@ -42,18 +40,24 @@ export class AppService {
     // 주제 체크
     let currentReserve: TopicReserve =
       await this.topicService.findCurrentReserve();
-    let afterReserve: TopicReserve = await this.topicService.findAfterReserve();
+    let nextReserve: TopicReserve = await this.topicService.findNextReserve();
 
+    let currentReserveId = currentReserve ? currentReserve.reserveId : null;
     let currentTopicName = currentReserve
       ? currentReserve.topic.topicName
       : null;
-    let afterTopicName = afterReserve ? afterReserve.topic.topicName : null;
-    let endDate = afterReserve ? afterReserve.reserveDate : null;
+    let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
+    let endDate = nextReserve ? nextReserve.reserveDate : null;
 
     let agree: number = await this.topicService.getAgree(currentReserve);
     let disagree: number = await this.topicService.getDisagree(currentReserve);
 
-    topic.setViewTopicDto(currentTopicName, afterTopicName, endDate);
+    topic.setViewTopicDto(
+      currentReserveId,
+      currentTopicName,
+      afterTopicName,
+      endDate,
+    );
     opinion.setViewOpinionNumber(agree, disagree);
 
     return new ViewDto(isLogined, nickname, userId, topic, hasOpinion, opinion);

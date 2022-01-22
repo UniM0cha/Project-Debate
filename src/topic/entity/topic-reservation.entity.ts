@@ -1,3 +1,4 @@
+import { Chat } from 'src/chat/chat.entity';
 import {
   Column,
   Entity,
@@ -22,7 +23,7 @@ export class TopicReserve {
   @Column()
   reserveDate: Date;
 
-  @Column({ default: ReserveType.PENDING })
+  @Column({ type: 'enum', enum: ReserveType, default: ReserveType.PENDING })
   reserveState: ReserveType;
 
   @ManyToOne(() => Topic, (topic) => topic.topicId)
@@ -30,6 +31,9 @@ export class TopicReserve {
 
   @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.topicUsersId)
   topicUsers: TopicUsers[];
+
+  @OneToMany(() => Chat, (chat) => chat.chatId)
+  chat: Chat[];
 
   setReserve(_reserveDate: Date, _topic: Topic) {
     this.reserveDate = _reserveDate;
