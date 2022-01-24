@@ -66,7 +66,7 @@ const countDownTimer = function (id, date) {
   timer = setInterval(showRemaining, 1000);
 };
 
-countDownTimer('topic-time', '02/27/2022 04:22 PM'); // 이부분 수정하면 시간 변경 가능
+countDownTimer('topic-time', '02/28/2022 09:27 PM'); // 이부분 수정하면 시간 변경 가능
 
 document.addEventListener('DOMContentLoaded', function () {
   // 맨 처음 찬성 반대 비율 요청

@@ -27,7 +27,7 @@ export class AdminController {
   @Get('/topic')
   async topic(@Res() res) {
     // test!!!!!!
-    await this.topicService.addTestData();
+    //await this.topicService.addTestData();
 
     const topicReserves: TopicReserve[] =
       await this.topicService.findAllTopicReservesWithTopic();
