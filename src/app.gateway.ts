@@ -22,7 +22,6 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() data,
   ): Promise<void> {
-    this.logger.debug(`Client: ${client.id}`);
     this.logger.debug(
       `New Message from Client: ${JSON.stringify(data, null, 4)}`,
     );
