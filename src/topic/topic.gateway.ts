@@ -49,7 +49,7 @@ export class TopicGateway {
       const reserveId: number = data.reserveId;
       const amount = await this.topicService.getAgreeDisagree(reserveId);
       if (amount) {
-        client.emit('refresh-opinion-type', {
+        this.server.emit('refresh-opinion-type', {
           agree: amount.agree,
           disagree: amount.disagree,
         });

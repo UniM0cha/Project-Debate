@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // 맨 처음 찬성 반대 비율 요청
   topicSocket.emit('request-refresh-opinion-type', { reserveId: reserveId });
 
+  // 모든 채팅 가져옴
+  getAllChat();
+
   //로그인, 로그아웃 버튼 구현
   const loginform = document.querySelector('.form-login');
   const logoutform = document.querySelector('.form-logout');
@@ -339,7 +342,6 @@ document.addEventListener('DOMContentLoaded', function () {
     ul.appendChild(li);
     ul.scrollTop = ul.scrollHeight;
   }
-
 });
 
 // 찬성 버튼 클릭 시 서버로 요청 전송
@@ -365,4 +367,20 @@ function sendDisagreeToServer() {
     reserveId: reserveId,
     opinionType: 'disagree',
   });
+}
+
+async function getAllChat() {
+  const response = await fetch(`/chat/all`, {
+    method: 'POST',
+  });
+  const data = await response.json();
+
+  if (data.state === 1) {
+    console.log('주제 예약이 유효하지 않음');
+  } else if (data.state === 0) {
+    ///////////////////////////////////// 모든 채팅 내용은 chatList 안에 저장됩니다 ///////////////////
+    const chatList = data.chat;
+    console.log(`chatList: ${JSON.stringify(chatList, null, 4)}`);
+  }
+  return;
 }

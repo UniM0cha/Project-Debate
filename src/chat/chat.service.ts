@@ -42,7 +42,13 @@ export class ChatService {
           const today = new Date();
           const nickname = user.nickname;
           const chat = new Chat();
-          chat.createChat(today, data.opinion_input, user, reserve);
+          chat.createChat(
+            today,
+            data.opinion_input,
+            user,
+            reserve,
+            opinionType,
+          );
           await this.chatRepository.save(chat);
           this.logger.debug(`채팅 저장 성공`);
           return {
@@ -65,5 +71,11 @@ export class ChatService {
       this.logger.error(`채팅 저장 실패: 유저가 존재하지 않습니다.`);
       return { state: 1 };
     }
+  }
+
+  async getAllChat(reserveId: any): Promise<Chat[]> {
+    const topicReserve: TopicReserve =
+      await this.topicService.findOneTopicReserve(reserveId);
+    return await this.chatRepository.find({ topicReserve: topicReserve });
   }
 }

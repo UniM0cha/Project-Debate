@@ -29,10 +29,12 @@ export class Chat {
     message: string,
     user: Users,
     topicReserve: TopicReserve,
+    opinionType: OpinionType,
   ) {
     this.user = user;
     this.chatDate = date;
     this.chatMessage = message;
     this.topicReserve = topicReserve;
+    this.opinionType = opinionType;
   }
 }
