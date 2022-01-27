@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     loginform.style.display = 'block';
     logoutform.style.display = 'none';
+    //깃 실험중
   }
   //로그인, 로그아웃 버튼 구현
 
