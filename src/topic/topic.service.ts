@@ -287,6 +287,13 @@ export class TopicService {
     }
   }
 
+  async getPassedCount(): Promise<number> {
+    const passedCount: number = await this.topicReserveRepository.count({
+      reserveState: ReserveType.PASSED,
+    });
+    return passedCount;
+  }
+
   async addTestData() {
     const topic1 = new Topic();
     topic1.topicName = 'Topic1';
@@ -309,31 +316,61 @@ export class TopicService {
     const date2 = new Date('2022-01-18');
     topicReserve2.reserveDate = date2;
     topicReserve2.topic = topic2;
-    topicReserve2.reserveState = ReserveType.PROCEEDING;
+    topicReserve2.reserveState = ReserveType.PASSED;
 
     const topicReserve3 = new TopicReserve();
     const date3 = new Date('2022-01-19');
     topicReserve3.reserveDate = date3;
     topicReserve3.topic = topic3;
-    topicReserve3.reserveState = ReserveType.PENDING;
+    topicReserve3.reserveState = ReserveType.PASSED;
 
     const topicReserve4 = new TopicReserve();
     const date4 = new Date('2022-01-20');
     topicReserve4.reserveDate = date4;
     topicReserve4.topic = topic1;
-    topicReserve4.reserveState = ReserveType.PENDING;
+    topicReserve4.reserveState = ReserveType.PASSED;
 
     const topicReserve5 = new TopicReserve();
     const date5 = new Date('2022-01-21');
     topicReserve5.reserveDate = date5;
     topicReserve5.topic = topic2;
-    topicReserve5.reserveState = ReserveType.PENDING;
+    topicReserve5.reserveState = ReserveType.PASSED;
 
     const topicReserve6 = new TopicReserve();
     const date6 = new Date('2022-01-22');
     topicReserve6.reserveDate = date6;
     topicReserve6.topic = topic3;
-    topicReserve6.reserveState = ReserveType.PENDING;
+    topicReserve6.reserveState = ReserveType.PASSED;
+
+    const topicReserve7 = new TopicReserve();
+    const date7 = new Date('2022-01-23');
+    topicReserve7.reserveDate = date7;
+    topicReserve7.topic = topic3;
+    topicReserve7.reserveState = ReserveType.PASSED;
+
+    const topicReserve8 = new TopicReserve();
+    const date8 = new Date('2022-01-24');
+    topicReserve8.reserveDate = date8;
+    topicReserve8.topic = topic3;
+    topicReserve8.reserveState = ReserveType.PASSED;
+
+    const topicReserve9 = new TopicReserve();
+    const date9 = new Date('2022-01-25');
+    topicReserve9.reserveDate = date9;
+    topicReserve9.topic = topic3;
+    topicReserve9.reserveState = ReserveType.PASSED;
+
+    const topicReserve10 = new TopicReserve();
+    const date10 = new Date('2022-01-26');
+    topicReserve10.reserveDate = date10;
+    topicReserve10.topic = topic3;
+    topicReserve10.reserveState = ReserveType.PASSED;
+
+    const topicReserve11 = new TopicReserve();
+    const date11 = new Date('2022-01-27');
+    topicReserve11.reserveDate = date11;
+    topicReserve11.topic = topic3;
+    topicReserve11.reserveState = ReserveType.PASSED;
 
     await this.topicReserveRepository.save([
       topicReserve1,
@@ -342,6 +379,11 @@ export class TopicService {
       topicReserve4,
       topicReserve5,
       topicReserve6,
+      topicReserve7,
+      topicReserve8,
+      topicReserve9,
+      topicReserve10,
+      topicReserve11,
     ]);
   }
 }
