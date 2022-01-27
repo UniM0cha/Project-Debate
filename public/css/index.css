@@ -17,6 +17,7 @@ body{
 
 /* 상단 메뉴바 */
 .menu{
+  width: 90%;
   margin: 10px;
   display: flex;
   flex: 1;

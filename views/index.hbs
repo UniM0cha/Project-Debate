@@ -17,9 +17,6 @@
       const nickname = "{{nickname}}";
       const userId = "{{userId}}";
       const hasOpinion = {{hasOpinion}};
-      const type = "{{opinion.type}}";
-      let agree = {{opinion.agree}};
-      let disagree = {{opinion.disagree}};
       const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
     </script>
 
@@ -58,8 +55,8 @@
 
     <!-- 찬성반대투표바 -->
     <div class='age-dis-bar-wrapper'>
-      <div class='agree-bar'><span>찬성:</span></div>
-      <div class='disagree-bar'><span>반대:</span></div>
+      <div class='agree-bar'><span class="agree-sign">찬성:</span></div>
+      <div class='disagree-bar'><span class='disagree-sign'>반대:</span></div>
 
       <button class='bar-button agree-btn'>찬성</button>
       <button class='bar-button disagree-btn'>반대</button>
