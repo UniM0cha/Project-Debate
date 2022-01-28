@@ -121,10 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (isLogined === true && hasOpinion === false) {
-    agree_bar.style.display = 'none';
-    disagree_bar.style.display = 'none';
-    agree_sign.style.display = 'none';
-    disagree_sign.style.display = 'none'
     opinion_input.style.display = 'none';
     send_btn.style.display = 'none';
     input_box.style.display = 'none';
