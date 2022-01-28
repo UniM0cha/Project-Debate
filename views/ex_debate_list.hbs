@@ -57,12 +57,14 @@
     <h1>주제 예약 목록</h1>
     {{topicReserveCount}}
     {{topicReservePageCount}}
+
     <table border="1">
       <th>예약 번호</th>
       <th>주제</th>
       <th>시작 날짜</th>
       {{#if topicReserves}}
         {{#each topicReserves}}
+        {{reserveDate}}
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{topic.topicName}}</td>
