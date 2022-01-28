@@ -54,6 +54,29 @@
 
       </tbody>
     </table>
+    <h1>주제 예약 목록</h1>
+    {{topicReserveCount}}
+    {{topicReservePageCount}}
+    <table border="1">
+      <th>예약 번호</th>
+      <th>주제</th>
+      <th>시작 날짜</th>
+      {{#if topicReserves}}
+        {{#each topicReserves}}
+          <tr>
+            <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
+            <td>{{topic.topicName}}</td>
+            <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr>
+          <td colspan="5" align="center">데이터가 없습니다.</td>
+        </tr>
+      {{/if}}
+    </table>
+  
+    <p/>
 
     <!-- 페이지 이동 버튼 -->
     <nav aria-label='Page navigation example pagemove'>
