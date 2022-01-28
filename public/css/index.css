@@ -127,16 +127,19 @@ body{
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  flex-direction: column;
 }
 
 .agree-bar {
   width: 50%;
+  float: left;
   background-color: #4aa8d8;
   color: white;
   text-align: center;
-  border-radius: 10px 0px 0px 10px;
+  border-radius: 7px 0px 0px 7px;
   height: 26px;
   line-height: 26px;
+  margin-bottom: 5px;
 }
 
 .agree-bar span{
@@ -145,27 +148,34 @@ body{
 
 .disagree-bar {
   width: 50%;
+  float: left;
   background-color: #ff4040;
   color: white;
   text-align: center;
-  border-radius: 0px 10px 7px 0px;
+  border-radius: 0px 7px 7px 0px;
   height: 26px;
   line-height: 26px;
 }
 
 /* 찬성반대버튼*/
+.btn-group{
+  display: inline;
+}
+
 .bar-button {
   width: 50%;
   border-radius: 7px;
 }
 
 .agree-btn {
+  float: left;
   border: none;
   background-color: #4aa8d8;
   height: 26px;
 }
 
 .disagree-btn {
+  float: left;
   border: none;
   background-color: #ff4040;
   height: 26px;
