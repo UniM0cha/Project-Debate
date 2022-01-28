@@ -40,11 +40,13 @@
       </thead>
 
       <tbody class="list-body">
-        <tr class="topic1">
-          <td>1</td>
-          <td>올해 대선은 누가 될까요?</td>
-          <td>21.01.03 ~ 21.01.04</td>
-        </tr>
+        {{#each topicReserves}}
+          <tr>
+            <td>{{reserveId}}</a></td>
+            <td><a href="/{{topic.topicName}}">{{topic.topicName}}</a></td>
+            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
+          </tr>
+        {{/each}}
 
         <tr>
           <td>2</td>
@@ -55,7 +57,9 @@
       </tbody>
     </table>
     <h1>주제 예약 목록</h1>
-    {{topicReserveCount}}
+    {{!-- 최대값 --}}
+    {{topicReserveCount}} 
+    {{!-- 페이지 수 --}}
     {{topicReservePageCount}}
     <table border="1">
       <th>예약 번호</th>
@@ -66,7 +70,7 @@
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{topic.topicName}}</td>
-            <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
+            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
       {{else}}
@@ -96,5 +100,6 @@
         </li>
       </ul>
     </nav>
+
   </body>
 </html>
