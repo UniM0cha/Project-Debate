@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
       agree_bar.style.display = 'none';
       agree_sign.style.display = 'none';
     }
-
   });
 
   /**찬성/반대 요청을 한 후 서버로부터 받는 상태코드 */
@@ -268,9 +267,9 @@ document.addEventListener('DOMContentLoaded', function () {
     hour = hour.toString().padStart(2, '0');
     min = min.toString().padStart(2, '0');
     const time = ampm + ' ' + hour + ':' + min;
-    
+
     ul.scrollTop = ul.scrollHeight;
-    if (opinionType === "agree"){
+    if (opinionType === 'agree') {
       const li = document.createElement('li');
       li.classList.add(opinionType);
       //클래스 agree와 disagree추가
@@ -283,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
           `;
       li.innerHTML = dom;
       ul.appendChild(li);
-    } else if(opinionType === "disagree"){
+    } else if (opinionType === 'disagree') {
       const li = document.createElement('li');
       li.classList.add(opinionType);
       //클래스 agree와 disagree추가
@@ -297,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
       li.innerHTML = dom;
       ul.appendChild(li);
     }
-    
   }
 });
 

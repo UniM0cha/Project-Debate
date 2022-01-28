@@ -78,4 +78,28 @@ export class ChatService {
       await this.topicService.findOneTopicReserve(reserveId);
     return await this.chatRepository.find({ topicReserve: topicReserve });
   }
+
+  async validateAndGetAllChat(
+    reserveId: number,
+  ): Promise<{ state: number; chat?: Chat[] }> {
+    /**상태코드
+     * 0: 정상적으로 채팅내역을 보냄
+     * 1: 주제 예약을 찾지 못함
+     */
+
+    const topicReserve: TopicReserve =
+      await this.topicService.findOneTopicReserve(reserveId);
+    if (topicReserve) {
+      const chat: Chat[] = await await this.chatRepository.find({
+        topicReserve: topicReserve,
+      });
+      this.logger.debug(`전체 채팅 내용 보내기 성공`);
+      return { state: 0, chat: chat };
+    } else {
+      this.logger.error(
+        `전체 채팅 내용 보내기 실패: 유효하지 않은 주제 예약 번호입니다.`,
+      );
+      return { state: 1 };
+    }
+  }
 }

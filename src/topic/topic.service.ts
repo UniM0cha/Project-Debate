@@ -294,6 +294,13 @@ export class TopicService {
     return passedCount;
   }
 
+  async findOnePassedTopicReserve(reserveId: number): Promise<TopicReserve> {
+    return this.topicReserveRepository.findOne({
+      reserveId: reserveId,
+      reserveState: ReserveType.PASSED,
+    });
+  }
+
   async addTestData() {
     const topic1 = new Topic();
     topic1.topicName = 'Topic1';
