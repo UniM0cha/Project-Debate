@@ -13,6 +13,11 @@
     <title>이전 주제 리스트 페이지</title>
   </head>
 
+  <script>
+      let isLogined = {{isLogined}};
+      console.log(isLogined);
+  </script>
+
   <body>
     <!-- 상단 메뉴 바 -->
     <nav class='navbar navbar-lg navbar-dark bg-dark'>
@@ -63,6 +68,7 @@
     <h1>주제 예약 목록</h1>
     {{topicReserveCount}}
     {{topicReservePageCount}}
+    {{getEndTimeList}}
 
     <table border="1">
       <th>예약 번호</th>
@@ -106,4 +112,5 @@
     </nav>
 
   </body>
+  <script src="/js/login.js"></script>
 </html>
