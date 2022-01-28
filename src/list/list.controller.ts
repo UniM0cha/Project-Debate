@@ -26,7 +26,7 @@ export class ListController {
 
   @Get('/')
   async getAllTopics(@Res() res) {
-    await this.topicServices.addTestData();
+    // await this.topicServices.addTestData();
     const topicReserves: TopicReserve[] =
       await this.topicServices.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicServices.findAllTopics();

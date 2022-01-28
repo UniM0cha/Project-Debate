@@ -75,7 +75,10 @@ export class TopicService {
   }
 
   async findAllTopicReservesWithTopic(): Promise<TopicReserve[]> {
-    return this.topicReserveRepository.find({ relations: ['topic'] });
+    return this.topicReserveRepository.find({
+      relations: ['topic'],
+      order: { reserveId: 'DESC' },
+    });
   }
 
   async findOneTopicReserveWithTopic(id: number): Promise<TopicReserve> {

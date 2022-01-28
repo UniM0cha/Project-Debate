@@ -30,6 +30,10 @@
     </nav>
 
     <!-- 게시판 -->
+    {{!-- 최대값 --}}
+    {{topicReserveCount}} 
+    {{!-- 페이지 수 --}}
+    {{topicReservePageCount}}
     <table class='table table-striped topic-list'>
       <thead>
         <tr>
@@ -40,23 +44,24 @@
       </thead>
 
       <tbody class="list-body">
-        <tr class="topic1">
-          <td>1</td>
-          <td>올해 대선은 누가 될까요?</td>
-          <td>21.01.03 ~ 21.01.04</td>
-        </tr>
-
+      {{#if topicReserves}}
+        {{#each topicReserves}}
+          <tr>
+            <td>{{reserveId}}</a></td>
+            <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/{{reserveId}}">{{topic.topicName}}</a></td>
+            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
+          </tr>
+        {{/each}}
+      {{else}}
         <tr>
-          <td>2</td>
-          <td>올해 대선은 누가 될까요?</td>
-          <td>2021.01.03</td>
+          <td colspan="5" align="center">데이터가 없습니다.</td>
         </tr>
-
+      {{/if}}
       </tbody>
+
     </table>
     <h1>주제 예약 목록</h1>
-    {{topicReserveCount}}
-    {{topicReservePageCount}}
+
     <table border="1">
       <th>예약 번호</th>
       <th>주제</th>
@@ -66,7 +71,7 @@
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{topic.topicName}}</td>
-            <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
+            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
       {{else}}
@@ -96,5 +101,6 @@
         </li>
       </ul>
     </nav>
+
   </body>
 </html>
