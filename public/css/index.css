@@ -19,9 +19,9 @@ body{
 .menu{
   width: 90%;
   margin: 10px;
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-flex;
   align-items: center;
   padding: 10px;
   background-color: rgb(224, 229, 236);
@@ -31,7 +31,6 @@ body{
 
 /* 이전 리스트 버튼 */
 .div-ex-debatelist{
-  flex: 1;
 }
 
 .btn-ex-debatelist{
@@ -56,7 +55,6 @@ body{
 
 /* 사이트 로고 */
 .div-title{
-  flex: 1;
   text-align: center;
 }
 .title{
@@ -69,7 +67,6 @@ body{
 
 /* 로그인 버튼 */
 .div-login{
-  flex: 1;
   text-align: right;
 }
 .btn-login{
