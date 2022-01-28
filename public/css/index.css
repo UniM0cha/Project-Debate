@@ -18,12 +18,8 @@ body{
 /* 상단 메뉴바 */
 .menu{
   width: 90%;
-  margin: 10px;
   margin-left: auto;
   margin-right: auto;
-  display: inline-flex;
-  align-items: center;
-  padding: 10px;
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
   border-radius: 15px;
@@ -31,6 +27,7 @@ body{
 
 /* 이전 리스트 버튼 */
 .div-ex-debatelist{
+  display: inline-block;
 }
 
 .btn-ex-debatelist{
@@ -55,7 +52,7 @@ body{
 
 /* 사이트 로고 */
 .div-title{
-  text-align: center;
+
 }
 .title{
   text-decoration: none;
@@ -67,7 +64,7 @@ body{
 
 /* 로그인 버튼 */
 .div-login{
-  text-align: right;
+
 }
 .btn-login{
   border: none;
@@ -298,6 +295,9 @@ body{
 
 /*노트북&데스크탑*/
 @media (min-width: 992px) {
+  .menu{
+    width: 60%;
+  }
   .time-topic-div {
     width: 60%;
   }
