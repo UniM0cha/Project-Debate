@@ -1,4 +1,7 @@
+const topicSocket = io.connect('/topic');
+
 document.addEventListener('DOMContentLoaded', () => {
+  topicSocket.emit('request-refresh-opinion-type', { reserveId: reserveId });
   getAllChat();
 });
 

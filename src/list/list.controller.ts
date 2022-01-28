@@ -14,6 +14,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
+import { ListService } from './list.service';
 
 @Controller('list')
 export class ListController {
@@ -21,6 +22,7 @@ export class ListController {
     private readonly topicServices: TopicService,
     private readonly chatService: ChatService,
     private readonly appService: AppService,
+    private readonly listService: ListService,
   ) {}
   private readonly logger = new Logger(ListController.name);
 
@@ -55,7 +57,7 @@ export class ListController {
   }
 
   // id로 해당 주제 예약번호 받아옴
-  @Get('/:id')
+  @Get('/view/:id')
   async getChat(
     @Param('id', ParseIntPipe) reserveId: number,
     @Session() session,
@@ -67,6 +69,7 @@ export class ListController {
     if (topicReserve) {
       session.reserveId = reserveId;
       const viewDto = await this.appService.createViewDto(session);
+      viewDto.topic = await this.listService.setTopicDto(reserveId);
       this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
       return res.render('ex_Debate_show', viewDto);
     } else {

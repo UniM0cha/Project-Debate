@@ -20,6 +20,10 @@ export class AppController {
   async root(@Session() session: Record<string, any>) {
     session.reserveId = await this.appService.getCurrentReserveId();
     const viewDto = await this.appService.createViewDto(session);
+
+    viewDto.hasOpinion = await this.appService.checkHasOpinion(viewDto.userId);
+    viewDto.topic = await this.appService.setIndexTopicDto();
+
     this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
     return viewDto;
   }
