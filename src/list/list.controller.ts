@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Res, Session } from '@nestjs/common';
+import { Controller, Get, Param, Render, Res, Session } from '@nestjs/common';
 import session from 'express-session';
 import { ViewDto } from 'src/dto/view.dto';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
