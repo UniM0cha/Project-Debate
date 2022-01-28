@@ -5,20 +5,6 @@ let topicSocket = io.connect('/topic');
 async function getTime() {
   const res = await fetch('/time', { method: 'post' });
   return res.headers.get('date');
-
-  // if (window.XMLHttpRequest) {
-  //   xmlHttpRequest = new XMLHttpRequest();
-  //   xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
-  //   xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
-  //   xmlHttpRequest.send('');
-  //   return xmlHttpRequest.getResponseHeader('date');
-  // } else if (window.ActiveXObject) {
-  //   xmlHttpRequest = new ActiveXObject('Microsoft.XMLHTTP');
-  //   xmlHttpRequest.open('HEAD', window.location.href.toString(), false);
-  //   xmlHttpRequest.setRequestHeader('ContentType', 'text/html');
-  //   xmlHttpRequest.send('');
-  //   return xmlHttpRequest.getResponseHeader('date');
-  // }
 }
 
 //채팅 타이머
@@ -256,35 +242,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const opinion_input = document.querySelector('#message').value;
 
     if (opinion_input != '') {
-      // 현재 날짜 조회
-      // let st = await getTime();
-      // let today = new Date(st);
-      // let hour = today.getHours();
-      // let min = today.getMinutes();
-      // if (hour / 12 >= 1) {
-      //   hour = '오후 ' + (hour - 12);
-      //   if (hour - 12 < 10) {
-      //     hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
-      //   }
-      // } else {
-      //   hour = '오전 ' + hour;
-      //   if (hour < 10) {
-      //     hour = hour.slice(0, 2) + '0' + hour.slice(2, 3);
-      //   }
-      // }
-      // if (min < 10) {
-      //   min = '0' + min;
-      // }
-
       console.log('sending message to server');
       chatSocket.emit('new-message-to-server', {
         reserveId: reserveId,
         userId: userId,
         opinion_input: opinion_input,
-        // nickname: nickname,
-        // date: hour + ':' + min,
-        // date 객체로 수정
-        // date: today,
       });
     }
     document.querySelector('#message').value = '';
@@ -306,37 +268,36 @@ document.addEventListener('DOMContentLoaded', function () {
     hour = hour.toString().padStart(2, '0');
     min = min.toString().padStart(2, '0');
     const time = ampm + ' ' + hour + ':' + min;
-
-    // if (hour / 12 >= 1) {
-    //   hour = '오후 ' + (hour - 12);
-    //   if (hour.slice(3, 5) - 12 < 10) {
-    //     hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
-    //   }
-    // } else {
-    //   hour = '오전 ' + hour;
-    //   if (hour.slice(3, 5) < 10) {
-    //     hour = hour.slice(0, 3) + '0' + hour.slice(3, 4);
-    //   }
-    // }
-    // if (min < 10) {
-    //   min = '0' + min;
-    // }
-
-    // time = hour + ':' + min;
-
-    const li = document.createElement('li');
-    li.classList.add(opinionType);
-    //클래스 agree와 disagree추가
-    const dom = `
-        <div class='nickname'>${nickname}</div>
+    
+    ul.scrollTop = ul.scrollHeight;
+    if (opinionType === "agree"){
+      const li = document.createElement('li');
+      li.classList.add(opinionType);
+      //클래스 agree와 disagree추가
+      const dom = `
+          <div class='nickname'>${nickname}</div>
             <div
               class='user-opinion'
             >${opinion}</div>
             <div class='opinion-time'>${time}</div>
-        `;
-    li.innerHTML = dom;
-    ul.appendChild(li);
-    ul.scrollTop = ul.scrollHeight;
+          `;
+      li.innerHTML = dom;
+      ul.appendChild(li);
+    } else if(opinionType === "disagree"){
+      const li = document.createElement('li');
+      li.classList.add(opinionType);
+      //클래스 agree와 disagree추가
+      const dom = `
+          <div class='nickname'>${nickname}</div>
+          <div class='opinion-time'>${time}</div>
+            <div
+              class='user-opinion'
+            >${opinion}</div>
+          `;
+      li.innerHTML = dom;
+      ul.appendChild(li);
+    }
+    
   }
 });
 

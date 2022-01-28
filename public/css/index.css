@@ -131,6 +131,7 @@ body{
 }
 
 .agree-bar {
+  width: 50%;
   float: left;
   background-color: #4aa8d8;
   color: white;
@@ -146,6 +147,7 @@ body{
 }
 
 .disagree-bar {
+  width: 50%;
   float: left;
   background-color: #ff4040;
   color: white;
