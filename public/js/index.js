@@ -1,5 +1,5 @@
-let chatSocket = io.connect('http://localhost:3000/message');
-let topicSocket = io.connect('/topic');
+const chatSocket = io.connect('http://localhost:3000/message');
+const topicSocket = io.connect('/topic');
 //서버시간 가져오기
 // let xmlHttpRequest;
 async function getTime() {
@@ -11,6 +11,7 @@ async function getTime() {
 const input_box = document.querySelector('.opinion-input');
 const send_btn = document.querySelector('.send');
 const live_debate = document.querySelector('.live-debate');
+
 const countDownTimer = function (id, date) {
   let _vDate = new Date(date); // 전달 받은 일자
   let _second = 1000;
@@ -250,61 +251,56 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     document.querySelector('#message').value = '';
   }
-
-  ////////////////// 정윤: opinionType 변수 넘겨줬으니까 처리 부탁드립니다요 ///////////////////////
-  function send_opinion(nickname, opinion, date, opinionType) {
-    console.log(opinionType);
-    const today = new Date(date);
-    let hour = today.getHours();
-    let min = today.getMinutes();
-    let ampm = '';
-    if (hour > 12) {
-      hour = hour - 12;
-      ampm = '오후';
-    } else {
-      ampm = '오전';
-    }
-    hour = hour.toString().padStart(2, '0');
-    min = min.toString().padStart(2, '0');
-    const time = ampm + ' ' + hour + ':' + min;
-
-    ul.scrollTop = ul.scrollHeight;
-    if (opinionType === 'agree') {
-      const li = document.createElement('li');
-      li.classList.add(opinionType);
-      //클래스 agree와 disagree추가
-      const dom = `
-          <div class='nickname'>${nickname}</div>
-            <div
-              class='user-opinion'
-            >${opinion}</div>
-            <div class='opinion-time'>${time}</div>
-          `;
-      li.innerHTML = dom;
-      ul.appendChild(li);
-    } else if (opinionType === 'disagree') {
-      const li = document.createElement('li');
-      li.classList.add(opinionType);
-      //클래스 agree와 disagree추가
-      const dom = `
-          <div class='nickname'>${nickname}</div>
-          <div class='opinion-time'>${time}</div>
-            <div
-              class='user-opinion'
-            >${opinion}</div>
-          `;
-      li.innerHTML = dom;
-      ul.appendChild(li);
-    }
-  }
 });
+
+// 서버로부터 도착한 채팅을 표시하는 함수
+function send_opinion(nickname, opinion, date, opinionType) {
+  const today = new Date(date);
+  let hour = today.getHours();
+  let min = today.getMinutes();
+  let ampm = '';
+  if (hour > 12) {
+    hour = hour - 12;
+    ampm = '오후';
+  } else {
+    ampm = '오전';
+  }
+  hour = hour.toString().padStart(2, '0');
+  min = min.toString().padStart(2, '0');
+  const time = ampm + ' ' + hour + ':' + min;
+
+  ul.scrollTop = ul.scrollHeight;
+  if (opinionType === 'agree') {
+    const li = document.createElement('li');
+    li.classList.add(opinionType);
+    //클래스 agree와 disagree추가
+    const dom = `
+        <div class='nickname'>${nickname}</div>
+          <div
+            class='user-opinion'
+          >${opinion}</div>
+          <div class='opinion-time'>${time}</div>
+        `;
+    li.innerHTML = dom;
+    ul.appendChild(li);
+  } else if (opinionType === 'disagree') {
+    const li = document.createElement('li');
+    li.classList.add(opinionType);
+    //클래스 agree와 disagree추가
+    const dom = `
+        <div class='nickname'>${nickname}</div>
+        <div class='opinion-time'>${time}</div>
+          <div
+            class='user-opinion'
+          >${opinion}</div>
+        `;
+    li.innerHTML = dom;
+    ul.appendChild(li);
+  }
+}
 
 // 찬성 버튼 클릭 시 서버로 요청 전송
 function sendAgreeToServer() {
-  // fetch(`/topic/agree`, {
-  //   method: 'POST',
-  // });
-  // socket 이벤트로 전환
   topicSocket.emit('opinion-type-to-server', {
     userId: userId,
     reserveId: reserveId,
@@ -314,9 +310,6 @@ function sendAgreeToServer() {
 
 // 반대 버튼 클릭 시 서버로 요청 전송
 function sendDisagreeToServer() {
-  // fetch(`/topic/disagree`, {
-  //   method: 'POST',
-  // });
   topicSocket.emit('opinion-type-to-server', {
     userId: userId,
     reserveId: reserveId,
