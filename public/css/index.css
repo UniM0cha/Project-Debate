@@ -23,11 +23,20 @@ body{
   background-color: rgb(224, 229, 236);
   box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
   border-radius: 15px;
+  margin-top: 10px;
+}
+
+.inner-menu{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
 }
 
 /* 이전 리스트 버튼 */
 .div-ex-debatelist{
-  display: inline-block;
+  flex: 1;
+  text-align: left;
 }
 
 .btn-ex-debatelist{
@@ -52,7 +61,8 @@ body{
 
 /* 사이트 로고 */
 .div-title{
-
+  flex: 1;
+  text-align: center;
 }
 .title{
   text-decoration: none;
@@ -64,7 +74,8 @@ body{
 
 /* 로그인 버튼 */
 .div-login{
-
+  flex: 1;
+  text-align: right;
 }
 .btn-login{
   border: none;
@@ -303,7 +314,6 @@ body{
   }
   .age-dis-bar-wrapper {
     width: 60%;
-    height: 40px;
   }
   .agree-bar{
     height: 40px;
