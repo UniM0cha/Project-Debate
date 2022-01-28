@@ -1,52 +1,35 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Description
+> 일정 시간 내에 주제를 하나 정하여 찬성과 반대가 나뉘어 채팅과 같이 토론을 나눔으로써
+> 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Environment
+- 현재 각자 개인 컴퓨터의 로컬 데이터베이스 사용중
+- Node.js (v16.13.1)
+- MySQL (v8.0.27)
+  - username : debate
+  - database : debate
+  - password : *관리자에게 문의*
+- TypeORM
+- Socket.IO
+- 추후에 AWS등 서버로 올릴 예정
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
+# Installation & Run
+npm 모듈 설치
 ```bash
 $ npm install
 ```
 
-## Running the app
-
+서버 실행
 ```bash
-# development
-$ npm run start
-
-# watch mode
+# development (watch mode)
 $ npm run start:dev
 
 # production mode
 $ npm run start:prod
 ```
 
-## Test
-
+테스트 실행
 ```bash
 # unit tests
 $ npm run test
@@ -58,16 +41,35 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+# File Manifest
+- views : 뷰 템플릿
+- public : 클라이언트 접근 에셋
+- src : Nest.js 백엔드 구성 파일
+  - admin : 관리자페이지 관련
+  - auth : 로그인 기능 관련
+  - chat : 채팅 기능 관련
+  - list : 이전 토론 리스트 관련
+  - topic : 토론 주제 관련
+    - 토론 내용 = Topic
+    - 토론 예약 = TopicReserve
+    - 토론에 참여한 유저 정보 = TopicUsers
+  - users : 유저 관련
+  - configs : 설정 관련 (데이터베이스 설정 포함)
+- test : e2e 테스트 관련
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Contributer
+## FrontEnd
+- 김승민(ksemin99) - [ksemin2825@gmail.com]
+## BackEnd
+- 박정우(qsc0415) - [qsc0415@naver.com]
+- 이정윤(UniM0cha) - [solst_ice@naver.com]
 
-## Stay in touch
+# Known Issue
+- 회원가입 진행중일 때 닉네임을 입력하고 메인페이지로 이동된 뒤, 뒤로가기를 누르면 닉네임 입력 페이지가 뜨며, 닉네임을 입력하고 확인을 누르면 서버가 터짐 (오류 메시지 캡쳐 필요)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Troubleshooting
 
-## License
+# Changelog
 
+# License
 Nest is [MIT licensed](LICENSE).
