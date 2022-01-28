@@ -297,6 +297,12 @@ export class TopicService {
     return passedCount;
   }
 
+  async getPassedList(): Promise<TopicReserve[]> {
+    const passedList: TopicReserve[] = await this.topicReserveRepository.find({
+      select: ['reserveDate'],
+    });
+    return passedList;
+  }
   async findOnePassedTopicReserve(reserveId: number): Promise<TopicReserve> {
     return this.topicReserveRepository.findOne({
       reserveId: reserveId,
