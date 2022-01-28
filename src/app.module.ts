@@ -28,5 +28,6 @@ import { AdminModule } from './admin/admin.module';
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
+  exports: [AppService],
 })
 export class AppModule {}

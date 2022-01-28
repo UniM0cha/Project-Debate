@@ -1,15 +1,29 @@
-import { Controller, Get, Param, Render, Res, Session } from '@nestjs/common';
-import session from 'express-session';
-import { ViewDto } from 'src/dto/view.dto';
+import {
+  Controller,
+  Get,
+  Render,
+  Res,
+  Session,
+  Param,
+  Logger,
+  ParseIntPipe,
+  NotFoundException,
+} from '@nestjs/common';
+import { AppService } from 'src/app.service';
+import { ChatService } from 'src/chat/chat.service';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
-import { ReserveDto } from '../admin/dto/reserve.dto';
-import { TopicDto } from '../admin/dto/topic.dto';
 
 @Controller('list')
 export class ListController {
-  constructor(private readonly topicServices: TopicService) {}
+  constructor(
+    private readonly topicServices: TopicService,
+    private readonly chatService: ChatService,
+    private readonly appService: AppService,
+  ) {}
+  private readonly logger = new Logger(ListController.name);
+
   @Get('/')
   async getAllTopics(@Res() res) {
     // await this.topicServices.addTestData();
@@ -39,8 +53,24 @@ export class ListController {
       topicReservePageCount: topicReservePageCount,
     });
   }
-  list(@Session() session: Record<string, any>) {
-    // let sessionDto = new ViewDto(session);
-    // return sessionDto;
+
+  // id로 해당 주제 예약번호 받아옴
+  @Get('/:id')
+  async getChat(
+    @Param('id', ParseIntPipe) reserveId: number,
+    @Session() session,
+    @Res() res,
+  ) {
+    // reserveId 가 유효한지 확인
+    const topicReserve: TopicReserve =
+      await this.topicServices.findOnePassedTopicReserve(reserveId);
+    if (topicReserve) {
+      session.reserveId = reserveId;
+      const viewDto = await this.appService.createViewDto(session);
+      this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
+      return res.render('ex_Debate_show', viewDto);
+    } else {
+      throw new NotFoundException();
+    }
   }
 }
