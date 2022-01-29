@@ -17,6 +17,7 @@ export class ChatController {
      * 1: 주제 예약을 찾지 못함
      */
     const reserveId = session.reserveId;
+    this.logger.debug(reserveId);
     const result = await this.chatService.validateAndGetAllChat(reserveId);
     return result;
   }
