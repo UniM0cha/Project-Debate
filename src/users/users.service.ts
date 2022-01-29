@@ -42,6 +42,11 @@ export class UsersService {
       return user;
     }
 
+    if (method === 'google') {
+      const user = await this.usersRepository.findByGoogleId(id);
+      return user;
+    }
+
     if (method === 'email') {
       const user = await this.usersRepository.findByEmail(id);
       return user;

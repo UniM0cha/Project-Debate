@@ -7,36 +7,40 @@ export class UsersRepository extends Repository<Users> {
     email: string,
     platformId: string,
   ): Promise<UpdateResult> {
-    return this.update({ email: email }, { googleId: platformId });
+    return await this.update({ email: email }, { googleId: platformId });
   }
 
   async updateNaverId(
     email: string,
     platformId: string,
   ): Promise<UpdateResult> {
-    return this.update({ email: email }, { naverId: platformId });
+    return await this.update({ email: email }, { naverId: platformId });
   }
 
   async updateKakaoId(
     email: string,
     platformId: string,
   ): Promise<UpdateResult> {
-    return this.update({ email: email }, { kakaoId: platformId });
+    return await this.update({ email: email }, { kakaoId: platformId });
   }
 
   async findByEmail(email: string): Promise<Users> {
-    return this.findOne({ email: email });
+    return await this.findOne({ email: email });
   }
 
   async findByNickname(nickname: string): Promise<Users> {
-    return this.findOne({ nickname: nickname });
+    return await this.findOne({ nickname: nickname });
   }
 
   async findByKakaoId(id: string): Promise<Users> {
-    return this.findOne({ kakaoId: id });
+    return await this.findOne({ kakaoId: id });
   }
 
   async findByNaverId(id: string): Promise<Users> {
-    return this.findOne({ naverId: id });
+    return await this.findOne({ naverId: id });
+  }
+
+  async findByGoogleId(id: string): Promise<Users> {
+    return await this.findOne({ googleId: id });
   }
 }

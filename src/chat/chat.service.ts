@@ -73,7 +73,7 @@ export class ChatService {
     }
   }
 
-  async getAllChat(reserveId: any): Promise<Chat[]> {
+  async getAllChat(reserveId: number): Promise<Chat[]> {
     const topicReserve: TopicReserve =
       await this.topicService.findOneTopicReserve(reserveId);
     return await this.chatRepository.find({ topicReserve: topicReserve });
@@ -81,7 +81,7 @@ export class ChatService {
 
   async validateAndGetAllChat(
     reserveId: number,
-  ): Promise<{ state: number; chat?: Chat[] }> {
+  ): Promise<{ state: number; chat?: any }> {
     /**상태코드
      * 0: 정상적으로 채팅내역을 보냄
      * 1: 주제 예약을 찾지 못함
@@ -90,11 +90,21 @@ export class ChatService {
     const topicReserve: TopicReserve =
       await this.topicService.findOneTopicReserve(reserveId);
     if (topicReserve) {
-      const chat: Chat[] = await await this.chatRepository.find({
-        topicReserve: topicReserve,
+      const chat: Chat[] = await this.chatRepository.find({
+        where: { topicReserve: topicReserve },
+        relations: ['users'],
+      });
+
+      const compressedChat = chat.map((chat) => {
+        return {
+          chatDate: chat.chatDate,
+          chatMessage: chat.chatMessage,
+          opinionType: chat.opinionType,
+          nickname: chat.users.nickname,
+        };
       });
       this.logger.debug(`전체 채팅 내용 보내기 성공`);
-      return { state: 0, chat: chat };
+      return { state: 0, chat: compressedChat };
     } else {
       this.logger.error(
         `전체 채팅 내용 보내기 실패: 유효하지 않은 주제 예약 번호입니다.`,
