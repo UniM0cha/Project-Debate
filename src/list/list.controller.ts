@@ -29,25 +29,25 @@ export class ListController {
   @Get('/')
   async getAllTopics(@Res() res, @Session() session) {
     // await this.topicServices.addTestData();
-    const topicReserves: TopicReserve[] =
-      await this.topicServices.findAllTopicReservesWithTopic();
+    // const topicReserves: TopicReserve[] =
+    //   await this.topicServices.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicServices.findAllTopics();
+    const getPassedTopicList: TopicReserve[] =
+      await this.topicServices.findPASSEDTopicReservesWithTopic();
     const topicReserveCount: Number = await this.topicServices.getPassedCount();
     const topicReservePageCount: Number = Math.floor(
       ((await this.topicServices.getPassedCount()) - 1) / 10 + 1,
     );
     console.log('최대값 : ' + topicReserveCount);
     console.log('페이지 수 : ' + topicReservePageCount);
+
     const getEndTime: TopicReserve[] = await this.topicServices.getPassedList();
     const getEndTimeList: TopicReserve[] = getEndTime.map((getEndTime) => {
       getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
       return getEndTime;
     });
-
-    const geteee = topicReserves.concat(getEndTimeList);
     getEndTimeList.reverse();
-    console.log(getEndTime);
-    console.log(getEndTimeList);
+    console.log(getPassedTopicList);
 
     //return res.render('ex_debate_list', { topics: topics });
 
@@ -55,8 +55,9 @@ export class ListController {
 
     return res.render('ex_debate_list', {
       ...viewDto,
+      getPassedTopicList: getPassedTopicList,
       getEndTimeList: getEndTimeList,
-      topicReserves: topicReserves,
+      //topicReserves: topicReserves,
       topics: topics,
       topicReserveCount: topicReserveCount,
       topicReservePageCount: topicReservePageCount,
