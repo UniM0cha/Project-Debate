@@ -27,7 +27,7 @@ export class ListController {
   private readonly logger = new Logger(ListController.name);
 
   @Get('/')
-  async getAllTopics(@Res() res) {
+  async getAllTopics(@Res() res, @Session() session) {
     // await this.topicServices.addTestData();
     const topicReserves: TopicReserve[] =
       await this.topicServices.findAllTopicReservesWithTopic();
@@ -39,7 +39,11 @@ export class ListController {
     console.log('최대값 : ' + topicReserveCount);
     console.log('페이지 수 : ' + topicReservePageCount);
     //return res.render('ex_debate_list', { topics: topics });
+
+    const viewDto = await this.appService.createViewDto(session);
+
     return res.render('ex_debate_list', {
+      ...viewDto,
       topicReserves: topicReserves,
       topics: topics,
       topicReserveCount: topicReserveCount,

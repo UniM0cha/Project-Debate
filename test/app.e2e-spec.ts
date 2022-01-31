@@ -16,9 +16,11 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+    return request(app.getHttpServer()).get('/').expect(200);
+    // .expect('Hello World!');
+  });
+
+  it('모든 채팅 내용 가져오기 (POST /chat/all)', () => {
+    return request(app.getHttpServer()).post('/chat/all').expect(200);
   });
 });
