@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoutform = document.querySelector('.form-logout');
 
   //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
-  if (isLogined == true) {
+  if (isLogined === true) {
     loginform.style.display = 'none';
     logoutform.style.display = 'block';
   } else {
