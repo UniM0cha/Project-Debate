@@ -300,8 +300,17 @@ export class TopicService {
   async getPassedList(): Promise<TopicReserve[]> {
     const passedList: TopicReserve[] = await this.topicReserveRepository.find({
       select: ['reserveDate'],
+      where: { reserveState: ReserveType.PASSED },
     });
     return passedList;
+  }
+
+  async findPASSEDTopicReservesWithTopic(): Promise<TopicReserve[]> {
+    return this.topicReserveRepository.find({
+      relations: ['topic'],
+      order: { reserveId: 'DESC' },
+      where: { reserveState: ReserveType.PASSED },
+    });
   }
 
   async addTestData() {
@@ -320,7 +329,7 @@ export class TopicService {
     const date1 = new Date('2022-01-01');
     topicReserve1.reserveDate = date1;
     topicReserve1.topic = topic1;
-    topicReserve1.reserveState = ReserveType.PASSED;
+    topicReserve1.reserveState = ReserveType.PENDING;
 
     const topicReserve2 = new TopicReserve();
     const date2 = new Date('2022-01-18');
