@@ -35,10 +35,11 @@ async function getAllChat() {
       min = min.toString().padStart(2, '0');
       //시간 계산
 
-      const nickname = item.chatId;
+      const nickname = item.nickname;
       const opinion = item.chatMessage;
       const time = ampm + ' ' + hour + ':' + min
       const opinionType = item.opinionType
+      const ul = document.querySelector('.live-debate');
 
       //채팅 작성하기
       ul.scrollTop = ul.scrollHeight;

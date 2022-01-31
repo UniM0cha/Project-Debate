@@ -9,9 +9,6 @@
       crossorigin='anonymous'
     ></script>  
     <script src="/js/ex_debate_show.js"></script>
-    <script>
-      const reserveId = {{topic.currentReserveId}};
-    </script>
   </head>
 
   <body>
@@ -20,7 +17,6 @@
       let isLogined = {{isLogined}};
       const nickname = "{{nickname}}";
       const userId = "{{userId}}";
-      const hasOpinion = {{hasOpinion}};
       const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
       console.log(isLogined);
     </script>

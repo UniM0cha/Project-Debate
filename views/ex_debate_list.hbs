@@ -11,9 +11,6 @@
     />
     <link rel='stylesheet' href='css/ex_debate_list.css' />
     <title>이전 주제 리스트 페이지</title>
-    <script>
-      const isLogined = {{isLogined}};
-    </script>
   </head>
 
   <script>
@@ -30,10 +27,13 @@
         </button>
       </form>
 
-      <a class='title' href='/'> 토론 사이트{{isLogined}}</a>
+      <a class='title' href='/'>토론 사이트</a>
 
       <form class='form-login expand' action='/login'>
         <button type='submit' class='btn btn-light btn-login'>로그인</button>
+      </form>
+      <form class='form-logout expand' action='/auth/logout'>
+        <button type='submit' class='btn-login'>로그아웃</button>
       </form>
     </nav>
 
