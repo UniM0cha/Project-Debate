@@ -39,13 +39,15 @@ export class ListController {
     console.log('최대값 : ' + topicReserveCount);
     console.log('페이지 수 : ' + topicReservePageCount);
     const getEndTime: TopicReserve[] = await this.topicServices.getPassedList();
-    const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
+    const getEndTimeList: TopicReserve[] = getEndTime.map((getEndTime) => {
       getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
-      return getEndTime.reserveDate;
+      return getEndTime;
     });
+
+    const geteee = topicReserves.concat(getEndTimeList);
     getEndTimeList.reverse();
+    console.log(getEndTime);
     console.log(getEndTimeList);
-    console.log(topicReserves);
 
     //return res.render('ex_debate_list', { topics: topics });
 
@@ -53,6 +55,7 @@ export class ListController {
 
     return res.render('ex_debate_list', {
       ...viewDto,
+      getEndTimeList: getEndTimeList,
       topicReserves: topicReserves,
       topics: topics,
       topicReserveCount: topicReserveCount,
