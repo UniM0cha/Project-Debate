@@ -16,9 +16,9 @@ export class AppService {
     let isLogined: boolean = session.isLogined;
     let nickname: string = null;
     let userId: string = null;
-    let topic: ViewTopicDto = new ViewTopicDto();
-    let hasOpinion: boolean = null;
-    let opinion: ViewOpinionDto = new ViewOpinionDto();
+    // let topic: ViewTopicDto = new ViewTopicDto();
+    // let hasOpinion: boolean = null;
+    // let opinion: ViewOpinionDto = new ViewOpinionDto();
 
     // 로그인 체크
     if (session.isLogined) {
@@ -26,18 +26,53 @@ export class AppService {
       nickname = session.userData.nickname;
       userId = session.userData.userId;
 
-      // 사용자의 의견 받아오기
-      let userOpinion: OpinionType = await this.topicService.getOpinion(userId);
-      hasOpinion = userOpinion ? true : false;
-      opinion.setViewOpinionType(userOpinion);
+      // // 사용자의 의견 받아오기
+      // let userOpinion: OpinionType = await this.topicService.getOpinion(userId);
+      // hasOpinion = userOpinion ? true : false;
+      // opinion.setViewOpinionType(userOpinion);
     } else {
       isLogined = false;
       nickname = null;
       userId = null;
-      hasOpinion = false;
+      // hasOpinion = false;
     }
 
-    // 주제 체크
+    // // 주제 체크
+    // let currentReserve: TopicReserve =
+    //   await this.topicService.findCurrentReserve();
+    // let nextReserve: TopicReserve = await this.topicService.findNextReserve();
+
+    // let currentReserveId = currentReserve ? currentReserve.reserveId : null;
+    // let currentTopicName = currentReserve
+    //   ? currentReserve.topic.topicName
+    //   : null;
+    // let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
+    // let endDate = nextReserve ? nextReserve.reserveDate : null;
+
+    // let agree: number = await this.topicService.getAgree(currentReserve);
+    // let disagree: number = await this.topicService.getDisagree(currentReserve);
+
+    // topic.setViewTopicDto(
+    //   currentReserveId,
+    //   currentTopicName,
+    //   afterTopicName,
+    //   endDate,
+    // );
+    // opinion.setViewOpinionNumber(agree, disagree);
+
+    return new ViewDto(isLogined, nickname, userId);
+  }
+
+  async checkHasOpinion(userId: string): Promise<boolean> {
+    let hasOpinion: boolean = null;
+    let userOpinion: OpinionType = await this.topicService.getOpinion(userId);
+    hasOpinion = userOpinion ? true : false;
+    return hasOpinion;
+  }
+
+  async setIndexTopicDto(): Promise<ViewTopicDto> {
+    let topic: ViewTopicDto = new ViewTopicDto();
+
     let currentReserve: TopicReserve =
       await this.topicService.findCurrentReserve();
     let nextReserve: TopicReserve = await this.topicService.findNextReserve();
@@ -49,18 +84,13 @@ export class AppService {
     let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
     let endDate = nextReserve ? nextReserve.reserveDate : null;
 
-    let agree: number = await this.topicService.getAgree(currentReserve);
-    let disagree: number = await this.topicService.getDisagree(currentReserve);
-
     topic.setViewTopicDto(
       currentReserveId,
       currentTopicName,
       afterTopicName,
       endDate,
     );
-    opinion.setViewOpinionNumber(agree, disagree);
-
-    return new ViewDto(isLogined, nickname, userId, topic, hasOpinion, opinion);
+    return topic;
   }
 
   async getCurrentReserveId(): Promise<number> {

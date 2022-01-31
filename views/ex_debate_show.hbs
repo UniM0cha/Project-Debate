@@ -2,123 +2,78 @@
   <head>
     <meta charset='utf-8' />
     <title>실시간 토론 페이지</title>
-    <link
-      href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css'
-      rel='stylesheet'
-      integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3'
+    <link rel='stylesheet' href='/css/index.css' />
+    <script
+      src='https://cdn.socket.io/4.4.0/socket.io.min.js'
+      integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
       crossorigin='anonymous'
-    />
-    <link rel='stylesheet' href='css/index.css' />
+    ></script>  
+    <script src="/js/ex_debate_show.js"></script>
   </head>
 
   <body>
+    {{!-- index.js파일에서 사용할 script선언 --}}
+    <script>
+      let isLogined = {{isLogined}};
+      const nickname = "{{nickname}}";
+      const userId = "{{userId}}";
+      const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
+      console.log(isLogined);
+    </script>
 
-    <!-- 상단 메뉴 -->
-    <nav class='navbar navbar-lg navbar-dark bg-dark'>
-      <form class='form-ex-debatelist' action='/list'>
-        <button type='submit' class='btn btn-light btn-ex-debatelist'>이전
-          리스트</button>
-      </form>
+    {{!-- 상단 메뉴 --}}
+    <div class="menu">
+      <div class="inner-menu">
+      <div class="div-ex-debatelist">
+        <form class='form-ex-debatelist' action='/list'>
+          <button type='submit' class='btn-ex-debatelist'>
+            이전 리스트
+          </button>
+        </form>
+      </div>
 
-      <a class='title' href='/'>
-        토론 사이트</a>
+      <div class="div-title">
+        <a class='title' href='#'>토론 사이트</a>
+      </div>
 
-      <form class='form-login expand' action='/login'>
-        <button type='submit' class='btn btn-light btn-login'>로그인</button>
-      </form>
-    </nav>
+      <div class="div-login">
+        <form class='form-login expand' action='/auth'>
+          <button type='submit' class='btn-login'>로그인</button>
+        </form>
+        <form class='form-logout expand' action='/auth/logout'>
+          <button type='submit' class='btn-login'>로그아웃</button>
+        </form>
+      </div>
+      </div>
+    </div>
 
     <!-- 주제 -->
     <div class='time-topic-div'>
-      <div class='time'>
-        주제의 남은 시간 표시
+      <div class='time'  id="topic-time">
       </div>
       <div class='topic'>
-        주제
+        주제 : {{topic.currentTopicName}}<br>
       </div>
     </div>
 
     <!-- 찬성반대투표바 -->
     <div class='age-dis-bar-wrapper'>
-      <div class='agree-bar'>찬성: 50%</div>
-      <div class='disagree-bar'>반대: 50%</div>
-
-      {{! <button class='bar-button agree-btn'>찬성</button>
-      <button class='bar-button disagree-btn'>반대</button> }}
+      <div>
+      <div class='agree-bar'><span class="agree-sign">찬성:</span></div>
+      <div class='disagree-bar'><span class='disagree-sign'>반대:</span></div>
+      </div>
     </div>
 
     <!-- 실시간 토론 하는 곳 -->
     <div class='debate-wrapper'>
       <div class='debate-box'>
-        <ul class='live-debate'>
-
-          <li class='agree'>
-            <div class='nickname'>usernickname</div>
-            <div
-              class='user-opinion'
-            >찬성의견안녕하세요요요용요요요요요요용요요요요</div>
-            <div class='opinion-time'>오후 01:36</div>
-          </li>
-
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
-          <li class='disagree'>
-            <div class='nickname'>usernickname</div>
-            <div class='opinion-time'>오후 01:37</div>
-            <div class='user-opinion'>반대의견</div>
-          </li>
+        <ul class='live-debate' id='messages'>
 
         </ul>
       </div>
-      <div class='input-box'>
-        <input class='opinion-input' type='text' />
-        <button class='send' type='button'>전송</button>
-      </div>
+
     </div>
 
+    <script src="/js/login.js"></script>
   </body>
-
-  <script
-    src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js'
-    integrity='sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p'
-    crossorigin='anonymous'
-  ></script>
 </html>

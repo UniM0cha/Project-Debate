@@ -1,27 +1,27 @@
 import { OpinionType } from 'src/topic/entity/topic-users.entity';
 
 export class ViewDto {
-  readonly isLogined: boolean;
-  readonly nickname: string;
-  readonly userId: string;
-  readonly topic: ViewTopicDto;
-  readonly hasOpinion: boolean;
-  readonly opinion: ViewOpinionDto;
+  isLogined: boolean;
+  nickname: string;
+  userId: string;
+  topic?: ViewTopicDto;
+  hasOpinion?: boolean;
+  // readonly opinion: ViewOpinionDto;
 
   constructor(
     _isLogined: boolean,
     _nickname: string,
     _userId: string,
-    _topic: ViewTopicDto,
-    _hasOpinion: boolean,
-    _opinion: ViewOpinionDto,
+    // _topic: ViewTopicDto,
+    // _hasOpinion: boolean,
+    // _opinion: ViewOpinionDto,
   ) {
     this.isLogined = _isLogined;
     this.nickname = _nickname;
     this.userId = _userId;
-    this.topic = _topic;
-    this.hasOpinion = _hasOpinion;
-    this.opinion = _opinion;
+    // this.topic = _topic;
+    // this.hasOpinion = _hasOpinion;
+    // this.opinion = _opinion;
   }
 }
 

@@ -18,8 +18,8 @@ export class Chat {
   @Column({ type: 'enum', enum: OpinionType })
   opinionType: OpinionType;
 
-  @ManyToOne(() => Users, (user) => user.userId)
-  user: Users;
+  @ManyToOne(() => Users, (users) => users.userId)
+  users: Users;
 
   @ManyToOne(() => TopicReserve, (topicReserve) => topicReserve.reserveId)
   topicReserve: TopicReserve;
@@ -27,11 +27,11 @@ export class Chat {
   createChat(
     date: Date,
     message: string,
-    user: Users,
+    users: Users,
     topicReserve: TopicReserve,
     opinionType: OpinionType,
   ) {
-    this.user = user;
+    this.users = users;
     this.chatDate = date;
     this.chatMessage = message;
     this.topicReserve = topicReserve;

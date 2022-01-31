@@ -304,6 +304,12 @@ export class TopicService {
     });
     return passedList;
   }
+  async findOnePassedTopicReserve(reserveId: number): Promise<TopicReserve> {
+    return this.topicReserveRepository.findOne({
+      reserveId: reserveId,
+      reserveState: ReserveType.PASSED,
+    });
+  }
 
   async findPASSEDTopicReservesWithTopic(): Promise<TopicReserve[]> {
     return this.topicReserveRepository.find({
