@@ -23,7 +23,7 @@ export class TopicGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() data,
   ) {
-    this.logger.debug(`Opinion Type Refresh Request: ${client.id}`);
+    this.logger.debug(`Opinion Type Refresh Request - clientId: ${client.id}`);
     const reserveId: number = data.reserveId;
     const amount = await this.topicService.getAgreeDisagree(reserveId);
     if (amount) {
