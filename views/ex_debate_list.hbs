@@ -9,7 +9,7 @@
       integrity='sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3'
       crossorigin='anonymous'
     />
-    <link rel='stylesheet' href='css/ex_debate_list.css' />
+    <link rel='stylesheet' href='/css/ex_debate_list.css' />
     <title>이전 주제 리스트 페이지</title>
   </head>
 
@@ -56,16 +56,18 @@
           <th>번호</th>
           <th>주제</th>
           <th>날짜</th>
+          <th>끝난 날짜</th>
         </tr>
       </thead>
 
       <tbody class="list-body">
-      {{#if getPassedTopicList}}
-        {{#each getPassedTopicList}}
+      {{#if arr1}}
+        {{#each arr1}}
           <tr>
             <td>{{reserveId}}</a></td>
             <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
             <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat reserveEndDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
       {{else}}
@@ -82,15 +84,16 @@
       <th>예약 번호</th>
       <th>주제</th>
       <th>시작 날짜</th>
+      <th>끝난 날짜</th>
       
-      
-      {{#if getPassedTopicList}}
-        {{#each getPassedTopicList}}
+      {{#if arr1}}
+        {{#each arr1}}
         
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{topic.topicName}}</td>
             <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat reserveEndDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
         
@@ -99,14 +102,6 @@
           <td colspan="5" align="center">데이터가 없습니다.</td>
         </tr>
       {{/if}}
-    </table>
-    <table border="1">
-      <th>끝난 날짜</th>
-      {{#each getEndTimeList}}
-        <tr>
-          <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
-        </tr>
-      {{/each}}
     </table>
   
     <p/>
