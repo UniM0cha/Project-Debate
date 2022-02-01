@@ -54,10 +54,11 @@ export class ListController {
         arr1.push( getPassedTopicList.slice( (i - 1) * 10, i * 10 ) );
       } else {
         arr1.push( getPassedTopicList.slice( (i - 1) * 10,  topicReserveCount.valueOf() ) );
-        console.log(getPassedTopicList.slice( (i - 1) * 10,  topicReserveCount.valueOf() ));
+        console.log( getPassedTopicList.slice( (i - 1) * 10,  topicReserveCount.valueOf() ) );
       }
     }
-    console.log("arr1 : " + arr1);
+    console.log("arr1 : " + arr1);        // test
+    console.log("arr1 : " + arr1.length); // test
     
 
     //return res.render('ex_debate_list', { topics: topics });
@@ -65,6 +66,7 @@ export class ListController {
     const viewDto = await this.appService.createViewDto(session);
 
     return res.render('ex_debate_list', {
+      arr1: arr1, // test
       ...viewDto,
       getPassedTopicList: getPassedTopicList,
       getEndTimeList: getEndTimeList,

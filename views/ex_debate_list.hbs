@@ -42,6 +42,14 @@
     {{topicReserveCount}} 
     {{!-- 페이지 수 --}}
     {{topicReservePageCount}}
+    <!--수정중-->
+    {{#each arr1}}
+      {{#each TopicReserve}}
+        {{reserveId}}
+      {{/each}}
+    {{/each}}
+    {{arr1.TopicReserve.reserveId}}
+    <!--수정중-->
     <table class='table table-striped topic-list'>
       <thead>
         <tr>
@@ -69,9 +77,6 @@
 
     </table>
     <h1>주제 예약 목록</h1>
-    {{topicReserveCount}}
-    {{topicReservePageCount}}
-    {{getEndTimeList}}
 
     <table border="1">
       <th>예약 번호</th>
