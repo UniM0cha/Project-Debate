@@ -28,9 +28,9 @@ export class ListController {
 
   @Get('/')
   async getAllTopics(@Res() res, @Session() session) {
-    //await this.topicServices.addTestData();
-    //const topicReserves: TopicReserve[] =
-    //await this.topicServices.findAllTopicReservesWithTopic();
+    // await this.topicServices.addTestData();
+    // const topicReserves: TopicReserve[] =
+    //   await this.topicServices.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicServices.findAllTopics();
     const getPassedTopicList: TopicReserve[] =
       await this.topicServices.findPASSEDTopicReservesWithTopic();
@@ -48,14 +48,25 @@ export class ListController {
     });
     getEndTimeList.reverse();
     console.log(getPassedTopicList);
+    let arr1 = [];
+    for( let i: number = 1; i <= topicReservePageCount; i++ ) {
+      if(topicReserveCount.valueOf() / i >= 10) {
+        arr1.push( getPassedTopicList.slice( (i - 1) * 10, i * 10 ) );
+      } else {
+        arr1.push( getPassedTopicList.slice( (i - 1) * 10,  topicReserveCount.valueOf() ) );
+        console.log(getPassedTopicList.slice( (i - 1) * 10,  topicReserveCount.valueOf() ));
+      }
+    }
+    console.log("arr1 : " + arr1);
+    
 
     //return res.render('ex_debate_list', { topics: topics });
 
     const viewDto = await this.appService.createViewDto(session);
 
     return res.render('ex_debate_list', {
-      getPassedTopicList: getPassedTopicList,
       ...viewDto,
+      getPassedTopicList: getPassedTopicList,
       getEndTimeList: getEndTimeList,
       //topicReserves: topicReserves,
       topics: topics,
