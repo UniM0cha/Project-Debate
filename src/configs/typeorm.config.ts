@@ -2,12 +2,12 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export const typeORMConfig: TypeOrmModuleOptions = {
-  type: 'mariadb',
-  host: '112.151.4.252',
-  port: 1026,
-  // type: 'mysql',
-  // host: 'localhost',
-  // port: 3306,
+  //type: 'mariadb',
+  //host: '112.151.4.252',
+  //port: 1026,
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
   username: 'debate',
   password: 'mochamocha',
   database: 'debate',

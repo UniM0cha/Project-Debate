@@ -21,7 +21,10 @@ export class TopicReserve {
   reserveId: number;
 
   @Column()
-  reserveDate: Date;
+  startDate: Date;
+
+  @Column({ nullable: true })
+  endDate: Date;
 
   @Column({ type: 'enum', enum: ReserveType, default: ReserveType.PENDING })
   reserveState: ReserveType;
@@ -35,8 +38,8 @@ export class TopicReserve {
   @OneToMany(() => Chat, (chat) => chat.chatId)
   chat: Chat[];
 
-  setReserve(_reserveDate: Date, _topic: Topic) {
-    this.reserveDate = _reserveDate;
+  setReserve(_startDate: Date, _topic: Topic) {
+    this.startDate = _startDate;
     this.topic = _topic;
   }
 }

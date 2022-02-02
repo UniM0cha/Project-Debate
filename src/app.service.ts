@@ -82,7 +82,7 @@ export class AppService {
       ? currentReserve.topic.topicName
       : null;
     let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
-    let endDate = nextReserve ? nextReserve.reserveDate : null;
+    let endDate = nextReserve ? nextReserve.startDate : null;
 
     topic.setViewTopicDto(
       currentReserveId,

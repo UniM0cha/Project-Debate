@@ -22,21 +22,25 @@ export class TopicService {
   private readonly logger = new Logger(TopicService.name);
 
   /** 주제 순환 코드 */
-  @Cron('0 0 * * * *')
+  @Cron('0 * * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
 
-    // 현재 진행중인 주제
-    const currentReserve: TopicReserve =
-      await this.topicReserveRepository.findCurrentReserve();
+    // 오늘 교체되야야하는 주제
+    // const todayReserve: TopicReserve =
+    //   await this.topicReserveRepository.findTodayTopicReserve();
 
     // 오늘 교체되야야하는 주제
-    const todayReserve: TopicReserve =
-      await this.topicReserveRepository.findTodayTopicReserve();
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+    this.logger.debug(`Find Today Reserve - Today is: ${today}`);
 
-    this.logger.debug(
-      `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
-    );
+    const todayReserve: TopicReserve =
+      await this.topicReserveRepository.findOne({
+        startDate: today,
+        reserveState: ReserveType.PENDING,
+      });
+
     this.logger.debug(
       `Today Reserve: ${JSON.stringify(todayReserve, null, 4)}`,
     );
@@ -45,14 +49,34 @@ export class TopicService {
     if (todayReserve) {
       // 교체되기로 한 것은 PROCCEING으로 변경
       if (todayReserve.reserveState === ReserveType.PENDING) {
-        this.topicReserveRepository.updateToProceeding(todayReserve.reserveId);
+        this.topicReserveRepository.update(
+          { reserveId: todayReserve.reserveId },
+          { reserveState: ReserveType.PROCEEDING },
+        );
       }
+
+      // 현재 진행중인 주제
+      const currentReserve: TopicReserve =
+        await this.topicReserveRepository.findCurrentReserve();
+
+      this.logger.debug(
+        `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
+      );
 
       // 진행중인 예약이 있는지 확인 -> 예약된것이 없는 초기상태를 대비
       if (currentReserve) {
-        // 먼저 진행되었던 것은 PASSED로 변경
+        // 먼저 진행되었던 것은 PASSED로 변경하고 어제를 종료 날짜로 기록
         if (currentReserve.reserveState === ReserveType.PROCEEDING) {
-          this.topicReserveRepository.updateToPassed(currentReserve.reserveId);
+          const yesterday = new Date(today);
+          yesterday.setDate(today.getDate() - 1);
+
+          this.topicReserveRepository.update(
+            { reserveId: currentReserve.reserveId },
+            {
+              reserveState: ReserveType.PASSED,
+              endDate: yesterday,
+            },
+          );
         }
       }
     }
@@ -124,7 +148,7 @@ export class TopicService {
     const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
     return await this.topicReserveRepository.update(
       { reserveId: id },
-      { reserveDate: reserve.reserveDate, topic: topic },
+      { startDate: reserve.reserveDate, topic: topic },
     );
   }
 
@@ -299,7 +323,7 @@ export class TopicService {
 
   async getPassedList(): Promise<TopicReserve[]> {
     const passedList: TopicReserve[] = await this.topicReserveRepository.find({
-      select: ['reserveDate'],
+      select: ['startDate'],
       where: { reserveState: ReserveType.PASSED },
     });
     return passedList;
@@ -333,67 +357,67 @@ export class TopicService {
 
     const topicReserve1 = new TopicReserve();
     const date1 = new Date('2022-01-01');
-    topicReserve1.reserveDate = date1;
+    topicReserve1.startDate = date1;
     topicReserve1.topic = topic1;
     topicReserve1.reserveState = ReserveType.PENDING;
 
     const topicReserve2 = new TopicReserve();
     const date2 = new Date('2022-01-18');
-    topicReserve2.reserveDate = date2;
+    topicReserve2.startDate = date2;
     topicReserve2.topic = topic2;
     topicReserve2.reserveState = ReserveType.PASSED;
 
     const topicReserve3 = new TopicReserve();
     const date3 = new Date('2022-01-19');
-    topicReserve3.reserveDate = date3;
+    topicReserve3.startDate = date3;
     topicReserve3.topic = topic3;
     topicReserve3.reserveState = ReserveType.PASSED;
 
     const topicReserve4 = new TopicReserve();
     const date4 = new Date('2022-01-20');
-    topicReserve4.reserveDate = date4;
+    topicReserve4.startDate = date4;
     topicReserve4.topic = topic1;
     topicReserve4.reserveState = ReserveType.PASSED;
 
     const topicReserve5 = new TopicReserve();
     const date5 = new Date('2022-01-21');
-    topicReserve5.reserveDate = date5;
+    topicReserve5.startDate = date5;
     topicReserve5.topic = topic2;
     topicReserve5.reserveState = ReserveType.PASSED;
 
     const topicReserve6 = new TopicReserve();
     const date6 = new Date('2022-01-22');
-    topicReserve6.reserveDate = date6;
+    topicReserve6.startDate = date6;
     topicReserve6.topic = topic3;
     topicReserve6.reserveState = ReserveType.PASSED;
 
     const topicReserve7 = new TopicReserve();
     const date7 = new Date('2022-01-23');
-    topicReserve7.reserveDate = date7;
+    topicReserve7.startDate = date7;
     topicReserve7.topic = topic3;
     topicReserve7.reserveState = ReserveType.PASSED;
 
     const topicReserve8 = new TopicReserve();
     const date8 = new Date('2022-01-24');
-    topicReserve8.reserveDate = date8;
+    topicReserve8.startDate = date8;
     topicReserve8.topic = topic3;
     topicReserve8.reserveState = ReserveType.PASSED;
 
     const topicReserve9 = new TopicReserve();
     const date9 = new Date('2022-01-25');
-    topicReserve9.reserveDate = date9;
+    topicReserve9.startDate = date9;
     topicReserve9.topic = topic3;
     topicReserve9.reserveState = ReserveType.PASSED;
 
     const topicReserve10 = new TopicReserve();
     const date10 = new Date('2022-01-26');
-    topicReserve10.reserveDate = date10;
+    topicReserve10.startDate = date10;
     topicReserve10.topic = topic3;
     topicReserve10.reserveState = ReserveType.PASSED;
 
     const topicReserve11 = new TopicReserve();
     const date11 = new Date('2022-01-27');
-    topicReserve11.reserveDate = date11;
+    topicReserve11.startDate = date11;
     topicReserve11.topic = topic3;
     topicReserve11.reserveState = ReserveType.PASSED;
 
