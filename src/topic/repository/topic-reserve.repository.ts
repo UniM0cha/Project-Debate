@@ -12,7 +12,7 @@ export class TopicReserveRepository extends Repository<TopicReserve> {
     this.logger.debug(`Find Today Reserve - Today is: ${today}`);
 
     return await this.findOne({
-      reserveDate: today,
+      startDate: today,
       reserveState: ReserveType.PENDING,
     });
   }
@@ -22,9 +22,9 @@ export class TopicReserveRepository extends Repository<TopicReserve> {
     today.setHours(9, 0, 0, 0);
 
     return await this.findOne({
-      where: { reserveDate: MoreThan(today) },
+      where: { startDate: MoreThan(today) },
       relations: ['topic'],
-      order: { reserveDate: 'ASC' },
+      order: { startDate: 'ASC' },
     });
   }
 

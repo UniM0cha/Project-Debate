@@ -8,6 +8,7 @@ import {
   Logger,
   ParseIntPipe,
   NotFoundException,
+  Redirect,
 } from '@nestjs/common';
 import { AppService } from 'src/app.service';
 import { ChatService } from 'src/chat/chat.service';
@@ -25,6 +26,10 @@ export class ListController {
     private readonly listService: ListService,
   ) {}
   private readonly logger = new Logger(ListController.name);
+
+  @Get('/')
+  @Redirect('/list/page/1')
+  redirectToPageOne() {}
 
   @Get('/page/:page')
   async getAllTopics(
@@ -47,8 +52,8 @@ export class ListController {
 
     const getEndTime: TopicReserve[] = await this.topicServices.getPassedList();
     const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
-      getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
-      return getEndTime.reserveDate;
+      getEndTime.startDate.setDate(getEndTime.startDate.getDate() - 1);
+      return getEndTime.startDate;
     });
 
     // const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
@@ -64,7 +69,7 @@ export class ListController {
     getPassedTopicList.forEach((element, index) => {
       arr1.push({
         reserveId: element.reserveId,
-        reserveDate: element.reserveDate,
+        reserveDate: element.startDate,
         reserveEndDate: getEndTimeList[index + 1],
         topic: {
           topicName: element.topic.topicName,
