@@ -15,7 +15,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   namingStrategy: new SnakeNamingStrategy(),
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   autoLoadEntities: true,
-  // synchronize: true,
-  // dropSchema: true,
+  synchronize: true,
+  dropSchema: true,
   logging: true,
 };
