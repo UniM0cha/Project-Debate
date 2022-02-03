@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { OpinionType, TopicUsers } from './entity/topic-users.entity';
@@ -10,6 +10,7 @@ import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
+import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class TopicService {
@@ -25,10 +26,6 @@ export class TopicService {
   @Cron('0 * * * * *')
   async cycleTopic() {
     this.logger.debug(`Start Cycling....`);
-
-    // 오늘 교체되야야하는 주제
-    // const todayReserve: TopicReserve =
-    //   await this.topicReserveRepository.findTodayTopicReserve();
 
     // 오늘 교체되야야하는 주제
     const today = new Date();
@@ -56,8 +53,7 @@ export class TopicService {
       }
 
       // 현재 진행중인 주제
-      const currentReserve: TopicReserve =
-        await this.topicReserveRepository.findCurrentReserve();
+      const currentReserve: TopicReserve = await this.findCurrentReserve();
 
       this.logger.debug(
         `Current Reserve: ${JSON.stringify(currentReserve, null, 4)}`,
@@ -83,15 +79,27 @@ export class TopicService {
   }
 
   async findNextReserve(): Promise<TopicReserve> {
-    return await this.topicReserveRepository.findNextReserve();
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+
+    return await this.topicReserveRepository.findOne({
+      where: { startDate: MoreThan(today) },
+      relations: ['topic'],
+      order: { startDate: 'ASC' },
+    });
   }
 
   async findCurrentReserve(): Promise<TopicReserve> {
-    return await this.topicReserveRepository.findCurrentReserve();
+    return await this.topicReserveRepository.findOne(
+      {
+        reserveState: ReserveType.PROCEEDING,
+      },
+      { relations: ['topic'] },
+    );
   }
 
   async findAllTopics(): Promise<Topic[]> {
-    return this.topicRepository.find();
+    return await this.topicRepository.find();
   }
 
   async findOneTopic(id: number): Promise<Topic> {
@@ -162,8 +170,7 @@ export class TopicService {
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
     const user: Users = await this.usersService.findOneById(_userId);
-    const topicReserve: TopicReserve =
-      await this.topicReserveRepository.findCurrentReserve();
+    const topicReserve: TopicReserve = await this.findCurrentReserve();
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
       users: user,
       topicReserve: topicReserve,
@@ -171,56 +178,117 @@ export class TopicService {
     return topicUsers ? topicUsers.opinionType : null;
   }
 
-  async addAgree(userId: string, reserveId: number) {
+  // async addAgree(userId: string, reserveId: number) {
+  //   const user: Users = await this.usersService.findOneById(userId);
+  //   const topicReserve: TopicReserve =
+  //     await this.topicReserveRepository.findOne(reserveId);
+
+  //   let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+  //     users: user,
+  //     topicReserve: topicReserve,
+  //   });
+
+  //   // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
+  //   if (topicUser) {
+  //     await this.topicUsersRepository.update(topicUser, {
+  //       opinionType: OpinionType.AGREE,
+  //     });
+  //     this.logger.debug(`Agree Opinion Update Success`);
+  //   } else {
+  //     topicUser = new TopicUsers();
+  //     topicUser.users = user;
+  //     topicUser.topicReserve = topicReserve;
+  //     topicUser.opinionType = OpinionType.AGREE;
+  //     await this.topicUsersRepository.save(topicUser);
+  //     this.logger.debug(`Agree Opinion Save Success`);
+  //   }
+  // }
+
+  // async addDisagree(userId: string, reserveId: number) {
+  //   const user: Users = await this.usersService.findOneById(userId);
+  //   const topicReserve: TopicReserve =
+  //     await this.topicReserveRepository.findOne(reserveId);
+
+  //   let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+  //     users: user,
+  //     topicReserve: topicReserve,
+  //   });
+
+  //   // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
+  //   if (topicUser) {
+  //     await this.topicUsersRepository.update(topicUser, {
+  //       opinionType: OpinionType.DISAGREE,
+  //     });
+  //     this.logger.debug(`Disagree Opinion Update Success`);
+  //   } else {
+  //     topicUser = new TopicUsers();
+  //     topicUser.users = user;
+  //     topicUser.topicReserve = topicReserve;
+  //     topicUser.opinionType = OpinionType.DISAGREE;
+  //     await this.topicUsersRepository.save(topicUser);
+  //     this.logger.debug(`Disagree Opinion Save Success`);
+  //   }
+  // }
+
+  async addAgreeDisagree(userId: string, reserveId: number, type: OpinionType) {
+    // userId와 reserveId 검증
+    if (!userId) {
+      this.logger.error(`addAgreeDisagree failed: 등록된 유저가 없습니다.`);
+      throw new BadRequestException();
+    }
+
+    if (!reserveId) {
+      this.logger.error(
+        `addAgreeDisagree failed: 유효하지 않은 주제예약 번호입니다.`,
+      );
+      throw new BadRequestException();
+    }
+
+    // 현재 진행중인 주제인지 검증
+    const currentReserve: TopicReserve = await this.findCurrentReserve();
+
+    if (currentReserve.reserveId === reserveId) {
+      this.logger.error(
+        `addAgreeDisagree failed: 현재 진행중인 주제가 아닙니다.`,
+      );
+      throw new BadRequestException();
+    }
+
+    // 유효한 userId인지 검증
     const user: Users = await this.usersService.findOneById(userId);
+    if (!user) {
+      this.logger.error(`addAgreeDisagree failed: 존재하지 않는 유저입니다.`);
+      throw new BadRequestException();
+    }
+
+    // 존재하는 주제 예약 번호인지 검증
     const topicReserve: TopicReserve =
       await this.topicReserveRepository.findOne(reserveId);
+    if (!topicReserve) {
+      this.logger.error(
+        `addAgreeDisagree failed: 존재하지 않는 주제예약 번호입니다.`,
+      );
+      throw new BadRequestException();
+    }
 
-    let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
+    // 이미 의견을 표출한 유저인지 검증
+    const topicUser: TopicUsers = await this.topicUsersRepository.findOne({
       users: user,
       topicReserve: topicReserve,
     });
 
-    // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
     if (topicUser) {
-      await this.topicUsersRepository.update(topicUser, {
-        opinionType: OpinionType.AGREE,
-      });
-      this.logger.debug(`Agree Opinion Update Success`);
-    } else {
-      topicUser = new TopicUsers();
-      topicUser.users = user;
-      topicUser.topicReserve = topicReserve;
-      topicUser.opinionType = OpinionType.AGREE;
-      await this.topicUsersRepository.save(topicUser);
-      this.logger.debug(`Agree Opinion Save Success`);
+      this.logger.error(
+        `addAgreeDisagree failed: 이미 의견을 결정한 유저입니다.`,
+      );
+      throw new BadRequestException();
     }
-  }
 
-  async addDisagree(userId: string, reserveId: number) {
-    const user: Users = await this.usersService.findOneById(userId);
-    const topicReserve: TopicReserve =
-      await this.topicReserveRepository.findOne(reserveId);
-
-    let topicUser: TopicUsers = await this.topicUsersRepository.findOne({
-      users: user,
-      topicReserve: topicReserve,
-    });
-
-    // 이미 의견 표출 했다면 Update, 새로운 의견이면 save
-    if (topicUser) {
-      await this.topicUsersRepository.update(topicUser, {
-        opinionType: OpinionType.DISAGREE,
-      });
-      this.logger.debug(`Disagree Opinion Update Success`);
-    } else {
-      topicUser = new TopicUsers();
-      topicUser.users = user;
-      topicUser.topicReserve = topicReserve;
-      topicUser.opinionType = OpinionType.DISAGREE;
-      await this.topicUsersRepository.save(topicUser);
-      this.logger.debug(`Disagree Opinion Save Success`);
-    }
+    const newTopicUser = new TopicUsers();
+    newTopicUser.setTopicUsers(type, user, topicReserve);
+    await this.topicUsersRepository.save(newTopicUser);
+    this.logger.debug(`addAgreeDisagree Success`);
+    return;
   }
 
   async getAgree(currentReserve: TopicReserve): Promise<number> {
