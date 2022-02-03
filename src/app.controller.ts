@@ -30,4 +30,8 @@ export class AppController {
 
   @Post('/time')
   sendTime() {}
+
+  @Get('/test')
+  @Render('test')
+  test() {}
 }
