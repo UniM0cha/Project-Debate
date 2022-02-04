@@ -8,14 +8,14 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: 'root',
-  password: '991229',
+  username: 'debate',
+  password: 'mochamocha',
   database: 'debate',
   // 카멜케이스를 스네이크로
   namingStrategy: new SnakeNamingStrategy(),
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   autoLoadEntities: true,
-  synchronize: true,
-  dropSchema: true,
+  //synchronize: true,
+  //dropSchema: true,
   logging: true,
 };
