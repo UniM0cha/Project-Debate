@@ -228,23 +228,23 @@ topicSocket.on('refresh-opinion-type', ({ agree, disagree }) => {
   // }
 });
 
-// 현재 안쓰이는 함수
-//찬성 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
-function agree_calculate(agree, disagree) {
-  sum = agree + disagree;
-  agree = sum / agree;
-  agreebar_width = 100 / agree;
-  disagreebar_width = 100 - agreebar_width;
-}
+// // 현재 안쓰이는 함수
+// //찬성 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
+// function agree_calculate(agree, disagree) {
+//   sum = agree + disagree;
+//   agree = sum / agree;
+//   agreebar_width = 100 / agree;
+//   disagreebar_width = 100 - agreebar_width;
+// }
 
-// 현재 안쓰이는 함수
-//반대 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
-function disagree_calculate(agree, disagree) {
-  sum = agree + disagree;
-  agree = sum / disagree;
-  disagreebar_width = 100 / disagree;
-  agreebar_width = 100 - disagreebar_width;
-}
+// // 현재 안쓰이는 함수
+// //반대 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
+// function disagree_calculate(agree, disagree) {
+//   sum = agree + disagree;
+//   agree = sum / disagree;
+//   disagreebar_width = 100 / disagree;
+//   agreebar_width = 100 - disagreebar_width;
+// }
 
 /**찬성/반대 요청을 한 후 서버로부터 상태코드 응답 이벤트 등록 */
 topicSocket.on('option-type-state-to-client', ({ state }) => {
@@ -269,7 +269,7 @@ topicSocket.on('option-type-state-to-client', ({ state }) => {
       break;
     // 유효하지 않은 주제
     case 2:
-      alert(`주제가 설정되지 않았습니다.`);
+      alert(`유효하지 않은 주제입니다.`);
       break;
     // 유저가 의견을 제시하지 않음
     case 3:
@@ -341,12 +341,12 @@ async function send_chat_socket_emit() {
   document.querySelector('#message').value = '';
 }
 
-const ul = document.querySelector('.live-debate');
-
 // 서버로부터 도착한 채팅을 표시하는 함수
 function send_opinion(nickname, opinion, date, opinionType) {
+  const ul = document.querySelector('.live-debate');
   const today = new Date(date);
   let hour = today.getHours();
+
   let min = today.getMinutes();
   let ampm = '';
   if (hour > 12) {
@@ -359,7 +359,7 @@ function send_opinion(nickname, opinion, date, opinionType) {
   min = min.toString().padStart(2, '0');
   const time = ampm + ' ' + hour + ':' + min;
 
-  ul.scrollTop = ul.scrollHeight;
+  //ul.scrollTop = ul.scrollHeight;
   if (opinionType === 'agree') {
     const li = document.createElement('li');
     li.classList.add(opinionType);
@@ -387,6 +387,7 @@ function send_opinion(nickname, opinion, date, opinionType) {
     li.innerHTML = dom;
     ul.appendChild(li);
   }
+  ul.scrollTop = ul.scrollHeight;
 }
 
 // 모든 채팅 가져오는 함수
@@ -425,7 +426,8 @@ async function getAllChat() {
       const ul = document.querySelector('.live-debate');
 
       //채팅 작성하기
-      ul.scrollTop = ul.scrollHeight;
+
+      // ul.scrollTop = ul.scrollHeight;
       if (opinionType === 'agree') {
         const li = document.createElement('li');
         li.classList.add(opinionType);
@@ -453,6 +455,7 @@ async function getAllChat() {
         li.innerHTML = dom;
         ul.appendChild(li);
       }
+      ul.scrollTop = ul.scrollHeight;
     });
     console.log(`chatList: ${JSON.stringify(chatList, null, 4)}`);
   }
