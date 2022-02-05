@@ -69,8 +69,8 @@ export class ListController {
     getPassedTopicList.forEach((element, index) => {
       arr1.push({
         reserveId: element.reserveId,
-        reserveDate: element.startDate,
-        reserveEndDate: getEndTimeList[index + 1],
+        startDate: element.startDate,
+        endDate: element.endDate,
         topic: {
           topicName: element.topic.topicName,
         },
