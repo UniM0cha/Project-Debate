@@ -13,6 +13,7 @@ async function bootstrap() {
   app.setViewEngine('hbs');
 
   hbs.registerHelper('dateFormat', require('handlebars-dateformat'));
+  hbs.registerPartials(join(__dirname, '..', 'views/partials'));
 
   const FileStore = require('session-file-store')(session);
   app.use(

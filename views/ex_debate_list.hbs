@@ -74,7 +74,7 @@
           <tr>
             <td>{{reserveId}}</a></td>
             <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
-            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat startDate "YY.MM.DD"}}</td>
             <td>{{dateFormat endDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
@@ -101,7 +101,7 @@
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
             <td>{{topic.topicName}}</td>
             <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
-            <td>{{dateFormat endDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat reserveEndDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
         

@@ -42,7 +42,7 @@ async function getAllChat() {
       const ul = document.querySelector('.live-debate');
 
       //채팅 작성하기
-
+      ul.scrollTop = ul.scrollHeight;
       if (opinionType === 'agree') {
         const li = document.createElement('li');
         li.classList.add(opinionType);
@@ -70,7 +70,6 @@ async function getAllChat() {
         li.innerHTML = dom;
         ul.appendChild(li);
       }
-      //ul.scrollTop = ul.scrollHeight;
     });
     console.log(`chatList: ${JSON.stringify(chatList, null, 4)}`);
   }

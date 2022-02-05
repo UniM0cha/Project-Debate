@@ -29,6 +29,7 @@
     <table border="1">
       <th>예약 번호</th>
       <th>시작 날짜</th>
+      <th>종료 날짜</th>
       <th>상태</th>
       <th>주제 번호</th>
       <th>주제</th>
@@ -36,7 +37,8 @@
         {{#each topicReserves}}
           <tr>
             <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
-            <td>{{dateFormat reserveDate "YYYY년 MM월 DD일"}}</td>
+            <td>{{dateFormat startDate "YYYY년 MM월 DD일"}}</td>
+            <td>{{#if endDate}}{{dateFormat endDate "YYYY년 MM월 DD일"}}{{else}}{{/if}}</td>
             <td>{{reserveState}}</td>
             <td align="center">{{topic.topicId}}</td>
             <td>{{topic.topicName}}</td>
@@ -44,7 +46,7 @@
         {{/each}}
       {{else}}
         <tr>
-          <td colspan="5" align="center">데이터가 없습니다.</td>
+          <td colspan="6" align="center">데이터가 없습니다.</td>
         </tr>
       {{/if}}
     </table>

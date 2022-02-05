@@ -9,6 +9,7 @@ import {
   Session,
 } from '@nestjs/common';
 import { TopicReserve } from './entity/topic-reservation.entity';
+import { OpinionType } from './entity/topic-users.entity';
 import { TopicService } from './topic.service';
 
 @Controller('topic')
@@ -25,20 +26,27 @@ export class TopicController {
       `Agree Request: userId: ${userId}, reserveId: ${reserveId}`,
     );
 
-    if (userId && reserveId) {
-      const currentReserve: TopicReserve =
-        await this.topicService.findCurrentReserve();
+    await this.topicService.addAgreeDisagree(
+      userId,
+      reserveId,
+      OpinionType.AGREE,
+    );
+    return;
 
-      if (currentReserve.reserveId === reserveId) {
-        await this.topicService.addAgree(userId, reserveId);
-        return 200;
-      } else {
-        throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
-      }
-    } else {
-      this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
-      throw new BadRequestException();
-    }
+    // if (userId && reserveId) {
+    //   const currentReserve: TopicReserve =
+    //     await this.topicService.findCurrentReserve();
+
+    //   if (currentReserve.reserveId === reserveId) {
+    //     await this.topicService.addAgree(userId, reserveId);
+    //     return 200;
+    //   } else {
+    //     throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
+    //   }
+    // } else {
+    //   this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
+    //   throw new BadRequestException();
+    // }
   }
 
   /**반대 버튼을 클릭했을 때의 요청 */
@@ -50,18 +58,25 @@ export class TopicController {
       `Disagree Request: userId: ${userId}, reserveId: ${reserveId}`,
     );
 
-    if (userId && reserveId) {
-      const currentReserve: TopicReserve =
-        await this.topicService.findCurrentReserve();
-      if (currentReserve.reserveId === reserveId) {
-        await this.topicService.addDisagree(userId, reserveId);
-        return 200;
-      } else {
-        throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
-      }
-    } else {
-      this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
-      throw new BadRequestException();
-    }
+    await this.topicService.addAgreeDisagree(
+      userId,
+      reserveId,
+      OpinionType.DISAGREE,
+    );
+    return;
+
+    //   if (userId && reserveId) {
+    //     const currentReserve: TopicReserve =
+    //       await this.topicService.findCurrentReserve();
+    //     if (currentReserve.reserveId === reserveId) {
+    //       await this.topicService.addDisagree(userId, reserveId);
+    //       return 200;
+    //     } else {
+    //       throw new BadRequestException('현재 진행중인 주제가 아닙니다.');
+    //     }
+    //   } else {
+    //     this.logger.debug(`등록된 유저 또는 주제가 없습니다.`);
+    //     throw new BadRequestException();
+    //   }
   }
 }

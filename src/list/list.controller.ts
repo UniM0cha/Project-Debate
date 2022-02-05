@@ -51,28 +51,25 @@ export class ListController {
     );
 
     const getEndTime: TopicReserve[] = await this.topicServices.getPassedList();
-    // const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
-    //   getEndTime.startDate.setDate(getEndTime.startDate.getDate() - 1);
-    //   return getEndTime.startDate;
-    // });
+    const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
+      getEndTime.startDate.setDate(getEndTime.startDate.getDate() - 1);
+      return getEndTime.startDate;
+    });
 
     // const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
     //   getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
     //   return getEndTime.reserveDate;
     // });
-    // getEndTimeList.reverse();
+    getEndTimeList.reverse();
 
     // getPassedTopicList = getPassedTopicList.slice((page - 1) * 10, page * 10);
 
     let arr1 = [];
-    this.logger.debug(
-      `getPassedTopicList: ${JSON.stringify(getPassedTopicList, null, 4)}`,
-    );
+
     getPassedTopicList.forEach((element, index) => {
       arr1.push({
         reserveId: element.reserveId,
-        reserveDate: element.startDate,
-        //reserveEndDate: getEndTimeList[index + 1],
+        startDate: element.startDate,
         endDate: element.endDate,
         topic: {
           topicName: element.topic.topicName,
