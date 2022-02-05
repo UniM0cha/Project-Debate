@@ -317,7 +317,7 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
       break;
     // 유효하지 않은 주제
     case 2:
-      alert(`주제가 설정되지 않았습니다.`);
+      alert(`유효하지 않은 주제입니다.`);
       break;
     // 유저가 의견을 제시하지 않음
     case 3:
@@ -345,7 +345,6 @@ const ul = document.querySelector('.live-debate');
 
 // 서버로부터 도착한 채팅을 표시하는 함수
 function send_opinion(nickname, opinion, date, opinionType) {
-  
   const today = new Date(date);
   let hour = today.getHours();
   let min = today.getMinutes();
@@ -403,7 +402,7 @@ async function getAllChat() {
     ///////////////////////////////////// 모든 채팅 내용은 chatList 안에 저장됩니다 ///////////////////
     const chatList = data.chat;
     //채팅 돌리기
-    chatList.forEach(item => {
+    chatList.forEach((item) => {
       //시간 계산
       const today = new Date(item.chatDate);
       let hour = today.getHours();
@@ -421,8 +420,8 @@ async function getAllChat() {
 
       const nickname = item.nickname;
       const opinion = item.chatMessage;
-      const time = ampm + ' ' + hour + ':' + min
-      const opinionType = item.opinionType
+      const time = ampm + ' ' + hour + ':' + min;
+      const opinionType = item.opinionType;
       const ul = document.querySelector('.live-debate');
 
       //채팅 작성하기
