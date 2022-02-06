@@ -19,7 +19,7 @@ async function getAllChat() {
     ///////////////////////////////////// 모든 채팅 내용은 chatList 안에 저장됩니다 ///////////////////
     const chatList = data.chat;
     //채팅 돌리기
-    chatList.forEach(item => {
+    chatList.forEach((item) => {
       //시간 계산
       const today = new Date(item.chatDate);
       let hour = today.getHours();
@@ -37,8 +37,8 @@ async function getAllChat() {
 
       const nickname = item.nickname;
       const opinion = item.chatMessage;
-      const time = ampm + ' ' + hour + ':' + min
-      const opinionType = item.opinionType
+      const time = ampm + ' ' + hour + ':' + min;
+      const opinionType = item.opinionType;
       const ul = document.querySelector('.live-debate');
 
       //채팅 작성하기

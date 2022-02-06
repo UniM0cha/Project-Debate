@@ -28,49 +28,38 @@ export class ChatService {
      * 2 : 유효하지 않는 주제
      * 3 : 유저가 의견을 제시하지 않음
      */
-
     const user: Users = await this.usersService.findOneById(data.userId);
-    if (user) {
-      const reserve: TopicReserve = await this.topicService.findOneTopicReserve(
-        data.reserveId,
-      );
-      if (reserve) {
-        const opinionType: OpinionType =
-          await this.topicService.findUserOpinionType(user, reserve);
-        if (opinionType) {
-          // 채팅 저장
-          const today = new Date();
-          const nickname = user.nickname;
-          const chat = new Chat();
-          chat.createChat(
-            today,
-            data.opinion_input,
-            user,
-            reserve,
-            opinionType,
-          );
-          await this.chatRepository.save(chat);
-          this.logger.debug(`채팅 저장 성공`);
-          return {
-            state: 0,
-            date: today,
-            nickname: nickname,
-            opinionType: opinionType,
-          };
-        } else {
-          this.logger.error(
-            `채팅 저장 실패: 유저가 의견을 제시하지 않았습니다.`,
-          );
-          return { state: 3 };
-        }
-      } else {
-        this.logger.error(`채팅 저장 실패: 유효하지 않은 주제입니다.`);
-        return { state: 2 };
-      }
-    } else {
+    if (!user) {
       this.logger.error(`채팅 저장 실패: 유저가 존재하지 않습니다.`);
       return { state: 1 };
     }
+
+    const reserve: TopicReserve =
+      await this.topicService.findOneProceedingTopicReserve(data.reserveId);
+    if (!reserve) {
+      this.logger.error(`채팅 저장 실패: 유효하지 않은 주제입니다.`);
+      return { state: 2 };
+    }
+
+    const opinionType: OpinionType =
+      await this.topicService.findUserOpinionType(user, reserve);
+    if (!opinionType) {
+      this.logger.error(`채팅 저장 실패: 유저가 의견을 제시하지 않았습니다.`);
+      return { state: 3 };
+    }
+
+    const today = new Date();
+    const nickname = user.nickname;
+    const chat = new Chat();
+    chat.createChat(today, data.opinion_input, user, reserve, opinionType);
+    await this.chatRepository.save(chat);
+    this.logger.debug(`채팅 저장 성공`);
+    return {
+      state: 0,
+      date: today,
+      nickname: nickname,
+      opinionType: opinionType,
+    };
   }
 
   async getAllChat(reserveId: number): Promise<Chat[]> {
