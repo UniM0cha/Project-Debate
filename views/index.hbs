@@ -8,9 +8,6 @@
       crossorigin='anonymous'
     ></script>  
     <link rel='stylesheet' href='/css/index.css' />
-    <script type="text/javascript">
-        H.registerHelpers(Handlebars);
-    </script>
   </head>
 
   <body>
@@ -22,31 +19,9 @@
       const hasOpinion = {{hasOpinion}};
       const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
     </script>
+
     {{!-- 상단 메뉴 --}}
-    <div class="menu">
-      <div class="inner-menu">
-      <div class="div-ex-debatelist">
-        <form class='form-ex-debatelist' action='/list'>
-          <button type='submit' class='btn-ex-debatelist'>
-            이전 리스트
-          </button>
-        </form>
-      </div>
-
-      <div class="div-title">
-        <a class='title' href='#'>토론 사이트</a>
-      </div>
-
-      <div class="div-login">
-        <form class='form-login expand' action='/auth'>
-          <button type='submit' class='btn-login'>로그인</button>
-        </form>
-        <form class='form-logout expand' action='/auth/logout'>
-          <button type='submit' class='btn-login'>로그아웃</button>
-        </form>
-      </div>
-      </div>
-    </div>
+    {{> header}}
 
     <!-- 주제 -->
     <div class='time-topic-div'>
