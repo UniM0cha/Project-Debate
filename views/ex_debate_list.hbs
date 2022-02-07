@@ -41,7 +41,6 @@
           <th>번호</th>
           <th>주제</th>
           <th>날짜</th>
-          <th>끝난 날짜</th>
         </tr>
       </thead>
 
@@ -51,8 +50,7 @@
           <tr>
             <td>{{reserveId}}</a></td>
             <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
-            <td>{{dateFormat startDate "YY.MM.DD"}}</td>
-            <td>{{dateFormat endDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat startDate "YY.MM.DD"}}~{{dateFormat endDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
       {{else}}
@@ -63,50 +61,26 @@
       </tbody>
 
     </table>
-    <h1>주제 예약 목록</h1>
-
-    <table border="1">
-      <th>예약 번호</th>
-      <th>주제</th>
-      <th>시작 날짜</th>
-      <th>끝난 날짜</th>
-      
-      {{#if arr1}}
-        {{#each arr1}}
-        
-          <tr>
-            <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
-            <td>{{topic.topicName}}</td>
-            <td>{{dateFormat reserveDate "YY.MM.DD"}}</td>
-            <td>{{dateFormat reserveEndDate "YY.MM.DD"}}</td>
-          </tr>
-        {{/each}}
-        
-      {{else}}
-        <tr>
-          <td colspan="5" align="center">데이터가 없습니다.</td>
-        </tr>
-      {{/if}}
-    </table>
-  
-    <p/>
 
     <!-- 페이지 이동 버튼 -->
     <nav aria-label='Page navigation example pagemove'>
       <ul class='pagination justify-content-center'>
-        <li class='page-item'>
+        {{!-- <li class='page-item'>
           <a class='page-link' href='#' aria-label='Previous'>
             <span aria-hidden='true'>&laquo;</span>
           </a>
-        </li>
-        <li class='page-item'><a class='page-link' href='#'>1</a></li>
-        <li class='page-item'><a class='page-link' href='#'>2</a></li>
-        <li class='page-item'><a class='page-link' href='#'>3</a></li>
-        <li class='page-item'>
+        </li> --}}
+        {{#if topicReservePageCount}}
+        {{#each @index}}
+        <li class='page-item'><a class='page-link' href='#'>{{@index}}</a></li>
+        {{/each}}
+        {{/if}}
+
+        {{!-- <li class='page-item'>
           <a class='page-link' href='#' aria-label='Next'>
             <span aria-hidden='true'>&raquo;</span>
           </a>
-        </li>
+        </li> --}}
       </ul>
     </nav>
 
