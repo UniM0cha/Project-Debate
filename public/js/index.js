@@ -29,12 +29,13 @@ function countDownTimer(date) {
   function showRemaining() {
     let now = new Date();
     let distDt = _vDate - now;
-    if (distDt < 0) {
+    if (distDt <= 0) {
       clearInterval(timer);
       document.getElementById(id).textContent = '해당 주제가 종료 되었습니다!';
       input_box.style.display = 'none';
       send_btn.style.display = 'none';
       live_debate.style.height = '100%';
+      location.reload();
 
       //이 부분에 서버시간 받아서 데베에 집어넣기
 
@@ -372,11 +373,9 @@ function send_opinion(nickname, opinion, date, opinionType) {
     li.classList.add(opinionType);
     //클래스 agree와 disagree추가
     const dom = `
-        <div class='nickname'>${nickname}</div>
-          <div
-            class='user-opinion'
-          >${opinion}</div>
-          <div class='opinion-time'>${time}</div>
+      <div class='nickname'>${nickname}</div>
+      <div class='user-opinion'>${opinion}</div>
+      <div class='opinion-time'>${time}</div>
         `;
     li.innerHTML = dom;
     ul.appendChild(li);
@@ -385,11 +384,9 @@ function send_opinion(nickname, opinion, date, opinionType) {
     li.classList.add(opinionType);
     //클래스 agree와 disagree추가
     const dom = `
-        <div class='nickname'>${nickname}</div>
-        <div class='opinion-time'>${time}</div>
-          <div
-            class='user-opinion'
-          >${opinion}</div>
+      <div class='nickname'>${nickname}</div>
+      <div class='opinion-time'>${time}</div>
+      <div class='user-opinion'>${opinion}</div>
         `;
     li.innerHTML = dom;
     ul.appendChild(li);
@@ -440,12 +437,10 @@ async function getAllChat() {
         li.classList.add(opinionType);
         //클래스 agree와 disagree추가
         const dom = `
-            <div class='nickname'>${nickname}</div>
-              <div
-                class='user-opinion'
-              >${opinion}</div>
-              <div class='opinion-time'>${time}</div>
-            `;
+          <div class='nickname'>${nickname}</div>
+          <div class='user-opinion'>${opinion}</div>
+          <div class='opinion-time'>${time}</div>
+          `;
         li.innerHTML = dom;
         ul.appendChild(li);
       } else if (opinionType === 'disagree') {
@@ -453,11 +448,9 @@ async function getAllChat() {
         li.classList.add(opinionType);
         //클래스 agree와 disagree추가
         const dom = `
-            <div class='nickname'>${nickname}</div>
-            <div class='opinion-time'>${time}</div>
-              <div
-                class='user-opinion'
-              >${opinion}</div>
+          <div class='nickname'>${nickname}</div>
+          <div class='opinion-time'>${time}</div>
+          <div class='user-opinion'>${opinion}</div>
             `;
         li.innerHTML = dom;
         ul.appendChild(li);

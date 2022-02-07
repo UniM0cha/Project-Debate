@@ -23,7 +23,7 @@ export class TopicGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() data,
   ) {
-    this.logger.debug(`Opinion Type Refresh Request - clientId: ${client.id}`);
+    this.logger.debug(`찬성/반대 비율 새로고침 요청`);
     const reserveId: number = data.reserveId;
     const amount = await this.topicService.getAgreeDisagree(reserveId);
     if (amount) {
@@ -40,7 +40,7 @@ export class TopicGateway {
     @MessageBody() data,
   ) {
     this.logger.debug(
-      `New Opinion Type Request: ${JSON.stringify(data, null, 4)}`,
+      `${data.opinionType} 추가 요청 - data: ${JSON.stringify(data, null, 4)}`,
     );
     const state = await this.topicService.validateAndSaveOpinionType(data);
     client.emit('option-type-state-to-client', { state: state });
