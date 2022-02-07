@@ -60,7 +60,7 @@ export class ListController {
     //   getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
     //   return getEndTime.reserveDate;
     // });
-    getEndTimeList.reverse();
+    //getEndTimeList.reverse();
 
     // getPassedTopicList = getPassedTopicList.slice((page - 1) * 10, page * 10);
 
@@ -68,6 +68,7 @@ export class ListController {
 
     getPassedTopicList.forEach((element, index) => {
       arr1.push({
+        countNumber: index + 1,
         reserveId: element.reserveId,
         startDate: element.startDate,
         endDate: element.endDate,
@@ -76,6 +77,9 @@ export class ListController {
         },
       });
     });
+
+    arr1.reverse();
+
     this.logger.debug(`arr1: ${JSON.stringify(arr1, null, 4)}`);
     arr1 = arr1.slice((page - 1) * 10, page * 10);
 
