@@ -22,18 +22,6 @@
     <!-- 상단 메뉴 바 -->
     {{> header}}
 
-    <!-- 게시판 -->
-    {{!-- 최대값 --}}
-    {{topicReserveCount}} 
-    {{!-- 페이지 수 --}}
-    {{topicReservePageCount}}
-    <!--수정중-->
-    {{#each arr1}}
-      {{#each TopicReserve}}
-        {{reserveId}}
-      {{/each}}
-    {{/each}}
-    {{arr1.TopicReserve.reserveId}}
     <!--수정중-->
     <table class='table table-striped topic-list'>
       <thead>
@@ -59,7 +47,6 @@
         </tr>
       {{/if}}
       </tbody>
-
     </table>
 
     <!-- 페이지 이동 버튼 -->
@@ -70,19 +57,31 @@
             <span aria-hidden='true'>&laquo;</span>
           </a>
         </li> --}}
-        {{#if topicReservePageCount}}
-        {{#each @index}}
-        <li class='page-item'><a class='page-link' href='#'>{{@index}}</a></li>
-        {{/each}}
-        {{/if}}
-
         {{!-- <li class='page-item'>
           <a class='page-link' href='#' aria-label='Next'>
             <span aria-hidden='true'>&raquo;</span>
           </a>
         </li> --}}
+
       </ul>
     </nav>
+
+    <script>
+      const pagecount = {{topicReservePageCount}};
+      console.log(pagecount);
+      const ul = document.querySelector(".pagination");
+      let li;
+      for(let i = 0; i < pagecount; i++){
+        li = document.createElement('li');
+        li.classList.add("page-item");
+        let dom = `<a class='page-link' href='/list/page/${i+1}'>${i+1}</a>`;
+        console.log(i);
+        console.log(dom);
+        li.innerHTML = dom;
+        console.log(li);
+        ul.appendChild(li);
+      }
+    </script>
 
   </body>
   <script src="/js/login.js"></script>

@@ -15,87 +15,6 @@ body{
   font-family: Cafe24Ssurround;
 }
 
-/* 상단 메뉴바 */
-.menu{
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 15px;
-  margin-top: 10px;
-}
-
-.inner-menu{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-/* 이전 리스트 버튼 */
-.div-ex-debatelist{
-  flex: 1;
-  text-align: left;
-}
-
-.btn-ex-debatelist{
-  border: none;
-  padding: 15px 15px;
-  font-size: 20px;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 15px;
-  font-family: Cafe24Ssurround;
-}
-
-.btn-ex-debatelist:hover{
-  box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
-  border-radius: 15px;
-}
-
-.btn-ex-debatelist:active{
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
-  border-radius: 15px;
-}
-
-/* 사이트 로고 */
-.div-title{
-  flex: 1;
-  text-align: center;
-}
-.title{
-  text-decoration: none;
-  font-size: 30px;
-  font-weight: bold;
-  color: black;
-
-}
-
-/* 로그인 버튼 */
-.div-login{
-  flex: 1;
-  text-align: right;
-}
-.btn-login{
-  border: none;
-  font-size: 20px;
-  padding: 15px 15px;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
-  border-radius: 15px;
-  font-family: Cafe24Ssurround;
-}
-
-.btn-login:hover{
-  box-shadow: rgba(163, 177, 198, 0.5) 1px 1px 2px 0px, rgb(255, 255, 255) -1px -1px 2px 0px;
-  border-radius: 15px;
-}
-
-.btn-login:active{
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px inset, rgb(255, 255, 255) -2px -2px 4px 0px inset;
-  border-radius: 15px;
-}
 /* 게시판 */
 .topic-list {
   width: 90%;
@@ -106,6 +25,9 @@ body{
 
 
 /*페이지 이동*/
+.page-item{
+  background-color: rgb(224, 229, 236);;
+}
 
 /*노트북&데스크탑*/
 @media (min-width: 992px) {
