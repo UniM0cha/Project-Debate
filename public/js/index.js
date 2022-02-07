@@ -349,6 +349,8 @@ async function send_chat_socket_emit() {
   document.querySelector('#message').value = '';
 }
 
+// const ul = document.querySelector('.live-debate');
+
 // 서버로부터 도착한 채팅을 표시하는 함수
 function send_opinion(nickname, opinion, date, opinionType) {
   const ul = document.querySelector('.live-debate');
@@ -367,7 +369,6 @@ function send_opinion(nickname, opinion, date, opinionType) {
   min = min.toString().padStart(2, '0');
   const time = ampm + ' ' + hour + ':' + min;
 
-  //ul.scrollTop = ul.scrollHeight;
   if (opinionType === 'agree') {
     const li = document.createElement('li');
     li.classList.add(opinionType);

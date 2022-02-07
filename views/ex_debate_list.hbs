@@ -20,43 +20,8 @@
 
   <body>
     <!-- 상단 메뉴 바 -->
-    <div class="menu">
-      <div class="inner-menu">
-      <div class="div-ex-debatelist">
-        <form class='form-ex-debatelist' action='/list'>
-          <button type='submit' class='btn-ex-debatelist'>
-            이전 리스트
-          </button>
-        </form>
-      </div>
+    {{> header}}
 
-      <div class="div-title">
-        <a class='title' href='#'>토론 사이트</a>
-      </div>
-
-      <div class="div-login">
-        <form class='form-login expand' action='/auth'>
-          <button type='submit' class='btn-login'>로그인</button>
-        </form>
-        <form class='form-logout expand' action='/auth/logout'>
-          <button type='submit' class='btn-login'>로그아웃</button>
-        </form>
-      </div>
-      </div>
-    </div>
-
-    <!-- 게시판 -->
-    {{!-- 최대값 --}}
-    {{topicReserveCount}} 
-    {{!-- 페이지 수 --}}
-    {{topicReservePageCount}}
-    <!--수정중-->
-    {{#each arr1}}
-      {{#each TopicReserve}}
-        {{reserveId}}
-      {{/each}}
-    {{/each}}
-    {{arr1.TopicReserve.reserveId}}
     <!--수정중-->
     <table class='table table-striped topic-list'>
       <thead>
@@ -64,7 +29,6 @@
           <th>번호</th>
           <th>주제</th>
           <th>날짜</th>
-          <th>끝난 날짜</th>
         </tr>
       </thead>
 
@@ -74,8 +38,7 @@
           <tr>
             <td>{{countNumber}}</a></td>
             <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
-            <td>{{dateFormat startDate "YY.MM.DD"}}</td>
-            <td>{{dateFormat endDate "YY.MM.DD"}}</td>
+            <td>{{dateFormat startDate "YY.MM.DD"}}~{{dateFormat endDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}
       {{else}}
@@ -84,54 +47,41 @@
         </tr>
       {{/if}}
       </tbody>
-
     </table>
-    <h1>주제 예약 목록</h1>
-
-    <table border="1">
-      <th>예약 번호</th>
-      <th>주제</th>
-      <th>시작 날짜</th>
-      <th>끝난 날짜</th>
-      
-      {{#if arr1}}
-        {{#each arr1}}
-        
-          <tr>
-            <td align="center"><a href="/admin/reserve/{{reserveId}}">{{reserveId}}</a></td>
-            <td>{{topic.topicName}}</td>
-            <td>{{dateFormat startDate "YY.MM.DD"}}</td>
-            <td>{{dateFormat endDate "YY.MM.DD"}}</td>
-          </tr>
-        {{/each}}
-        
-      {{else}}
-        <tr>
-          <td colspan="5" align="center">데이터가 없습니다.</td>
-        </tr>
-      {{/if}}
-    </table>
-  
-    <p/>
 
     <!-- 페이지 이동 버튼 -->
     <nav aria-label='Page navigation example pagemove'>
       <ul class='pagination justify-content-center'>
-        <li class='page-item'>
+        {{!-- <li class='page-item'>
           <a class='page-link' href='#' aria-label='Previous'>
             <span aria-hidden='true'>&laquo;</span>
           </a>
-        </li>
-        <li class='page-item'><a class='page-link' href='#'>1</a></li>
-        <li class='page-item'><a class='page-link' href='#'>2</a></li>
-        <li class='page-item'><a class='page-link' href='#'>3</a></li>
-        <li class='page-item'>
+        </li> --}}
+        {{!-- <li class='page-item'>
           <a class='page-link' href='#' aria-label='Next'>
             <span aria-hidden='true'>&raquo;</span>
           </a>
-        </li>
+        </li> --}}
+
       </ul>
     </nav>
+
+    <script>
+      const pagecount = {{topicReservePageCount}};
+      console.log(pagecount);
+      const ul = document.querySelector(".pagination");
+      let li;
+      for(let i = 0; i < pagecount; i++){
+        li = document.createElement('li');
+        li.classList.add("page-item");
+        let dom = `<a class='page-link' href='/list/page/${i+1}'>${i+1}</a>`;
+        console.log(i);
+        console.log(dom);
+        li.innerHTML = dom;
+        console.log(li);
+        ul.appendChild(li);
+      }
+    </script>
 
   </body>
   <script src="/js/login.js"></script>
