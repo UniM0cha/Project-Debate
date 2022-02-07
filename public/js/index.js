@@ -8,10 +8,17 @@ async function getTime() {
 }
 
 //채팅 타이머
-const countDownTimer = function (id, date) {
+function countDownTimer(date) {
+  const topicTime = document.getElementById('topic-time');
   const input_box = document.querySelector('.opinion-input');
   const send_btn = document.querySelector('.send');
   const live_debate = document.querySelector('.live-debate');
+
+  if (date === '') {
+    topicTime.textContent = '다음 주제가 없습니다.';
+    return;
+  }
+
   let _vDate = new Date(date); // 전달 받은 일자
   let _second = 1000;
   let _minute = _second * 60;
@@ -24,8 +31,7 @@ const countDownTimer = function (id, date) {
     let distDt = _vDate - now;
     if (distDt < 0) {
       clearInterval(timer);
-      document.getElementById(id).textContent =
-        '해당 이벤트가 종료 되었습니다!';
+      document.getElementById(id).textContent = '해당 주제가 종료 되었습니다!';
       input_box.style.display = 'none';
       send_btn.style.display = 'none';
       live_debate.style.height = '100%';
@@ -42,18 +48,19 @@ const countDownTimer = function (id, date) {
     let minutes = Math.floor((distDt % _hour) / _minute);
     let seconds = Math.floor((distDt % _minute) / _second);
     //document.getElementById(id).textContent = date.toLocaleString() + "까지 : ";
-    document.getElementById(id).textContent = '남은 주제 기간 : ';
-    document.getElementById(id).textContent += days + '일 ';
-    document.getElementById(id).textContent += hours + '시간 ';
-    document.getElementById(id).textContent += minutes + '분 ';
-    document.getElementById(id).textContent += seconds + '초';
+    topicTime.textContent = '남은 주제 기간 : ';
+    topicTime.textContent += days + '일 ';
+    topicTime.textContent += hours + '시간 ';
+    topicTime.textContent += minutes + '분 ';
+    topicTime.textContent += seconds + '초';
   }
 
   showRemaining();
   timer = setInterval(showRemaining, 1000);
-};
+}
 
-countDownTimer('topic-time', '02/28/2022 09:27 PM'); // 이부분 수정하면 시간 변경 가능
+countDownTimer(endDate); // 이부분 수정하면 시간 변경 가능
+// countDownTimer('02/28/2022 09:27 PM'); // 이부분 수정하면 시간 변경 가능
 
 document.addEventListener('DOMContentLoaded', function () {
   // 맨 처음 찬성 반대 비율 요청
