@@ -4,10 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { lastValueFrom } from 'rxjs';
 import { UserDataDto } from 'src/dto/userdata.dto';
 
-const SERVER_URL = `localhost:3000`;
+const SERVER_URL = `112.151.4.252:13465`;
 const KAKAO_REST_API_KEY = `ff5db7469114a5d6adfbdbc19d58501a`;
-const NAVER_CLIENT_ID = `3ZYCyJm99tF7H49oxtHq`;
-const NAVER_CLIENT_SECRET = `_WTAqF5gdE`;
+const NAVER_CLIENT_ID = `OzobY4hdweiTJHUmbhNn`;
+const NAVER_CLIENT_SECRET = `__B9xmG_FB`;
 const NAVER_RANDOM_STATE = `hollyshit`;
 const GOOGLE_CLINET_ID = `880048515831-a3467he7oalogte46it7n2b38hvgvj59.apps.googleusercontent.com`;
 const GOOGLE_CLINET_SECRET = `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`;
