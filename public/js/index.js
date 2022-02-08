@@ -1,4 +1,4 @@
-const chatSocket = io.connect('http://localhost:3000/message');
+const chatSocket = io.connect('/message');
 const topicSocket = io.connect('/topic');
 
 //서버시간 가져오기

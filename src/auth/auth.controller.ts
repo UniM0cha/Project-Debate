@@ -64,8 +64,6 @@ export class AuthController {
       default:
         throw new NotFoundException();
     }
-
-    // TODO : 구글
   }
 
   /**
