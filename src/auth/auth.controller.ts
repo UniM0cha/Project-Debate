@@ -264,7 +264,7 @@ export class AuthController {
    * @returns
    */
   @Get('register')
-  async register(@Session() session: Record<string, any>, @Res() res) {
+  async showRegisterPage(@Session() session: Record<string, any>, @Res() res) {
     this.logger.debug(
       `Received Session Data Before Register: ${JSON.stringify(
         session,
@@ -283,12 +283,17 @@ export class AuthController {
 
   /**
    * POST /auth/register
-   * 닉네임 입력 페이지에서 nickname을 받아와서 디비에 저장
-   * @param session
-   * @Body nickname
+   * 클라이언트로부터 닉네임을 입력받아서
+   * 닉네임이 저장 가능한지 검증하고
+   * 유효한 닉네임이라면 회원가입 진행
+   *
+   * @param session -> 세션에서 OAuth 정보를 가져온다.
+   * @param nickname -> 클라이언트가 입력한 닉네임
+   * @param res -> 응답을 보내기 위함
+   * @returns
    */
   @Post('register')
-  async getNickname(
+  async register(
     @Session() session: Record<string, any>,
     @Body('nickname') nickname: string,
     @Res() res,
@@ -296,62 +301,49 @@ export class AuthController {
     // 회원가입에 필요한 데이터가 없다면 메인페이지로
     if (!session.registerData) {
       res.redirect('/');
+      this.logger.error('회원가입 실패: 로그인 정보 없음');
+      return;
     }
 
     const email = session.registerData.email;
     const platform = session.registerData.platform;
     const platformId = session.registerData.platformId;
 
-    // 들어오자마자 세션 데이터를 삭제해서 뒤끝 없게...
-    delete session.registerData;
-
-    // 중복 체크
-    const user: Users = await this.usersSerivce.findByNickname(nickname);
-    if (user) {
-      // 중복된 닉네임의 유저가 있을 때에 여기로 들어옴.
-      // 프론트쪽에서 닉네임 중복체크를 확실하게 해줘야함... 여기로 들어오면 안돼
-      throw new BadRequestException(null, 'Nickname has overlapped!!!');
-    } else {
-      // 데이터베이스 저장
-      const user: Users = new Users();
-      user.nickname = nickname;
-      user.email = email;
-
-      switch (platform) {
-        case 'kakao':
-          user.kakaoId = platformId;
-          break;
-        case 'naver':
-          user.naverId = platformId;
-          break;
-        case 'google':
-          user.googleId = platformId;
-          break;
-      }
-
-      const savedUser = await this.usersSerivce.save(user);
-
-      // 로그인
-      const userData = new UserDataDto(savedUser.userId, savedUser.nickname);
-      session.userData = userData;
-      session.isLogined = true;
-      session.save((err) => {
-        if (err) throw err;
-
-        this.logger.debug(
-          `Generated Session Data After Login: ${JSON.stringify(
-            session,
-            null,
-            4,
-          )}`,
-        );
-        return res.redirect('/');
-      });
+    // 중복 체크하여 문제 있을 경우 데이터 처리하지 않고 상태코드만 전달
+    const state: number = await this.usersSerivce.nicknameCheck(nickname);
+    if (state !== 0) {
+      return res.json(state);
     }
+
+    // 데이터베이스 저장
+    const user: Users = new Users();
+    user.setUser(nickname, email, platform, platformId);
+    const savedUser = await this.usersSerivce.save(user);
+
+    // 로그인
+    const userData = new UserDataDto(savedUser.userId, savedUser.nickname);
+    session.userData = userData;
+    session.isLogined = true;
+    session.save((err) => {
+      if (err) throw err;
+
+      this.logger.debug(
+        `Generated Session Data After Login: ${JSON.stringify(
+          session,
+          null,
+          4,
+        )}`,
+      );
+
+      // 로그인 완료되고 가입시에 저장한 데이터 삭제, 상태코드 전송
+      delete session.registerData;
+      return res.json(state);
+    });
   }
 
   /**
    * GET /auth/logout
+   * 로그아웃 요청 시
    */
   @Get('logout')
   async logout(@Session() session: Record<string, any>, @Res() res) {

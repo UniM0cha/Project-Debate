@@ -168,7 +168,7 @@ export class ListController {
       session.reserveId = reserveId;
       const viewDto = await this.appService.createViewDto(session);
       viewDto.topic = await this.listService.setTopicDto(reserveId);
-      this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
+      this.logger.debug(`viewDto: ${JSON.stringify(viewDto)}`);
       return res.render('ex_debate_show', viewDto);
     } else {
       throw new NotFoundException();

@@ -24,7 +24,7 @@ export class AppController {
     viewDto.hasOpinion = await this.appService.checkHasOpinion(viewDto.userId);
     viewDto.topic = await this.appService.setIndexTopicDto();
 
-    this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
+    this.logger.debug(`viewDto: ${JSON.stringify(viewDto)}`);
     return viewDto;
   }
 

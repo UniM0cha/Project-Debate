@@ -11,9 +11,13 @@
     />
     <link rel='stylesheet' href='css/login.css' />
     <title>로그인 페이지</title>
-    <script>history.forward();</script>
+    <script type="text/javascript">
+      window.history.forward();
+      function noBack(){window.history.forward();}
+    </script>
   </head>
-  <body>
+  
+  <body onload="noBack();" onpageshow="if(event.persisted) noBack();" onunload="">
     <nav class='navbar navbar-lg navbar-dark bg-dark'>
       <a class='title' href='/'>토론 사이트</a>
     </nav>
