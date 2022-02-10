@@ -6,21 +6,30 @@ import {
   Param,
   Post,
   Res,
+  Session,
 } from '@nestjs/common';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
+import { AdminService } from './admin.service';
 import { ReserveDto } from './dto/reserve.dto';
 import { TopicDto } from './dto/topic.dto';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly topicService: TopicService) {}
+  constructor(
+    private readonly topicService: TopicService,
+    private readonly adminService: AdminService,
+  ) {}
   private readonly logger = new Logger(AdminController.name);
 
   // 추후에 권한 있는 사람만 접근 가능하도록 만들 것
   @Get('/')
-  main(@Res() res) {
+  async main(@Res() res, @Session() session: Record<string, any>) {
+    if (!(await this.adminService.checkAdmin(session))) {
+      return res.redirect('/');
+    }
+
     return res.render('admin/main');
   }
 
