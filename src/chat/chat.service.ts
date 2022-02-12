@@ -68,6 +68,12 @@ export class ChatService {
     return await this.chatRepository.find({ topicReserve: topicReserve });
   }
 
+  // controller에서 5초마다 얘를 불러줄거임
+  async qwerqwer(chatTime: Date) {
+    const qwer: Text = await this.chatRepository.find(chatTime); // 함수하나 만들어서 시간 -5초 애들 userid검색으로 바꾸기
+    return await qwer;
+  }
+
   async validateAndGetAllChat(
     reserveId: number,
   ): Promise<{ state: number; chat?: any }> {
