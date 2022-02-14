@@ -8,16 +8,13 @@ export class AdminService {
   private readonly logger = new Logger(AdminService.name);
 
   async checkAdmin(session: Record<string, any>): Promise<boolean> {
-    const userId: string = session.userData.userId;
-    if (!userId) {
-      return false;
+    if (session.userData && session.userData.userId) {
+      const userId: string = session.userData.userId;
+      const users: Users = await this.usersService.findOneById(userId);
+      if (users && users.role === UserRole.ADMIN) {
+        return true;
+      }
     }
-
-    const users: Users = await this.usersService.findOneById(userId);
-    if (users.role !== UserRole.ADMIN) {
-      return false;
-    } else {
-      return true;
-    }
+    return false;
   }
 }
