@@ -4,13 +4,13 @@ import { JwtService } from '@nestjs/jwt';
 import { lastValueFrom } from 'rxjs';
 import { UserDataDto } from 'src/dto/userdata.dto';
 
-const SERVER_URL = `112.151.4.252:13465`;
-const KAKAO_REST_API_KEY = `ff5db7469114a5d6adfbdbc19d58501a`;
+const SERVER_URL = `debatalk.duckdns.org`;
+const KAKAO_REST_API_KEY = `114fbc070b3563572db5fe6be76b2ae8`;
 const NAVER_CLIENT_ID = `OzobY4hdweiTJHUmbhNn`;
 const NAVER_CLIENT_SECRET = `__B9xmG_FB`;
 const NAVER_RANDOM_STATE = `hollyshit`;
-const GOOGLE_CLINET_ID = `880048515831-a3467he7oalogte46it7n2b38hvgvj59.apps.googleusercontent.com`;
-const GOOGLE_CLINET_SECRET = `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`;
+const GOOGLE_CLINET_ID = `241359741651-24t8rj9mpjktd4h5urgqotfvk908rsla.apps.googleusercontent.com`;
+const GOOGLE_CLINET_SECRET = `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`;
 
 @Injectable()
 export class AuthService {
