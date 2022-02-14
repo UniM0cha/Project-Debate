@@ -11,7 +11,7 @@
 
 body{
   margin: 0px;
-  background-color: rgb(224, 229, 236);
+  background-color: beige;
   font-family: Cafe24Ssurround;
 }
 
@@ -20,14 +20,12 @@ body{
 .time-topic-div {
   margin-top: 10px;
   width: 90%;
-  background-color: transparent;
+  background-color: antiquewhite;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
   border-radius: 10px;
   height: auto;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
   border-radius: 15px;
   padding: 5px 0px;
 }
@@ -141,7 +139,7 @@ body{
 
 .nickname {
   font-size: x-small;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   font-family: none;
 }
 
@@ -152,8 +150,7 @@ body{
   display: inline-flex;
   border-radius: 7px;
   font-size: 13px;
-  background-color: rgb(224, 229, 236);
-  box-shadow: rgba(163, 177, 198, 0.5) 2px 2px 4px 0px, rgb(255, 255, 255) -2px -2px 4px 0px;
+  background-color: antiquewhite;
   border-radius: 5px;
   padding: 10px;
   font-family: none;
@@ -188,6 +185,7 @@ body{
 .disagree .user-opinion {
   margin-left: auto;
   margin-right: 0px;
+  background-color: aquamarine;
 }
 
 .input-box{
@@ -201,6 +199,8 @@ body{
   word-break: break-all;
   margin: 0px;
   border: black solid 1px;
+  resize: none;
+  padding: 10px;
 }
 
 .send {

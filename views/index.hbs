@@ -67,7 +67,7 @@
       </div>
 
       <div class='input-box'>
-        <input id='message' class='opinion-input' type='text' />
+        <textarea id='message' class='opinion-input' type='text' maxlength="200" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
         <button id='send' class='send' type='button'>전송</button>
       </div>
     </div>
