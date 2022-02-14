@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { lastValueFrom } from 'rxjs';
 import { UserDataDto } from 'src/dto/userdata.dto';
 
-const SERVER_URL = `debatalk.duckdns.org`;
+const SERVER_URL = `debatalk.ddns.net`;
 const KAKAO_REST_API_KEY = `114fbc070b3563572db5fe6be76b2ae8`;
 const NAVER_CLIENT_ID = `OzobY4hdweiTJHUmbhNn`;
 const NAVER_CLIENT_SECRET = `__B9xmG_FB`;
