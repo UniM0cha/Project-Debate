@@ -15,7 +15,7 @@ export class UsersController {
   @Post('check')
   async nicknameCheck(@Body() body): Promise<number> {
     const nickname = body.nickname;
-    const check: number = await this.usersService.nicknameCheck(nickname);
-    return check;
+    const state: number = await this.usersService.nicknameCheck(nickname);
+    return state;
   }
 }
