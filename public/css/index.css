@@ -108,17 +108,11 @@ body{
 }
 
 .first-ad{
-  margin-top: 100px;
-  border: solid 1px black;
-  margin-left: auto;
-  height: fit-content;
+ display: none;
 }
 
 .second-ad{
-  margin-top: 100px;
-  border: solid 1px black;
-  margin-right: auto;
-  height: fit-content;
+  display: none;
 }
 
 /* 실시간 토론 상자 */
@@ -220,14 +214,14 @@ body{
   border-radius: 7px;
   word-break: break-all;
   margin: 0px;
-  border: 1px #adb5bd solid;
+  border: 1px #868e96 solid;
   resize: none;
   padding: 10px;
 }
 
 .opinion-input:focus{
   outline: none;
-  border: 1px #ced4da solid;
+  border: 2px #868e96 solid;
 }
 
 .send {
@@ -235,7 +229,7 @@ body{
   border-radius: 7px;
   border: none;
   font-family: new;
-  border: 1px #ced4da solid;
+  border: 1px #868e96 solid;
   font-size: 20px;
 }
 
@@ -245,6 +239,12 @@ body{
 
 /*태블릿*/
 @media (min-width: 768px) {
+  .first-ad{
+    
+  }
+  .second-ad{
+    
+  }
 }
 
 /*노트북&데스크탑*/
@@ -275,5 +275,23 @@ body{
   .debate-wrapper {
     width: 60%;
     height: 75vh;
+  }
+}
+
+@media (min-width: 1140px){
+  .first-ad{
+    display: flex;
+    margin-top: 100px;
+    border: solid 1px black;
+    margin-left: auto;
+    height: fit-content;
+  }
+  
+  .second-ad{
+    display: flex;
+    margin-top: 100px;
+    border: solid 1px black;
+    margin-right: auto;
+    height: fit-content;
   }
 }
