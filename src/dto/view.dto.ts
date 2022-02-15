@@ -6,22 +6,11 @@ export class ViewDto {
   userId: string;
   topic?: ViewTopicDto;
   hasOpinion?: boolean;
-  // readonly opinion: ViewOpinionDto;
 
-  constructor(
-    _isLogined: boolean,
-    _nickname: string,
-    _userId: string,
-    // _topic: ViewTopicDto,
-    // _hasOpinion: boolean,
-    // _opinion: ViewOpinionDto,
-  ) {
+  constructor(_isLogined: boolean, _nickname: string, _userId: string) {
     this.isLogined = _isLogined;
     this.nickname = _nickname;
     this.userId = _userId;
-    // this.topic = _topic;
-    // this.hasOpinion = _hasOpinion;
-    // this.opinion = _opinion;
   }
 }
 
@@ -41,20 +30,5 @@ export class ViewTopicDto {
     this.currentTopicName = _currentTopicName;
     this.afterTopicName = _afterTopicName;
     this.endDate = _endDate;
-  }
-}
-
-export class ViewOpinionDto {
-  private type: OpinionType;
-  private agree: number;
-  private disagree: number;
-
-  setViewOpinionType(_type: OpinionType) {
-    this.type = _type;
-  }
-
-  setViewOpinionNumber(_agree: number, _disagree: number) {
-    this.agree = _agree;
-    this.disagree = _disagree;
   }
 }

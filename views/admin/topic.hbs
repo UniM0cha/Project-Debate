@@ -6,6 +6,12 @@
     <title>주제 관리 페이지</title>
   </head>
   <body>
+    <h1>주제 추가</h1>
+    <form action='/admin/new-topic' method='post'>
+      주제 입력: <input type='text' name='topicName' placeholder='주제 입력' required/><p/>
+      <input type='submit' value='추가' />
+    </form>
+
     <h1>예약 추가</h1>
     <form action='/admin/new-reserve' method='post'>
       주제 번호: <input type='number' name='topicId' placeholder='주제 번호 입력' list="topic-options" required><p/>
@@ -19,11 +25,24 @@
       {{/each}}
     </datalist>
 
-    <h1>주제 추가</h1>
-    <form action='/admin/new-topic' method='post'>
-      주제 입력: <input type='text' name='topicName' placeholder='주제 입력' required/><p/>
-      <input type='submit' value='추가' />
-    </form>
+    <h1>주제 목록</h1>
+    <table border="1">
+      <th>주제 번호</th>
+      <th>주제</th>
+      {{#if topics}}
+        {{#each topics}}
+          <tr>
+            <td align="center"><a href="/admin/topic/{{topicId}}">{{topicId}}</a></td>
+            <td>{{topicName}}</td>
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr>
+          <td colspan="5" align="center">데이터가 없습니다.</td>
+        </tr>
+      {{/if}}
+    </table>
+    <p/>
 
     <h1>주제 예약 목록</h1>
     <table border="1">
@@ -47,25 +66,6 @@
       {{else}}
         <tr>
           <td colspan="6" align="center">데이터가 없습니다.</td>
-        </tr>
-      {{/if}}
-    </table>
-    <p/>
-
-    <h1>주제 목록</h1>
-    <table border="1">
-      <th>주제 번호</th>
-      <th>주제</th>
-      {{#if topics}}
-        {{#each topics}}
-          <tr>
-            <td align="center"><a href="/admin/topic/{{topicId}}">{{topicId}}</a></td>
-            <td>{{topicName}}</td>
-          </tr>
-        {{/each}}
-      {{else}}
-        <tr>
-          <td colspan="5" align="center">데이터가 없습니다.</td>
         </tr>
       {{/if}}
     </table>

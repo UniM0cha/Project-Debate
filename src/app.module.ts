@@ -12,6 +12,7 @@ import { ChatModule } from './chat/chat.module';
 import { TopicModule } from './topic/topic.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AdminModule } from './admin/admin.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AdminModule } from './admin/admin.module';
     ChatModule,
     TopicModule,
     AdminModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

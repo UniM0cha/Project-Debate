@@ -38,4 +38,25 @@ export class Users {
 
   @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.topicUsersId)
   topicUsers: TopicUsers[];
+
+  setUser(
+    nickname: string,
+    email: string,
+    platform: string,
+    platformId: string,
+  ) {
+    this.nickname = nickname;
+    this.email = email;
+    switch (platform) {
+      case 'kakao':
+        this.kakaoId = platformId;
+        break;
+      case 'naver':
+        this.naverId = platformId;
+        break;
+      case 'google':
+        this.googleId = platformId;
+        break;
+    }
+  }
 }

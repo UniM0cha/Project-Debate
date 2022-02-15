@@ -11,6 +11,7 @@ import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
 import { MoreThan } from 'typeorm';
+import { TopicDataDto } from './dto/topic.dto';
 
 @Injectable()
 export class TopicService {
@@ -354,6 +355,50 @@ export class TopicService {
       order: { reserveId: 'DESC' },
       where: { reserveState: ReserveType.PASSED },
     });
+  }
+
+  async setTopicDataDto(): Promise<TopicDataDto> {
+    let topic: TopicDataDto = new TopicDataDto();
+
+    let currentReserve: TopicReserve = await this.findCurrentReserve();
+    let nextReserve: TopicReserve = await this.findNextReserve();
+
+    let currentReserveId = currentReserve ? currentReserve.reserveId : null;
+    let currentTopicName = currentReserve
+      ? currentReserve.topic.topicName
+      : null;
+    let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
+    let endDate = nextReserve ? nextReserve.startDate : null;
+
+    topic.setTopicDataDto(
+      currentReserveId,
+      currentTopicName,
+      afterTopicName,
+      endDate,
+    );
+    return topic;
+  }
+
+  async setListTopicDto(reserveId: number): Promise<TopicDataDto> {
+    let topicDto: TopicDataDto = new TopicDataDto();
+    const topicReserve: TopicReserve = await this.findOneTopicReserveWithTopic(
+      reserveId,
+    );
+    const currentReserveId: number = topicReserve.reserveId;
+    const currentTopicName: string = topicReserve.topic.topicName;
+    topicDto.setTopicDataDto(currentReserveId, currentTopicName, null, null);
+    return topicDto;
+  }
+
+  async checkHasOpinion(userId: string): Promise<boolean> {
+    const userOpinion: OpinionType = await this.getOpinion(userId);
+    const hasOpinion: boolean = userOpinion ? true : false;
+    return hasOpinion;
+  }
+
+  async getCurrentReserveId(): Promise<number> {
+    const currentReserve: TopicReserve = await this.findCurrentReserve();
+    return currentReserve ? currentReserve.reserveId : null;
   }
 
   async addTestData() {

@@ -1,8 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+
 import { lastValueFrom } from 'rxjs';
 import { UserDataDto } from 'src/dto/userdata.dto';
+import { Users } from 'src/users/users.entity';
+import { UsersService } from 'src/users/users.service';
+import { AuthDto } from './dto/auth.dto';
 
 const SERVER_URL = `localhost:3000`;
 const KAKAO_REST_API_KEY = `ff5db7469114a5d6adfbdbc19d58501a`;
@@ -18,6 +22,7 @@ export class AuthService {
   constructor(
     private httpService: HttpService,
     private jwtService: JwtService,
+    private usersService: UsersService,
   ) {}
 
   getAccessCodeUrl(platform: string): string {
@@ -115,5 +120,34 @@ export class AuthService {
     return await lastValueFrom(
       this.httpService.post(_url, '', { headers: _header }),
     );
+  }
+
+  async validateUser(userId: string): Promise<Users> {
+    const user = this.usersService.findOneById(userId);
+    if (!user) {
+      return null;
+    } else {
+      return user;
+    }
+  }
+
+  async setAuthDto(session: Record<string, any>): Promise<AuthDto> {
+    session.save();
+    let isLogined: boolean = session.isLogined;
+    let nickname: string = null;
+    let userId: string = null;
+
+    // 로그인 체크
+    if (session.isLogined) {
+      isLogined = true;
+      nickname = session.userData.nickname;
+      userId = session.userData.userId;
+    } else {
+      isLogined = false;
+      nickname = null;
+      userId = null;
+    }
+
+    return new AuthDto(isLogined, nickname, userId);
   }
 }

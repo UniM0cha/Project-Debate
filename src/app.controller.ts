@@ -8,24 +8,35 @@ import {
   Session,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ViewDto } from './dto/view.dto';
+import { AuthService } from './auth/auth.service';
+import { AuthDto } from './auth/dto/auth.dto';
+import { ViewDto, ViewTopicDto } from './dto/view.dto';
+import { TopicDataDto } from './topic/dto/topic.dto';
+import { TopicService } from './topic/topic.service';
 
 @Controller()
 export class AppController {
-  constructor(private appService: AppService) {}
+  constructor(
+    private appService: AppService,
+    private topicService: TopicService,
+    private authService: AuthService,
+  ) {}
   private readonly logger = new Logger(AppController.name);
 
   @Get('/')
   @Render('index')
   async root(@Session() session: Record<string, any>) {
-    session.reserveId = await this.appService.getCurrentReserveId();
-    const viewDto = await this.appService.createViewDto(session);
+    session.reserveId = await this.topicService.getCurrentReserveId();
 
-    viewDto.hasOpinion = await this.appService.checkHasOpinion(viewDto.userId);
-    viewDto.topic = await this.appService.setIndexTopicDto();
+    const authDto: AuthDto = await this.authService.setAuthDto(session);
 
-    this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
-    return viewDto;
+    const hasOpinion = await this.topicService.checkHasOpinion(authDto.userId);
+    const topicDataDto: TopicDataDto =
+      await this.topicService.setTopicDataDto();
+
+    const data = { ...authDto, hasOpinion, topic: topicDataDto };
+    this.logger.debug(`send view data: ${JSON.stringify(data)}`);
+    return data;
   }
 
   @Post('/time')
