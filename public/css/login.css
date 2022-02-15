@@ -42,6 +42,7 @@ body{
   height: 50px;
   width: 50px;
   vertical-align: middle;
+  margin-bottom: 2px;
 }
 
 .naver p{
