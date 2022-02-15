@@ -31,10 +31,8 @@
       <div class='topic'>
         주제 : {{topic.currentTopicName}}<br>
       </div>
-    </div>
-
-    <!-- 찬성반대투표바 -->
-    <div class='age-dis-bar-wrapper'>
+      
+      <div class='age-dis-bar-wrapper'>
       <div>
       <div class='agree-bar'><span class="agree-sign">찬성:</span></div>
       <div class='disagree-bar'><span class='disagree-sign'>반대:</span></div>
@@ -43,18 +41,30 @@
         <button class='bar-button agree-btn'>찬성</button>
         <button class='bar-button disagree-btn'>반대</button>
       </div>
-    </div>
-
-    <!-- 실시간 토론 하는 곳 -->
-    <div class='debate-wrapper'>
-      <div class='debate-box'>
-        <ul class='live-debate' id='messages'>
-        </ul>
       </div>
 
-      <div class='input-box'>
-        <textarea id='message' class='opinion-input' type='text' maxlength="200" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
-        <button id='send' class='send' type='button'>전송</button>
+    </div>
+
+    <!-- 찬성반대투표바 -->
+
+    <!-- 실시간 토론 하는 곳 -->
+    <div class="main">
+      <div class="first-ad ad">
+        <img src="css/ex-ad.png">
+      </div>
+      <div class='debate-wrapper'>
+        <div class='debate-box'>
+          <ul class='live-debate' id='messages'>
+          </ul>
+        </div>
+
+        <div class='input-box'>
+          <textarea id='message' class='opinion-input' type='text' maxlength="200" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
+          <button id='send' class='send' type='button'>전송</button>
+        </div>
+      </div>
+      <div class="second-ad ad">
+        <img src="css/ex-ad.png">
       </div>
     </div>
 

@@ -15,13 +15,18 @@ body{
   font-family: Cafe24Ssurround;
 }
 
+.div-title{
+  text-align: center;
+  margin-top: 30px;
+}
+
 /*로그인 버튼 모음*/
 .login-form {
   text-align: center;
 }
 
 .login-btn {
-  width: 50%;
+  width: 200px;
   height: 60px;
   border: none;
   border-radius: 5px;
@@ -31,11 +36,10 @@ body{
 }
 
 .naver {
-  margin-top: 10px;
   background-color: #03C75A;
   color: white;
   font-weight: bold;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .naver img{
@@ -49,6 +53,7 @@ body{
   display: inline-block;
   vertical-align: middle;
   margin: 0px;
+  margin-right: 10px;
 }
 
 .kakao {
@@ -69,6 +74,7 @@ body{
   display: inline-block;
   vertical-align: middle;
   margin: 0px;
+  margin-right: 10px;
 }
 
 
@@ -91,10 +97,11 @@ body{
   display: inline-block;
   vertical-align: middle;
   margin: 0px;
+  margin-right: 10px;
 }
 
 @media (min-width: 992px) {
   .login-btn {
-    width: 30%;
+    width: 20%;
   }
 }
