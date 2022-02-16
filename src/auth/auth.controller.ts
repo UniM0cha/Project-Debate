@@ -1,18 +1,19 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Logger,
   NotFoundException,
   Param,
   Post,
   Query,
-  Redirect,
-  Render,
   Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
@@ -38,6 +39,20 @@ export class AuthController {
     } else {
       return res.render('login');
     }
+  }
+
+  @Get('login/kakao')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoLogin() {
+    return HttpStatus.OK;
+  }
+
+  @Get('redirect/kakao')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoRedirect() {
+    return HttpStatus.OK;
   }
 
   /**
