@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
   Session,
   UseGuards,
@@ -19,6 +20,7 @@ import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
+import { KakaoUserDto } from './dto/kakao.user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -51,8 +53,8 @@ export class AuthController {
   @Get('redirect/kakao')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
-  async kakaoRedirect() {
-    return HttpStatus.OK;
+  async kakaoRedirect(@Req() req): Promise<{ access_token: string }> {
+    return this.authService.kakaoLogin(req.user as KakaoUserDto);
   }
 
   /**

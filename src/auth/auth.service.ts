@@ -7,6 +7,7 @@ import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthDto } from './dto/auth.dto';
+import { KakaoUserDto } from './dto/kakao.user.dto';
 
 const SERVER_URL = `localhost:3000`;
 const KAKAO_REST_API_KEY = `ff5db7469114a5d6adfbdbc19d58501a`;
@@ -149,5 +150,10 @@ export class AuthService {
     }
 
     return new AuthDto(isLogined, nickname, userId);
+  }
+
+  async kakaoLogin(payload: KakaoUserDto): Promise<{ access_token: string }> {
+    this.logger.debug(JSON.stringify(payload));
+    return { access_token: this.jwtService.sign(payload) };
   }
 }

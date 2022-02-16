@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-kakao';
+import { KakaoUserDto } from '../dto/kakao.user.dto';
 
 export class KakaoStrategy extends PassportStrategy(Strategy) {
   private readonly logger = new Logger(KakaoStrategy.name);
@@ -15,6 +16,11 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
   async validate(accessToken, refreshToken, profile, done) {
     const profileJson = profile._json;
     const kakao_account = profileJson.kakao_account;
-    this.logger.debug(`kakao_account: ${JSON.stringify(kakao_account)}`);
+    const payload: KakaoUserDto = {
+      kakaoId: profileJson.id,
+      email: kakao_account.email,
+      profileImage: kakao_account.profile.thumbnail_image_url,
+    };
+    done(null, payload);
   }
 }
