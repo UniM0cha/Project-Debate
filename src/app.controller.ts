@@ -4,9 +4,12 @@ import {
   Logger,
   Post,
   Render,
+  Req,
   Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { AuthDto } from './auth/dto/auth.dto';
@@ -25,7 +28,8 @@ export class AppController {
 
   @Get('/')
   @Render('index')
-  async root(@Session() session: Record<string, any>) {
+  @UseGuards(AuthGuard('jwt'))
+  async root(@Session() session, @Req() req) {
     session.reserveId = await this.topicService.getCurrentReserveId();
 
     const authDto: AuthDto = await this.authService.setAuthDto(session);
@@ -35,6 +39,7 @@ export class AppController {
       await this.topicService.setTopicDataDto();
 
     const data = { ...authDto, hasOpinion, topic: topicDataDto };
+    this.logger.debug(`req.user: ${JSON.stringify(req.user)}`);
     this.logger.debug(`send view data: ${JSON.stringify(data)}`);
     return data;
   }

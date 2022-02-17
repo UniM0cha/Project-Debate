@@ -27,7 +27,7 @@ export class AuthController {
   private readonly logger = new Logger(AuthController.name);
   constructor(
     private authService: AuthService,
-    private usersSerivce: UsersService,
+    private usersService: UsersService,
   ) {}
 
   /**
@@ -53,8 +53,30 @@ export class AuthController {
   @Get('redirect/kakao')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
-  async kakaoRedirect(@Req() req): Promise<{ access_token: string }> {
-    return this.authService.kakaoLogin(req.user as KakaoUserDto);
+  async kakaoRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) res,
+  ): Promise<{ access_token: string }> {
+    const kakaoUser: KakaoUserDto = req.user as KakaoUserDto;
+
+    // 먼저 이 유저가 존재하는지 확인하고
+    // 이미 유저가 있으면 로그인을 진행하고
+    // 유저가 없으면 회원가입을 진행해야함
+    const state: number = await this.authService.validateUser(
+      'kakao',
+      kakaoUser.kakaoId,
+      kakaoUser.email,
+    );
+    const access_token = this.authService.login(
+      kakaoUser.kakaoId,
+      kakaoUser.email,
+    );
+
+    // const access_token = await this.authService.kakaoLogin(
+    //   req.user as KakaoUserDto,
+    // );
+    await res.cookie('Authorization', access_token, { httpOnly: true });
+    return access_token;
   }
 
   /**
@@ -132,10 +154,10 @@ export class AuthController {
         );
 
         platformId = userInfo.data.id;
-        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
+        idUser = await this.usersService.findByPlatform(platform, platformId);
 
         email = userInfo.data.kakao_account.email;
-        emailUser = await this.usersSerivce.findByPlatform('email', email);
+        emailUser = await this.usersService.findByPlatform('email', email);
 
         break;
 
@@ -164,10 +186,10 @@ export class AuthController {
         );
 
         platformId = userInfo.data.response.id;
-        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
+        idUser = await this.usersService.findByPlatform(platform, platformId);
 
         email = userInfo.data.response.email;
-        emailUser = await this.usersSerivce.findByPlatform('email', email);
+        emailUser = await this.usersService.findByPlatform('email', email);
 
         break;
 
@@ -196,10 +218,10 @@ export class AuthController {
         );
 
         platformId = userInfo.aud;
-        idUser = await this.usersSerivce.findByPlatform(platform, platformId);
+        idUser = await this.usersService.findByPlatform(platform, platformId);
 
         email = userInfo.email;
-        emailUser = await this.usersSerivce.findByPlatform('email', email);
+        emailUser = await this.usersService.findByPlatform('email', email);
 
         break;
 
@@ -230,7 +252,7 @@ export class AuthController {
       } else {
         // 플랫폼 아이디 추가 후 로그인
         this.logger.debug(`Add Platform Request`);
-        await this.usersSerivce.updatePlatformId(platform, email, platformId);
+        await this.usersService.updatePlatformId(platform, email, platformId);
 
         const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
         // await this.authService.login(session, userData);
@@ -327,7 +349,7 @@ export class AuthController {
     const platformId = session.registerData.platformId;
 
     // 중복 체크하여 문제 있을 경우 데이터 처리하지 않고 상태코드만 전달
-    const state: number = await this.usersSerivce.nicknameCheck(nickname);
+    const state: number = await this.usersService.nicknameCheck(nickname);
     if (state !== 0) {
       return res.json(state);
     }
@@ -335,7 +357,7 @@ export class AuthController {
     // 데이터베이스 저장
     const user: Users = new Users();
     user.setUser(nickname, email, platform, platformId);
-    const savedUser = await this.usersSerivce.save(user);
+    const savedUser = await this.usersService.save(user);
 
     // 로그인
     const userData = new UserDataDto(savedUser.userId, savedUser.nickname);

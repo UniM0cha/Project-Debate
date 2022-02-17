@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import e from 'express';
 
 import { lastValueFrom } from 'rxjs';
 import { UserDataDto } from 'src/dto/userdata.dto';
@@ -123,12 +124,48 @@ export class AuthService {
     );
   }
 
-  async validateUser(userId: string): Promise<Users> {
-    const user = this.usersService.findOneById(userId);
-    if (!user) {
-      return null;
-    } else {
-      return user;
+  async validateUser(
+    platform: string,
+    platformId: string,
+    email: string,
+  ): Promise<{ state: number; user: Users }> {
+    /**
+     * 0 : 로그인 요청
+     * 1 : 중복 이메일 로그인 요청
+     * 2 : 회원가입 요청
+     */
+    // const idUser = await this.usersService.findByPlatform(platform, platformId);
+    const emailUser: Users = await this.usersService.findByPlatform(
+      'email',
+      email,
+    );
+    if (!emailUser) {
+      // 회원가입
+      this.logger.debug(`회원가입 요청`);
+      // this.register(platform, platformId, email);
+      return { state: 2, user: null };
+    }
+
+    let isPlatformId: boolean;
+    switch (platform) {
+      case 'naver':
+        isPlatformId = emailUser.naverId === platformId ? true : false;
+      case 'kakao':
+        isPlatformId = emailUser.kakaoId === platformId ? true : false;
+      case 'google':
+        isPlatformId = emailUser.googleId === platformId ? true : false;
+    }
+
+    if (emailUser && isPlatformId) {
+      // 로그인
+      this.logger.debug(`로그인 요청`);
+      return { state: 0, user: emailUser };
+    }
+
+    if (emailUser && !isPlatformId) {
+      // 플랫폼 아이디 추가 후 로그인
+      this.logger.debug(`중복 이메일 로그인 요청`);
+      return { state: 1, user: emailUser };
     }
   }
 
@@ -155,5 +192,14 @@ export class AuthService {
   async kakaoLogin(payload: KakaoUserDto): Promise<{ access_token: string }> {
     this.logger.debug(JSON.stringify(payload));
     return { access_token: this.jwtService.sign(payload) };
+  }
+
+  async login(
+    platformId: string,
+    email: string,
+  ): Promise<{ access_token: string }> {
+    const payload = {
+      userId: '',
+    };
   }
 }
