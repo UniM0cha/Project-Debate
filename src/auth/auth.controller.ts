@@ -44,11 +44,48 @@ export class AuthController {
     }
   }
 
+  @Get('login/naver')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('naver'))
+  async naverLogin() {
+    this.logger.debug(`카카오 로그인 요청`);
+    return HttpStatus.OK;
+  }
+
   @Get('login/kakao')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
   async kakaoLogin() {
+    this.logger.debug(`카카오 로그인 요청`);
     return HttpStatus.OK;
+  }
+
+  @Get('login/google')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('google'))
+  async googleLogin() {
+    this.logger.debug(`카카오 로그인 요청`);
+    return HttpStatus.OK;
+  }
+
+  @Get('redirect/naver')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('naver'))
+  async naverRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+    @Session() session,
+  ) {
+    const naverUser: KakaoUserDto = req.user as KakaoUserDto;
+
+    await this.loginRegister(
+      res,
+      session,
+      'naver',
+      naverUser.kakaoId,
+      naverUser.email,
+      naverUser.profileImage,
+    );
   }
 
   @Get('redirect/kakao')
@@ -56,17 +93,49 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   async kakaoRedirect(
     @Req() req,
-    @Res({ passthrough: true }) res,
+    @Res({ passthrough: true }) res: Response,
     @Session() session,
   ) {
     const kakaoUser: KakaoUserDto = req.user as KakaoUserDto;
-    const platform = 'kakao';
-    const platformId = kakaoUser.kakaoId;
-    const email = kakaoUser.email;
 
-    // 먼저 이 유저가 존재하는지 확인하고
-    // 이미 유저가 있으면 로그인을 진행하고
-    // 유저가 없으면 회원가입을 진행해야함
+    await this.loginRegister(
+      res,
+      session,
+      'kakao',
+      kakaoUser.kakaoId,
+      kakaoUser.email,
+      kakaoUser.profileImage,
+    );
+  }
+
+  @Get('redirect/google')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('google'))
+  async googleRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+    @Session() session,
+  ) {
+    const googleUser: KakaoUserDto = req.user as KakaoUserDto;
+
+    await this.loginRegister(
+      res,
+      session,
+      'google',
+      googleUser.kakaoId,
+      googleUser.email,
+      googleUser.profileImage,
+    );
+  }
+
+  async loginRegister(
+    res: Response,
+    session: any,
+    platform: string,
+    platformId: string,
+    email: string,
+    profileImage: string,
+  ) {
     const { state, user } = await this.authService.validateUser(
       platform,
       platformId,
@@ -100,6 +169,7 @@ export class AuthController {
         email: email,
         platform: platform,
         platformId: platformId,
+        profileImage: profileImage,
       };
 
       res.send(
@@ -108,16 +178,6 @@ export class AuthController {
           location.href='/auth/register';
         </script>`,
       );
-
-      // session.save((err) => {
-      //   if (err) throw err;
-      //   res.send(
-      //     `<script>
-      //       alert('로그인 정보가 없습니다. 회원가입을 진행합니다.');
-      //       location.href='/auth/register';
-      //     </script>`,
-      //   );
-      // });
     }
   }
 

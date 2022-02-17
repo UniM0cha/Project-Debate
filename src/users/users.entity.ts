@@ -30,6 +30,9 @@ export class Users {
   @Column({ nullable: true })
   googleId: string;
 
+  @Column()
+  profileImage: string;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   registerDate: Date;
 

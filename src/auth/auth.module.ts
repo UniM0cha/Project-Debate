@@ -5,8 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleStrategy } from './passport/google.strategy';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { KakaoStrategy } from './passport/kakao.stategy';
+import { NaverStrategy } from './passport/naver.strategy';
 
 @Module({
   imports: [
@@ -23,7 +25,13 @@ import { KakaoStrategy } from './passport/kakao.stategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, KakaoStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    NaverStrategy,
+    KakaoStrategy,
+    GoogleStrategy,
+    JwtStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
