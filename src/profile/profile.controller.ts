@@ -22,9 +22,8 @@ export class ProfileController {
     // 세션에서 로그인이 되어있는지 확인 - 안되어있으면 접근할 수 없도록
     if (
       !(
-        session.userData &&
-        session.userData.userId &&
-        (await this.authService.validateUser(session.userData.userId))
+        (session.userData && session.userData.userId)
+        // (await this.authService.validateUser(session.userData.userId))
       )
     ) {
       throw new UnauthorizedException();

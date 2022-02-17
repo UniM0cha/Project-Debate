@@ -15,7 +15,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import e, { Response } from 'express';
+import { session } from 'passport';
 import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -37,9 +38,9 @@ export class AuthController {
   @Get('/')
   loginPage(@Session() session, @Res() res) {
     if (session.isLogined) {
-      return res.redirect('/');
+      res.redirect('/');
     } else {
-      return res.render('login');
+      res.render('login');
     }
   }
 
@@ -56,27 +57,68 @@ export class AuthController {
   async kakaoRedirect(
     @Req() req,
     @Res({ passthrough: true }) res,
-  ): Promise<{ access_token: string }> {
+    @Session() session,
+  ) {
     const kakaoUser: KakaoUserDto = req.user as KakaoUserDto;
+    const platform = 'kakao';
+    const platformId = kakaoUser.kakaoId;
+    const email = kakaoUser.email;
 
     // 먼저 이 유저가 존재하는지 확인하고
     // 이미 유저가 있으면 로그인을 진행하고
     // 유저가 없으면 회원가입을 진행해야함
-    const state: number = await this.authService.validateUser(
-      'kakao',
-      kakaoUser.kakaoId,
-      kakaoUser.email,
-    );
-    const access_token = this.authService.login(
-      kakaoUser.kakaoId,
-      kakaoUser.email,
+    const { state, user } = await this.authService.validateUser(
+      platform,
+      platformId,
+      email,
     );
 
-    // const access_token = await this.authService.kakaoLogin(
-    //   req.user as KakaoUserDto,
-    // );
-    await res.cookie('Authorization', access_token, { httpOnly: true });
-    return access_token;
+    if (state === 0) {
+      // 로그인
+      const access_token = await this.authService.login(user);
+      await res.cookie('Authorization', access_token, { httpOnly: true });
+      res.redirect('/');
+    }
+    //
+    else if (state === 1) {
+      // 플랫폼 아이디 추가 후 로그인
+      await this.authService.addPlatformId(platform, user, platformId);
+      const access_token = await this.authService.login(user);
+      await res.cookie('Authorization', access_token, { httpOnly: true });
+      res.send(
+        `<script>
+          alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
+          location.href='/';
+        </script>`,
+      );
+    }
+    //
+    else if (state === 2) {
+      // 회원가입
+      // 이메일과 platform, platformId를 세션에 등록 후 회원가입 페이지로 이동
+      session.registerData = {
+        email: email,
+        platform: platform,
+        platformId: platformId,
+      };
+
+      res.send(
+        `<script>
+          alert('로그인 정보가 없습니다. 회원가입을 진행합니다.');
+          location.href='/auth/register';
+        </script>`,
+      );
+
+      // session.save((err) => {
+      //   if (err) throw err;
+      //   res.send(
+      //     `<script>
+      //       alert('로그인 정보가 없습니다. 회원가입을 진행합니다.');
+      //       location.href='/auth/register';
+      //     </script>`,
+      //   );
+      // });
+    }
   }
 
   /**
@@ -87,19 +129,19 @@ export class AuthController {
   @Get('login/:platform')
   login(@Session() session, @Param('platform') platform, @Res() res) {
     if (session.isLogined) {
-      return res.redirect('/');
+      res.redirect('/');
     }
 
     switch (platform) {
       case 'kakao':
         this.logger.debug(`Kakao Login Request`);
-        return res.redirect(this.authService.getAccessCodeUrl('kakao'));
+        res.redirect(this.authService.getAccessCodeUrl('kakao'));
       case 'naver':
         this.logger.debug(`Naver Login Request`);
-        return res.redirect(this.authService.getAccessCodeUrl('naver'));
+        res.redirect(this.authService.getAccessCodeUrl('naver'));
       case 'google':
         this.logger.debug(`Google Login Request`);
-        return res.redirect(this.authService.getAccessCodeUrl('google'));
+        res.redirect(this.authService.getAccessCodeUrl('google'));
       default:
         throw new NotFoundException();
     }
@@ -247,7 +289,7 @@ export class AuthController {
               4,
             )}`,
           );
-          return res.redirect('/');
+          res.redirect('/');
         });
       } else {
         // 플랫폼 아이디 추가 후 로그인
@@ -269,7 +311,7 @@ export class AuthController {
             )}`,
           );
 
-          return res.send(
+          res.send(
             `<script>
               alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
               location.href='/';
@@ -277,7 +319,7 @@ export class AuthController {
           );
         });
 
-        // return res.redirect('/');
+        //  res.redirect('/');
       }
     } else {
       // 회원가입
@@ -291,7 +333,7 @@ export class AuthController {
       session.registerData = registerData;
       session.save((err) => {
         if (err) throw err;
-        return res.redirect('/auth/register');
+        res.redirect('/auth/register');
       });
     }
   }
@@ -314,9 +356,9 @@ export class AuthController {
 
     // 플랫폼 로그인을 했는지 확인
     if (session.registerData && !session.isLogined) {
-      return res.render('register');
+      res.render('register');
     } else {
-      return res.redirect('/');
+      res.redirect('/');
     }
   }
 
@@ -351,7 +393,7 @@ export class AuthController {
     // 중복 체크하여 문제 있을 경우 데이터 처리하지 않고 상태코드만 전달
     const state: number = await this.usersService.nicknameCheck(nickname);
     if (state !== 0) {
-      return res.json(state);
+      res.json(state);
     }
 
     // 데이터베이스 저장
@@ -376,7 +418,7 @@ export class AuthController {
 
       // 로그인 완료되고 가입시에 저장한 데이터 삭제, 상태코드 전송
       delete session.registerData;
-      return res.json(state);
+      res.json(state);
     });
   }
 
@@ -391,7 +433,7 @@ export class AuthController {
     session.isLogined = false;
     session.save((err) => {
       if (err) throw err;
-      return res.redirect('/');
+      res.redirect('/');
     });
   }
 }

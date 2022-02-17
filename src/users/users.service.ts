@@ -66,15 +66,15 @@ export class UsersService {
     switch (platform) {
       case 'kakao':
         await this.usersRepository.updateKakaoId(email, platformId);
-        break;
+        return;
 
       case 'naver':
         await this.usersRepository.updateNaverId(email, platformId);
-        break;
+        return;
 
       case 'google':
         await this.usersRepository.updateGoogleId(email, platformId);
-        break;
+        return;
     }
     return;
   }

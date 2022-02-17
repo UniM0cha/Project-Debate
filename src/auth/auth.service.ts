@@ -142,7 +142,7 @@ export class AuthService {
     if (!emailUser) {
       // 회원가입
       this.logger.debug(`회원가입 요청`);
-      // this.register(platform, platformId, email);
+
       return { state: 2, user: null };
     }
 
@@ -157,13 +157,11 @@ export class AuthService {
     }
 
     if (emailUser && isPlatformId) {
-      // 로그인
       this.logger.debug(`로그인 요청`);
       return { state: 0, user: emailUser };
     }
 
     if (emailUser && !isPlatformId) {
-      // 플랫폼 아이디 추가 후 로그인
       this.logger.debug(`중복 이메일 로그인 요청`);
       return { state: 1, user: emailUser };
     }
@@ -194,12 +192,17 @@ export class AuthService {
     return { access_token: this.jwtService.sign(payload) };
   }
 
-  async login(
-    platformId: string,
-    email: string,
-  ): Promise<{ access_token: string }> {
-    const payload = {
-      userId: '',
-    };
+  async login(user: Users): Promise<{ access_token: string }> {
+    const payload = { userId: user.userId };
+    return { access_token: this.jwtService.sign(payload) };
+  }
+
+  async addPlatformId(platform: string, user: Users, platformId: string) {
+    await this.usersService.updatePlatformId(platform, user.email, platformId);
+    return;
+  }
+
+  async register(platform: any, platformId: any, email: any) {
+    throw new Error('Method not implemented.');
   }
 }

@@ -32,7 +32,7 @@ export class AdminController {
       throw new UnauthorizedException();
     }
 
-    return res.render('admin/main');
+    res.render('admin/main');
   }
 
   @Get('/topic')
@@ -47,7 +47,7 @@ export class AdminController {
       await this.topicService.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicService.findAllTopics();
 
-    return res.render('admin/topic', {
+    res.render('admin/topic', {
       topicReserves: topicReserves,
       topics: topics,
     });
@@ -60,7 +60,7 @@ export class AdminController {
       throw new UnauthorizedException();
     }
     const topic: Topic = await this.topicService.findOneTopic(id);
-    return res.render('admin/topic_detail', { topic: topic });
+    res.render('admin/topic_detail', { topic: topic });
   }
 
   /** 주제 추가 */
@@ -71,7 +71,7 @@ export class AdminController {
     }
     this.logger.debug(`body: ${JSON.stringify(body, null, 4)}`);
     await this.topicService.createTopic(body);
-    return res.redirect('/admin/topic');
+    res.redirect('/admin/topic');
   }
 
   /** 주제 수정 */
@@ -110,7 +110,7 @@ export class AdminController {
       await this.topicService.findOneTopicReserveWithTopic(id);
     this.logger.debug(`reserve: ${JSON.stringify(reserve)}`);
     const topics: Topic[] = await this.topicService.findAllTopics();
-    return res.render('admin/reserve_detail', {
+    res.render('admin/reserve_detail', {
       reserve: reserve,
       topics: topics,
     });

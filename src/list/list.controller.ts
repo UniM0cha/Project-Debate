@@ -140,11 +140,11 @@ export class ListController {
      *
      */
 
-    //return res.render('ex_debate_list', { topics: topics });
+    // res.render('ex_debate_list', { topics: topics });
 
     const authDto: AuthDto = await this.authService.setAuthDto(session);
 
-    return res.render('ex_debate_list', {
+    res.render('ex_debate_list', {
       arr1: arr1, // test
       ...authDto,
       //getPassedTopicList: getPassedTopicList,
@@ -174,7 +174,7 @@ export class ListController {
       );
       const data = { ...authDto, topic: topic };
       this.logger.debug(`viewDto: ${JSON.stringify(data)}`);
-      return res.render('ex_debate_show', data);
+      res.render('ex_debate_show', data);
     } else {
       throw new NotFoundException();
     }
