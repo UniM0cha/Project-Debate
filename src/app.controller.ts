@@ -8,11 +8,16 @@ import {
   Session,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ChatService } from './chat/chat.service';
 import { ViewDto } from './dto/view.dto';
+import { Chat } from './chat/chat.entity';
 
 @Controller()
 export class AppController {
-  constructor(private appService: AppService) {}
+  constructor(
+    private appService: AppService,
+    private readonly chatServices: ChatService,
+  ) {}
   private readonly logger = new Logger(AppController.name);
 
   @Get('/')

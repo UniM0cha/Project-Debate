@@ -90,10 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const live_debate = document.querySelector('.live-debate');
   const input_box = document.querySelector('.input-box');
   // //찬성반대바 구현
-  // const agree_bar = document.querySelector('.agree-bar');
-  // const disagree_bar = document.querySelector('.disagree-bar');
-  // const agree_sign = document.querySelector('.agree-sign');
-  // const disagree_sign = document.querySelector('.disagree-sign');
   const agree_btn = document.querySelector('.agree-btn');
   const disagree_btn = document.querySelector('.disagree-btn');
   //스크롤 아래 고정
@@ -106,23 +102,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //찬성 선택시
     agree_btn.addEventListener('click', () => {
-      //찬성 반대 선택 이후 버튼 숨기기
-      // agree_btn.style.display = 'none';
-      // disagree_btn.style.display = 'none';
-      // opinion_input.style.display = 'block';
-      // send_btn.style.display = 'block';
-      // input_box.style.display = 'flex';
       sendAgreeToServer();
     });
 
     //반대 선택시
     disagree_btn.addEventListener('click', () => {
-      //찬성 반대 선택 이후 버튼 숨기기
-      // agree_btn.style.display = 'none';
-      // disagree_btn.style.display = 'none';
-      // opinion_input.style.display = 'block';
-      // send_btn.style.display = 'block';
-      // input_box.style.display = 'flex';
       sendDisagreeToServer();
     });
   } else {
@@ -203,56 +187,7 @@ topicSocket.on('refresh-opinion-type', ({ agree, disagree }) => {
     agreebar_width = 100 / agree;
     disagreebar_width = 100 - agreebar_width;
   }
-
-  // //찬성비율 계산
-  // agree_calculate(agree, disagree);
-  // //찬성 반대 바 비율 변경
-  // agree_bar.style.width = agreebar_width + '%';
-  // disagree_bar.style.width = disagreebar_width + '%';
-  // //찬성 반대 비율 바 보여주기
-  // agree_bar.style.display = 'block';
-  // disagree_bar.style.display = 'block';
-  // agree_sign.style.display = 'block';
-  // disagree_sign.style.display = 'block';
-  // //찬성 100%일때 css수정
-  // if (agreebar_width === 100) {
-  //   agree_bar.style.borderRadius = '7px';
-  //   disagree_bar.style.display = 'none';
-  //   disagree_sign.style.display = 'none';
-  // }
-
-  // //반대 비율 계산
-  // disagree_calculate(agree, disagree);
-  // //찬성 반대 바 비율 변경
-  // agree_bar.style.width = agreebar_width + '%';
-  // disagree_bar.style.width = disagreebar_width + '%';
-  // //찬성 반대 비율 바 보여주기
-  // agree_bar.style.display = 'block';
-  // disagree_bar.style.display = 'block';
-  // if (disagreebar_width === 100) {
-  //   disagree_bar.style.borderRadius = '7px';
-  //   agree_bar.style.display = 'none';
-  //   agree_sign.style.display = 'none';
-  // }
 });
-
-// // 현재 안쓰이는 함수
-// //찬성 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
-// function agree_calculate(agree, disagree) {
-//   sum = agree + disagree;
-//   agree = sum / agree;
-//   agreebar_width = 100 / agree;
-//   disagreebar_width = 100 - agreebar_width;
-// }
-
-// // 현재 안쓰이는 함수
-// //반대 선택 시 계산식 -> 반올림 때문에 찬성 반대 계산기 나눔
-// function disagree_calculate(agree, disagree) {
-//   sum = agree + disagree;
-//   agree = sum / disagree;
-//   disagreebar_width = 100 / disagree;
-//   agreebar_width = 100 - disagreebar_width;
-// }
 
 /**찬성/반대 요청을 한 후 서버로부터 상태코드 응답 이벤트 등록 */
 topicSocket.on('option-type-state-to-client', ({ state }) => {
@@ -331,10 +266,14 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
     case 3:
       alert(`의견 제시 후 이용해주세요.`);
       break;
+    // 도배로 인한 채팅 금지 상태
+    case 4:
+      alert(`도배로 인해 채팅이 금지된 상태입니다..`);
+      break;
   }
 });
 
-/**서버로 채팅 내용을 보내는 함수 */
+/*서버로 채팅 내용을 보내는 함수 */
 async function send_chat_socket_emit() {
   const opinion_input = document.querySelector('#message').value;
 
