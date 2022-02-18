@@ -134,7 +134,6 @@ export class AuthService {
      * 1 : 중복 이메일 로그인 요청
      * 2 : 회원가입 요청
      */
-    // const idUser = await this.usersService.findByPlatform(platform, platformId);
     const emailUser: Users = await this.usersService.findByPlatform(
       'email',
       email,
@@ -149,11 +148,14 @@ export class AuthService {
     let isPlatformId: boolean;
     switch (platform) {
       case 'naver':
-        isPlatformId = emailUser.naverId === platformId ? true : false;
+        isPlatformId = emailUser.naverId === platformId;
+        break;
       case 'kakao':
-        isPlatformId = emailUser.kakaoId === platformId ? true : false;
+        isPlatformId = emailUser.kakaoId === platformId;
+        break;
       case 'google':
-        isPlatformId = emailUser.googleId === platformId ? true : false;
+        isPlatformId = emailUser.googleId === platformId;
+        break;
     }
 
     if (emailUser && isPlatformId) {
@@ -187,22 +189,13 @@ export class AuthService {
     return new AuthDto(isLogined, nickname, userId);
   }
 
-  async kakaoLogin(payload: KakaoUserDto): Promise<{ access_token: string }> {
-    this.logger.debug(JSON.stringify(payload));
-    return { access_token: this.jwtService.sign(payload) };
-  }
-
-  async login(user: Users): Promise<{ access_token: string }> {
+  async login(user: Users): Promise<string> {
     const payload = { userId: user.userId };
-    return { access_token: this.jwtService.sign(payload) };
+    return this.jwtService.sign(payload);
   }
 
   async addPlatformId(platform: string, user: Users, platformId: string) {
     await this.usersService.updatePlatformId(platform, user.email, platformId);
     return;
-  }
-
-  async register(platform: any, platformId: any, email: any) {
-    throw new Error('Method not implemented.');
   }
 }

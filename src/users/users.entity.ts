@@ -47,6 +47,7 @@ export class Users {
     email: string,
     platform: string,
     platformId: string,
+    profileImage: string,
   ) {
     this.nickname = nickname;
     this.email = email;
@@ -61,5 +62,6 @@ export class Users {
         this.googleId = platformId;
         break;
     }
+    this.profileImage = profileImage;
   }
 }

@@ -21,7 +21,9 @@ import { UserDataDto } from 'src/dto/userdata.dto';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
+import { GoogleUserDto } from './dto/google.user.dto';
 import { KakaoUserDto } from './dto/kakao.user.dto';
+import { NaverUserDto } from './dto/naver.user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -76,13 +78,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Session() session,
   ) {
-    const naverUser: KakaoUserDto = req.user as KakaoUserDto;
+    const naverUser: NaverUserDto = req.user as NaverUserDto;
 
     await this.loginRegister(
       res,
       session,
       'naver',
-      naverUser.kakaoId,
+      naverUser.naverId,
       naverUser.email,
       naverUser.profileImage,
     );
@@ -116,13 +118,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Session() session,
   ) {
-    const googleUser: KakaoUserDto = req.user as KakaoUserDto;
+    const googleUser: GoogleUserDto = req.user as GoogleUserDto;
 
     await this.loginRegister(
       res,
       session,
       'google',
-      googleUser.kakaoId,
+      googleUser.googleId,
       googleUser.email,
       googleUser.profileImage,
     );
@@ -145,7 +147,8 @@ export class AuthController {
     if (state === 0) {
       // 로그인
       const access_token = await this.authService.login(user);
-      await res.cookie('Authorization', access_token, { httpOnly: true });
+      this.logger.debug(`생성된 JWT 토큰: ${JSON.stringify(access_token)}`);
+      await res.cookie('access_token', access_token, { httpOnly: true });
       res.redirect('/');
     }
     //
@@ -186,217 +189,217 @@ export class AuthController {
    * 로그인 페이지에서 플랫폼 로그인 클릭
    * @returns
    */
-  @Get('login/:platform')
-  login(@Session() session, @Param('platform') platform, @Res() res) {
-    if (session.isLogined) {
-      res.redirect('/');
-    }
+  // @Get('login/:platform')
+  // login(@Session() session, @Param('platform') platform, @Res() res) {
+  //   if (session.isLogined) {
+  //     res.redirect('/');
+  //   }
 
-    switch (platform) {
-      case 'kakao':
-        this.logger.debug(`Kakao Login Request`);
-        res.redirect(this.authService.getAccessCodeUrl('kakao'));
-      case 'naver':
-        this.logger.debug(`Naver Login Request`);
-        res.redirect(this.authService.getAccessCodeUrl('naver'));
-      case 'google':
-        this.logger.debug(`Google Login Request`);
-        res.redirect(this.authService.getAccessCodeUrl('google'));
-      default:
-        throw new NotFoundException();
-    }
-  }
+  //   switch (platform) {
+  //     case 'kakao':
+  //       this.logger.debug(`Kakao Login Request`);
+  //       res.redirect(this.authService.getAccessCodeUrl('kakao'));
+  //     case 'naver':
+  //       this.logger.debug(`Naver Login Request`);
+  //       res.redirect(this.authService.getAccessCodeUrl('naver'));
+  //     case 'google':
+  //       this.logger.debug(`Google Login Request`);
+  //       res.redirect(this.authService.getAccessCodeUrl('google'));
+  //     default:
+  //       throw new NotFoundException();
+  //   }
+  // }
 
-  /**
-   * GET /auth/redirect/:platform
-   * @param qs 플랫폼으로부터 받아온 엑세스 코드
-   * @param res 리다이렉트를 위한 response
-   * @param session 세션
-   * @returns
-   */
-  @Get('redirect/:platform')
-  async loginRedirect(
-    @Query() qs,
-    @Res() res: Response,
-    @Session() session: Record<string, any>,
-    @Param('platform') platform,
-  ) {
-    let accessCode: string;
-    let token: any;
-    let accessToken: string;
-    let userInfo: any;
-    let platformId: string;
-    let idUser: Users;
-    let email: string;
-    let emailUser: Users;
+  // /**
+  //  * GET /auth/redirect/:platform
+  //  * @param qs 플랫폼으로부터 받아온 엑세스 코드
+  //  * @param res 리다이렉트를 위한 response
+  //  * @param session 세션
+  //  * @returns
+  //  */
+  // @Get('redirect/:platform')
+  // async loginRedirect(
+  //   @Query() qs,
+  //   @Res() res: Response,
+  //   @Session() session: Record<string, any>,
+  //   @Param('platform') platform,
+  // ) {
+  //   let accessCode: string;
+  //   let token: any;
+  //   let accessToken: string;
+  //   let userInfo: any;
+  //   let platformId: string;
+  //   let idUser: Users;
+  //   let email: string;
+  //   let emailUser: Users;
 
-    switch (platform) {
-      /** 카카오 */
-      case 'kakao':
-        accessCode = qs.code;
-        this.logger.debug(`Response Access_Code from Kakao: ${accessCode}`);
+  //   switch (platform) {
+  //     /** 카카오 */
+  //     case 'kakao':
+  //       accessCode = qs.code;
+  //       this.logger.debug(`Response Access_Code from Kakao: ${accessCode}`);
 
-        token = await this.authService.getAccessToken(platform, accessCode);
-        this.logger.debug(
-          `Response Token_Data from Kakao: ${JSON.stringify(
-            token.data,
-            null,
-            4,
-          )}`,
-        );
-        accessToken = token.data['access_token'];
+  //       token = await this.authService.getAccessToken(platform, accessCode);
+  //       this.logger.debug(
+  //         `Response Token_Data from Kakao: ${JSON.stringify(
+  //           token.data,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
+  //       accessToken = token.data['access_token'];
 
-        userInfo = await this.authService.getUserInfo(platform, accessToken);
-        this.logger.debug(
-          `Response User_Info from Kakao: ${JSON.stringify(
-            userInfo.data,
-            null,
-            4,
-          )}`,
-        );
+  //       userInfo = await this.authService.getUserInfo(platform, accessToken);
+  //       this.logger.debug(
+  //         `Response User_Info from Kakao: ${JSON.stringify(
+  //           userInfo.data,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
 
-        platformId = userInfo.data.id;
-        idUser = await this.usersService.findByPlatform(platform, platformId);
+  //       platformId = userInfo.data.id;
+  //       idUser = await this.usersService.findByPlatform(platform, platformId);
 
-        email = userInfo.data.kakao_account.email;
-        emailUser = await this.usersService.findByPlatform('email', email);
+  //       email = userInfo.data.kakao_account.email;
+  //       emailUser = await this.usersService.findByPlatform('email', email);
 
-        break;
+  //       break;
 
-      /** 네이버 */
-      case 'naver':
-        accessCode = qs.code;
-        this.logger.debug(`Response Access_Code from Naver: ${accessCode}`);
+  //     /** 네이버 */
+  //     case 'naver':
+  //       accessCode = qs.code;
+  //       this.logger.debug(`Response Access_Code from Naver: ${accessCode}`);
 
-        token = await this.authService.getAccessToken(platform, accessCode);
-        this.logger.debug(
-          `Response Token_Data from Naver: ${JSON.stringify(
-            token.data,
-            null,
-            4,
-          )}`,
-        );
-        accessToken = token.data['access_token'];
+  //       token = await this.authService.getAccessToken(platform, accessCode);
+  //       this.logger.debug(
+  //         `Response Token_Data from Naver: ${JSON.stringify(
+  //           token.data,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
+  //       accessToken = token.data['access_token'];
 
-        userInfo = await this.authService.getUserInfo(platform, accessToken);
-        this.logger.debug(
-          `Response User_Info from Naver: ${JSON.stringify(
-            userInfo.data,
-            null,
-            4,
-          )}`,
-        );
+  //       userInfo = await this.authService.getUserInfo(platform, accessToken);
+  //       this.logger.debug(
+  //         `Response User_Info from Naver: ${JSON.stringify(
+  //           userInfo.data,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
 
-        platformId = userInfo.data.response.id;
-        idUser = await this.usersService.findByPlatform(platform, platformId);
+  //       platformId = userInfo.data.response.id;
+  //       idUser = await this.usersService.findByPlatform(platform, platformId);
 
-        email = userInfo.data.response.email;
-        emailUser = await this.usersService.findByPlatform('email', email);
+  //       email = userInfo.data.response.email;
+  //       emailUser = await this.usersService.findByPlatform('email', email);
 
-        break;
+  //       break;
 
-      /** 구글 */
-      case 'google':
-        accessCode = qs.code;
-        this.logger.debug(`Response Access_Code from Google: ${accessCode}`);
+  //     /** 구글 */
+  //     case 'google':
+  //       accessCode = qs.code;
+  //       this.logger.debug(`Response Access_Code from Google: ${accessCode}`);
 
-        token = await this.authService.getAccessToken(platform, accessCode);
-        this.logger.debug(
-          `Response Token_Data from Google: ${JSON.stringify(
-            token.data,
-            null,
-            4,
-          )}`,
-        );
-        let IdToken = token.data['id_token'];
+  //       token = await this.authService.getAccessToken(platform, accessCode);
+  //       this.logger.debug(
+  //         `Response Token_Data from Google: ${JSON.stringify(
+  //           token.data,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
+  //       let IdToken = token.data['id_token'];
 
-        userInfo = await this.authService.getUserInfo(platform, null, IdToken);
-        this.logger.debug(
-          `Response User_Info from Google: ${JSON.stringify(
-            userInfo,
-            null,
-            4,
-          )}`,
-        );
+  //       userInfo = await this.authService.getUserInfo(platform, null, IdToken);
+  //       this.logger.debug(
+  //         `Response User_Info from Google: ${JSON.stringify(
+  //           userInfo,
+  //           null,
+  //           4,
+  //         )}`,
+  //       );
 
-        platformId = userInfo.aud;
-        idUser = await this.usersService.findByPlatform(platform, platformId);
+  //       platformId = userInfo.aud;
+  //       idUser = await this.usersService.findByPlatform(platform, platformId);
 
-        email = userInfo.email;
-        emailUser = await this.usersService.findByPlatform('email', email);
+  //       email = userInfo.email;
+  //       emailUser = await this.usersService.findByPlatform('email', email);
 
-        break;
+  //       break;
 
-      default:
-        throw new NotFoundException();
-    }
+  //     default:
+  //       throw new NotFoundException();
+  //   }
 
-    if (emailUser) {
-      if (idUser) {
-        // 로그인
-        this.logger.debug(`Login Request`);
+  //   if (emailUser) {
+  //     if (idUser) {
+  //       // 로그인
+  //       this.logger.debug(`Login Request`);
 
-        const userData = new UserDataDto(idUser.userId, idUser.nickname);
-        session.userData = userData;
-        session.isLogined = true;
-        session.save((err) => {
-          if (err) throw err;
+  //       const userData = new UserDataDto(idUser.userId, idUser.nickname);
+  //       session.userData = userData;
+  //       session.isLogined = true;
+  //       session.save((err) => {
+  //         if (err) throw err;
 
-          this.logger.debug(
-            `Generated Session Data After Login: ${JSON.stringify(
-              session,
-              null,
-              4,
-            )}`,
-          );
-          res.redirect('/');
-        });
-      } else {
-        // 플랫폼 아이디 추가 후 로그인
-        this.logger.debug(`Add Platform Request`);
-        await this.usersService.updatePlatformId(platform, email, platformId);
+  //         this.logger.debug(
+  //           `Generated Session Data After Login: ${JSON.stringify(
+  //             session,
+  //             null,
+  //             4,
+  //           )}`,
+  //         );
+  //         res.redirect('/');
+  //       });
+  //     } else {
+  //       // 플랫폼 아이디 추가 후 로그인
+  //       this.logger.debug(`Add Platform Request`);
+  //       await this.usersService.updatePlatformId(platform, email, platformId);
 
-        const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
-        // await this.authService.login(session, userData);
-        session.userData = userData;
-        session.isLogined = true;
-        session.save((err) => {
-          if (err) throw err;
+  //       const userData = new UserDataDto(emailUser.userId, emailUser.nickname);
+  //       // await this.authService.login(session, userData);
+  //       session.userData = userData;
+  //       session.isLogined = true;
+  //       session.save((err) => {
+  //         if (err) throw err;
 
-          this.logger.debug(
-            `Generated Session Data After Login: ${JSON.stringify(
-              session,
-              null,
-              4,
-            )}`,
-          );
+  //         this.logger.debug(
+  //           `Generated Session Data After Login: ${JSON.stringify(
+  //             session,
+  //             null,
+  //             4,
+  //           )}`,
+  //         );
 
-          res.send(
-            `<script>
-              alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
-              location.href='/';
-            </script>`,
-          );
-        });
+  //         res.send(
+  //           `<script>
+  //             alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
+  //             location.href='/';
+  //           </script>`,
+  //         );
+  //       });
 
-        //  res.redirect('/');
-      }
-    } else {
-      // 회원가입
-      this.logger.debug(`Register Request`);
-      // 이메일과 platform, platformId를 세션에 등록 후 회원가입 페이지로 이동
-      const registerData = {
-        email: email,
-        platform: platform,
-        platformId: platformId,
-      };
-      session.registerData = registerData;
-      session.save((err) => {
-        if (err) throw err;
-        res.redirect('/auth/register');
-      });
-    }
-  }
+  //       //  res.redirect('/');
+  //     }
+  //   } else {
+  //     // 회원가입
+  //     this.logger.debug(`Register Request`);
+  //     // 이메일과 platform, platformId를 세션에 등록 후 회원가입 페이지로 이동
+  //     const registerData = {
+  //       email: email,
+  //       platform: platform,
+  //       platformId: platformId,
+  //     };
+  //     session.registerData = registerData;
+  //     session.save((err) => {
+  //       if (err) throw err;
+  //       res.redirect('/auth/register');
+  //     });
+  //   }
+  // }
 
   /**
    * GET /auth/register
@@ -407,17 +410,14 @@ export class AuthController {
   @Get('register')
   async showRegisterPage(@Session() session: Record<string, any>, @Res() res) {
     this.logger.debug(
-      `Received Session Data Before Register: ${JSON.stringify(
-        session,
-        null,
-        4,
-      )}`,
+      `세션에서 받아온 회원가입 정보: ${JSON.stringify(session)}`,
     );
 
     // 플랫폼 로그인을 했는지 확인
-    if (session.registerData && !session.isLogined) {
+    if (session.registerData) {
       res.render('register');
     } else {
+      this.logger.error('회원가입 페이지 실패: 회원가입 정보 없음');
       res.redirect('/');
     }
   }
@@ -441,14 +441,12 @@ export class AuthController {
   ) {
     // 회원가입에 필요한 데이터가 없다면 메인페이지로
     if (!session.registerData) {
+      this.logger.error('회원가입 실패: 회원가입 정보 없음');
       res.redirect('/');
-      this.logger.error('회원가입 실패: 로그인 정보 없음');
       return;
     }
 
-    const email = session.registerData.email;
-    const platform = session.registerData.platform;
-    const platformId = session.registerData.platformId;
+    const { email, platform, platformId, profileImage } = session.registerData;
 
     // 중복 체크하여 문제 있을 경우 데이터 처리하지 않고 상태코드만 전달
     const state: number = await this.usersService.nicknameCheck(nickname);
@@ -458,11 +456,20 @@ export class AuthController {
 
     // 데이터베이스 저장
     const user: Users = new Users();
-    user.setUser(nickname, email, platform, platformId);
+    user.setUser(nickname, email, platform, platformId, profileImage);
     const savedUser = await this.usersService.save(user);
 
+    const access_token = await this.authService.login(savedUser);
+    await res.cookie('Authorization', access_token, { httpOnly: true });
+
+    // 로그인 완료되고 가입시에 저장한 데이터 삭제, 상태코드 전송
+    delete session.registerData;
+    res.json(state);
+
+    /*
     // 로그인
     const userData = new UserDataDto(savedUser.userId, savedUser.nickname);
+
     session.userData = userData;
     session.isLogined = true;
     session.save((err) => {
@@ -480,20 +487,21 @@ export class AuthController {
       delete session.registerData;
       res.json(state);
     });
+    */
   }
 
   /**
    * GET /auth/logout
    * 로그아웃 요청 시
    */
-  @Get('logout')
-  async logout(@Session() session: Record<string, any>, @Res() res) {
-    this.logger.debug(`Logout Request`);
-    delete session.userData;
-    session.isLogined = false;
-    session.save((err) => {
-      if (err) throw err;
-      res.redirect('/');
-    });
-  }
+  // @Get('logout')
+  // async logout(@Session() session: Record<string, any>, @Res() res) {
+  //   this.logger.debug(`Logout Request`);
+  //   delete session.userData;
+  //   session.isLogined = false;
+  //   session.save((err) => {
+  //     if (err) throw err;
+  //     res.redirect('/');
+  //   });
+  // }
 }

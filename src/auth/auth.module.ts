@@ -1,6 +1,6 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
@@ -12,17 +12,14 @@ import { NaverStrategy } from './passport/naver.strategy';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    JwtModule.register({
+      // secret: 'hello',
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '3200s' },
+    }),
     HttpModule,
     UsersModule,
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '60s' },
-        };
-      },
-    }),
   ],
   controllers: [AuthController],
   providers: [

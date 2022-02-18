@@ -3,19 +3,28 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+const fromAuthCookie = function () {
+  return function (request) {
+    let token = null;
+    if (request && request.cookies) {
+      token = request.cookies['access_token'];
+    }
+    return token;
+  };
+};
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   private readonly logger = new Logger(JwtStrategy.name);
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
+      jwtFromRequest: fromAuthCookie(),
+      ignoreExpiration: true,
       secretOrKey: process.env.JWT_SECRET,
     });
   }
 
   async validate(payload: any) {
-    this.logger.debug(JSON.stringify(payload));
-    return { userId: payload.sub, username: payload.username };
+    return { userId: payload.userId };
   }
 }

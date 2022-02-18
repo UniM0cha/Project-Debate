@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth20';
+import { GoogleUserDto } from '../dto/google.user.dto';
 import { KakaoUserDto } from '../dto/kakao.user.dto';
 
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -17,12 +18,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   async validate(accessToken, refreshToken, profile, done) {
     const profileJson = profile._json;
     this.logger.debug(JSON.stringify(profileJson));
-    // const kakao_account = profileJson.kakao_account;
-    // const payload: KakaoUserDto = {
-    //   kakaoId: profileJson.id,
-    //   email: kakao_account.email,
-    //   profileImage: kakao_account.profile.thumbnail_image_url,
-    // };
-    // done(null, payload);
+    const payload: GoogleUserDto = {
+      googleId: profileJson.sub,
+      email: profileJson.email,
+      profileImage: profileJson.picture,
+    };
+    done(null, payload);
   }
 }

@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-naver';
 import { KakaoUserDto } from '../dto/kakao.user.dto';
+import { NaverUserDto } from '../dto/naver.user.dto';
 
 export class NaverStrategy extends PassportStrategy(Strategy) {
   private readonly logger = new Logger(NaverStrategy.name);
@@ -15,13 +16,11 @@ export class NaverStrategy extends PassportStrategy(Strategy) {
 
   async validate(accessToken, refreshToken, profile, done) {
     const profileJson = profile._json;
-    this.logger.debug(JSON.stringify(profile));
-    // const kakao_account = profileJson.kakao_account;
-    // const payload: KakaoUserDto = {
-    //   kakaoId: profileJson.id,
-    //   email: kakao_account.email,
-    //   profileImage: kakao_account.profile.thumbnail_image_url,
-    // };
-    // done(null, payload);
+    const payload: NaverUserDto = {
+      naverId: profileJson.id,
+      email: profileJson.email,
+      profileImage: profileJson.profile_image,
+    };
+    done(null, payload);
   }
 }

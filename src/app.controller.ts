@@ -28,7 +28,7 @@ export class AppController {
 
   @Get('/')
   @Render('index')
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async root(@Session() session, @Req() req) {
     session.reserveId = await this.topicService.getCurrentReserveId();
 
