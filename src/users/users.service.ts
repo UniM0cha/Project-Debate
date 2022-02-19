@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Users } from './users.entity';
+import { UserRole, Users } from './users.entity';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -107,5 +107,21 @@ export class UsersService {
       this.logger.error('사용 불가능한 닉네임: 중복된 닉네임');
       return 1;
     }
+  }
+
+  async findNickname(userId: string): Promise<string> {
+    const user = await this.usersRepository.findOne({
+      select: ['nickname'],
+      where: { userId: userId },
+    });
+    return user ? user.nickname : null;
+  }
+
+  async findUserRole(userId: string): Promise<UserRole> {
+    const user: Users = await this.usersRepository.findOne({
+      select: ['role'],
+      where: { userId: userId },
+    });
+    return user ? user.role : null;
   }
 }

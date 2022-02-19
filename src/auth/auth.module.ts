@@ -6,6 +6,7 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './passport/google.strategy';
+import { MainAuthGuard } from './passport/main.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { KakaoStrategy } from './passport/kakao.stategy';
 import { NaverStrategy } from './passport/naver.strategy';
@@ -28,6 +29,7 @@ import { NaverStrategy } from './passport/naver.strategy';
     KakaoStrategy,
     GoogleStrategy,
     JwtStrategy,
+    MainAuthGuard,
   ],
   exports: [AuthService],
 })

@@ -169,25 +169,33 @@ export class AuthService {
     }
   }
 
-  async setAuthDto(session: Record<string, any>): Promise<AuthDto> {
-    session.save();
-    let isLogined: boolean = session.isLogined;
+  async setAuthDto(userId: string): Promise<AuthDto> {
+    let isLogined: boolean = userId ? true : false;
     let nickname: string = null;
-    let userId: string = null;
-
-    // 로그인 체크
-    if (session.isLogined) {
-      isLogined = true;
-      nickname = session.userData.nickname;
-      userId = session.userData.userId;
-    } else {
-      isLogined = false;
-      nickname = null;
-      userId = null;
+    if (isLogined) {
+      nickname = await this.usersService.findNickname(userId);
     }
-
     return new AuthDto(isLogined, nickname, userId);
   }
+  // async setAuthDto(session: Record<string, any>): Promise<AuthDto> {
+  //   session.save();
+  //   let isLogined: boolean = session.isLogined;
+  //   let nickname: string = null;
+  //   let userId: string = null;
+
+  //   // 로그인 체크
+  //   if (session.isLogined) {
+  //     isLogined = true;
+  //     nickname = session.userData.nickname;
+  //     userId = session.userData.userId;
+  //   } else {
+  //     isLogined = false;
+  //     nickname = null;
+  //     userId = null;
+  //   }
+
+  //   return new AuthDto(isLogined, nickname, userId);
+  // }
 
   async login(user: Users): Promise<string> {
     const payload = { userId: user.userId };

@@ -13,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { AuthDto } from './auth/dto/auth.dto';
+import { MainAuthGuard } from './auth/passport/main.guard';
 import { ViewDto, ViewTopicDto } from './dto/view.dto';
 import { TopicDataDto } from './topic/dto/topic.dto';
 import { TopicService } from './topic/topic.service';
@@ -28,18 +29,21 @@ export class AppController {
 
   @Get('/')
   @Render('index')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(MainAuthGuard)
   async root(@Session() session, @Req() req) {
+    this.logger.debug(`JWT Payload: ${JSON.stringify(req.user)}`);
+
     session.reserveId = await this.topicService.getCurrentReserveId();
 
-    const authDto: AuthDto = await this.authService.setAuthDto(session);
+    const authDto: AuthDto = await this.authService.setAuthDto(req.user.userId);
+    const hasOpinion: boolean = await this.topicService.checkHasOpinion(
+      req.user.userId,
+    );
 
-    const hasOpinion = await this.topicService.checkHasOpinion(authDto.userId);
     const topicDataDto: TopicDataDto =
       await this.topicService.setTopicDataDto();
 
     const data = { ...authDto, hasOpinion, topic: topicDataDto };
-    this.logger.debug(`req.user: ${JSON.stringify(req.user)}`);
     this.logger.debug(`send view data: ${JSON.stringify(data)}`);
     return data;
   }
