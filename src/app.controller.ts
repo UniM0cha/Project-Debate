@@ -21,7 +21,6 @@ import { TopicService } from './topic/topic.service';
 @Controller()
 export class AppController {
   constructor(
-    private appService: AppService,
     private topicService: TopicService,
     private authService: AuthService,
   ) {}

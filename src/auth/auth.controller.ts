@@ -156,7 +156,7 @@ export class AuthController {
       // 플랫폼 아이디 추가 후 로그인
       await this.authService.addPlatformId(platform, user, platformId);
       const access_token = await this.authService.login(user);
-      await res.cookie('Authorization', access_token, { httpOnly: true });
+      res.cookie('access_token', access_token, { httpOnly: true });
       res.send(
         `<script>
           alert('같은 이메일로 가입한 계정이 있습니다. 기존 계정으로 로그인합니다.');
@@ -460,7 +460,7 @@ export class AuthController {
     const savedUser = await this.usersService.save(user);
 
     const access_token = await this.authService.login(savedUser);
-    await res.cookie('Authorization', access_token, { httpOnly: true });
+    await res.cookie('access_token', access_token, { httpOnly: true });
 
     // 로그인 완료되고 가입시에 저장한 데이터 삭제, 상태코드 전송
     delete session.registerData;

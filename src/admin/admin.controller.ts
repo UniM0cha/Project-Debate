@@ -6,13 +6,9 @@ import {
   Param,
   Post,
   Res,
-  Session,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import session from 'express-session';
-import { AdminAuthGuard } from 'src/auth/passport/admin.guard';
 import { Role } from 'src/auth/passport/roles.decorator';
 import { RolesGuard } from 'src/auth/passport/roles.guard';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';

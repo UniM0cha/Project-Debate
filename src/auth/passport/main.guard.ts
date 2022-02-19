@@ -1,13 +1,8 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { userInfo } from 'os';
 import { Observable } from 'rxjs';
 
+// 로그인되지 않았더라도 접근은 할 수 있도록 해줌.
 export class MainAuthGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(MainAuthGuard.name);
 
