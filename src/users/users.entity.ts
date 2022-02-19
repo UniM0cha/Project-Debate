@@ -30,6 +30,9 @@ export class Users {
   @Column({ nullable: true })
   googleId: string;
 
+  @Column()
+  profileImage: string;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   registerDate: Date;
 
@@ -44,6 +47,7 @@ export class Users {
     email: string,
     platform: string,
     platformId: string,
+    profileImage: string,
   ) {
     this.nickname = nickname;
     this.email = email;
@@ -58,5 +62,6 @@ export class Users {
         this.googleId = platformId;
         break;
     }
+    this.profileImage = profileImage;
   }
 }

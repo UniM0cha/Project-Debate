@@ -38,3 +38,4 @@ lerna-debug.log*
 /sessions
 
 src/configs/typeorm.config.ts
+.env

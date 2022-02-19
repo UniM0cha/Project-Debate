@@ -176,11 +176,16 @@ export class TopicService {
    * 해당 유저가 어떤 의견인지 반환한다.
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
-    const user: Users = await this.usersService.findOneById(_userId);
     const topicReserve: TopicReserve = await this.findCurrentReserve();
+    // const user: Users = await this.usersService.findOneById(_userId);
+    // const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
+    //   users: user,
+    //   topicReserve: topicReserve,
+    // });
+
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
-      users: user,
-      topicReserve: topicReserve,
+      select: ['opinionType'],
+      where: { users: { userId: _userId }, topicReserve: topicReserve },
     });
     return topicUsers ? topicUsers.opinionType : null;
   }
@@ -391,6 +396,7 @@ export class TopicService {
   }
 
   async checkHasOpinion(userId: string): Promise<boolean> {
+    if (!userId) return false;
     const userOpinion: OpinionType = await this.getOpinion(userId);
     const hasOpinion: boolean = userOpinion ? true : false;
     return hasOpinion;
