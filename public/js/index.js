@@ -268,7 +268,7 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
       break;
     // 도배로 인한 채팅 금지 상태
     case 4:
-      alert(`도배로 인해 채팅이 금지된 상태입니다..`);
+      alert(`도배로 인해 채팅이 제한된 상태입니다..`);
       break;
   }
 });

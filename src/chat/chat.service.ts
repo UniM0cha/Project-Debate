@@ -65,13 +65,13 @@ export class ChatService {
     this.logger.debug(`today: ${JSON.stringify(today, null, 4)}`);
     this.logger.debug(`minusday: ${JSON.stringify(minusday, null, 4)}`);
 
-    const chattingList: Chat[] = await this.qwerqwer(
-      'f30ebee7-cec6-40fc-b171-8d61037a60d3',
-    );
+    // 수정
+    const chattingList: Chat[] = await this.qwerqwer({});
+
     this.logger.debug(`chattingList: ${JSON.stringify(chattingList, null, 4)}`);
 
     if (chattingList[0].chatDate >= minusday) {
-      this.logger.error(`채팅 저장 실패: 도배로 인해 채팅이 금지되었습니다.`);
+      this.logger.error(`채팅 저장 실패: 도배로 인해 채팅이 제한되었습니다.`);
       return { state: 4 };
     }
 
