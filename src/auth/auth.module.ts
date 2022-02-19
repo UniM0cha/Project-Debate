@@ -15,9 +15,8 @@ import { NaverStrategy } from './passport/naver.strategy';
   imports: [
     ConfigModule.forRoot(),
     JwtModule.register({
-      // secret: 'hello',
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '3200s' },
+      signOptions: { expiresIn: '12h' },
     }),
     HttpModule,
     UsersModule,

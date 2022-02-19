@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Render,
   Res,
   Session,
   Param,
@@ -9,9 +8,12 @@ import {
   ParseIntPipe,
   NotFoundException,
   Redirect,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthDto } from 'src/auth/dto/auth.dto';
+import { MainAuthGuard } from 'src/auth/passport/main.guard';
 import { ChatService } from 'src/chat/chat.service';
 import { TopicDataDto } from 'src/topic/dto/topic.dto';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
@@ -20,11 +22,10 @@ import { TopicService } from 'src/topic/topic.service';
 import { ListService } from './list.service';
 
 @Controller('list')
+@UseGuards(MainAuthGuard)
 export class ListController {
   constructor(
     private readonly topicService: TopicService,
-    private readonly chatService: ChatService,
-    private readonly listService: ListService,
     private readonly authService: AuthService,
   ) {}
   private readonly logger = new Logger(ListController.name);
@@ -35,8 +36,8 @@ export class ListController {
 
   @Get('/page/:page')
   async getAllTopics(
+    @Req() req,
     @Res() res,
-    @Session() session,
     @Param('page', ParseIntPipe) page: number,
   ) {
     // await this.topicServices.addTestData();
@@ -142,7 +143,7 @@ export class ListController {
 
     // res.render('ex_debate_list', { topics: topics });
 
-    const authDto: AuthDto = await this.authService.setAuthDto(session);
+    const authDto: AuthDto = await this.authService.setAuthDto(req.user.userId);
 
     res.render('ex_debate_list', {
       arr1: arr1, // test
@@ -159,6 +160,7 @@ export class ListController {
   // id로 해당 주제 예약번호 받아옴
   @Get('/view/:id')
   async getChat(
+    @Req() req,
     @Param('id', ParseIntPipe) reserveId: number,
     @Session() session,
     @Res() res,
@@ -168,7 +170,9 @@ export class ListController {
       await this.topicService.findOnePassedTopicReserve(reserveId);
     if (topicReserve) {
       session.reserveId = reserveId;
-      const authDto: AuthDto = await this.authService.setAuthDto(session);
+      const authDto: AuthDto = await this.authService.setAuthDto(
+        req.user.userId,
+      );
       const topic: TopicDataDto = await this.topicService.setListTopicDto(
         reserveId,
       );

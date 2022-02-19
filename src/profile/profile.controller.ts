@@ -4,6 +4,7 @@ import {
   Logger,
   Post,
   Render,
+  Req,
   Res,
   Session,
   UnauthorizedException,
@@ -21,7 +22,7 @@ export class ProfileController {
   @Get('/')
   @UseGuards(AuthGuard('jwt'))
   @Render('profile')
-  async showProfile(@Session() session) {
+  async showProfile(@Req() req, @Session() session) {
     // 세션에서 로그인이 되어있는지 확인 - 안되어있으면 접근할 수 없도록
     // if (
     //   !(
