@@ -11,6 +11,7 @@ import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
 import { TopicDto } from 'src/admin/dto/topic.dto';
 import { ReserveDto } from 'src/admin/dto/reserve.dto';
 import { MoreThan } from 'typeorm';
+import { TopicDataDto } from './dto/topic.dto';
 
 @Injectable()
 export class TopicService {
@@ -175,11 +176,16 @@ export class TopicService {
    * 해당 유저가 어떤 의견인지 반환한다.
    */
   async getOpinion(_userId: string): Promise<OpinionType> {
-    const user: Users = await this.usersService.findOneById(_userId);
     const topicReserve: TopicReserve = await this.findCurrentReserve();
+    // const user: Users = await this.usersService.findOneById(_userId);
+    // const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
+    //   users: user,
+    //   topicReserve: topicReserve,
+    // });
+
     const topicUsers: TopicUsers = await this.topicUsersRepository.findOne({
-      users: user,
-      topicReserve: topicReserve,
+      select: ['opinionType'],
+      where: { users: { userId: _userId }, topicReserve: topicReserve },
     });
     return topicUsers ? topicUsers.opinionType : null;
   }
@@ -354,6 +360,51 @@ export class TopicService {
       order: { reserveId: 'DESC' },
       where: { reserveState: ReserveType.PASSED },
     });
+  }
+
+  async setTopicDataDto(): Promise<TopicDataDto> {
+    let topic: TopicDataDto = new TopicDataDto();
+
+    let currentReserve: TopicReserve = await this.findCurrentReserve();
+    let nextReserve: TopicReserve = await this.findNextReserve();
+
+    let currentReserveId = currentReserve ? currentReserve.reserveId : null;
+    let currentTopicName = currentReserve
+      ? currentReserve.topic.topicName
+      : null;
+    let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
+    let endDate = nextReserve ? nextReserve.startDate : null;
+
+    topic.setTopicDataDto(
+      currentReserveId,
+      currentTopicName,
+      afterTopicName,
+      endDate,
+    );
+    return topic;
+  }
+
+  async setListTopicDto(reserveId: number): Promise<TopicDataDto> {
+    let topicDto: TopicDataDto = new TopicDataDto();
+    const topicReserve: TopicReserve = await this.findOneTopicReserveWithTopic(
+      reserveId,
+    );
+    const currentReserveId: number = topicReserve.reserveId;
+    const currentTopicName: string = topicReserve.topic.topicName;
+    topicDto.setTopicDataDto(currentReserveId, currentTopicName, null, null);
+    return topicDto;
+  }
+
+  async checkHasOpinion(userId: string): Promise<boolean> {
+    if (!userId) return false;
+    const userOpinion: OpinionType = await this.getOpinion(userId);
+    const hasOpinion: boolean = userOpinion ? true : false;
+    return hasOpinion;
+  }
+
+  async getCurrentReserveId(): Promise<number> {
+    const currentReserve: TopicReserve = await this.findCurrentReserve();
+    return currentReserve ? currentReserve.reserveId : null;
   }
 
   async addTestData() {

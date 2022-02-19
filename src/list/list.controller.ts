@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Render,
   Res,
   Session,
   Param,
@@ -9,21 +8,25 @@ import {
   ParseIntPipe,
   NotFoundException,
   Redirect,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
-import { AppService } from 'src/app.service';
+import { AuthService } from 'src/auth/auth.service';
+import { AuthDto } from 'src/auth/dto/auth.dto';
+import { MainAuthGuard } from 'src/auth/passport/main.guard';
 import { ChatService } from 'src/chat/chat.service';
+import { TopicDataDto } from 'src/topic/dto/topic.dto';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
 import { ListService } from './list.service';
 
 @Controller('list')
+@UseGuards(MainAuthGuard)
 export class ListController {
   constructor(
-    private readonly topicServices: TopicService,
-    private readonly chatService: ChatService,
-    private readonly appService: AppService,
-    private readonly listService: ListService,
+    private readonly topicService: TopicService,
+    private readonly authService: AuthService,
   ) {}
   private readonly logger = new Logger(ListController.name);
 
@@ -33,24 +36,24 @@ export class ListController {
 
   @Get('/page/:page')
   async getAllTopics(
+    @Req() req,
     @Res() res,
-    @Session() session,
     @Param('page', ParseIntPipe) page: number,
   ) {
     // await this.topicServices.addTestData();
     // const topicReserves: TopicReserve[] =
     //   await this.topicServices.findAllTopicReservesWithTopic();
-    const topics: Topic[] = await this.topicServices.findAllTopics();
+    const topics: Topic[] = await this.topicService.findAllTopics();
     let getPassedTopicList: TopicReserve[] =
-      await this.topicServices.findPASSEDTopicReservesWithTopic();
+      await this.topicService.findPASSEDTopicReservesWithTopic();
     // const getPassedTopicList: TopicReserve[] =
     //   await this.topicServices.findPASSEDTopicReservesWithTopic();
-    const topicReserveCount: number = await this.topicServices.getPassedCount();
+    const topicReserveCount: number = await this.topicService.getPassedCount();
     const topicReservePageCount: number = Math.floor(
       (topicReserveCount - 1) / 10 + 1,
     );
 
-    const getEndTime: TopicReserve[] = await this.topicServices.getPassedList();
+    const getEndTime: TopicReserve[] = await this.topicService.getPassedList();
     const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
       getEndTime.startDate.setDate(getEndTime.startDate.getDate() - 1);
       return getEndTime.startDate;
@@ -138,13 +141,13 @@ export class ListController {
      *
      */
 
-    //return res.render('ex_debate_list', { topics: topics });
+    // res.render('ex_debate_list', { topics: topics });
 
-    const viewDto = await this.appService.createViewDto(session);
+    const authDto: AuthDto = await this.authService.setAuthDto(req.user.userId);
 
-    return res.render('ex_debate_list', {
+    res.render('ex_debate_list', {
       arr1: arr1, // test
-      ...viewDto,
+      ...authDto,
       //getPassedTopicList: getPassedTopicList,
       //getEndTimeList: getEndTimeList,
       //topicReserves: topicReserves,
@@ -157,19 +160,25 @@ export class ListController {
   // id로 해당 주제 예약번호 받아옴
   @Get('/view/:id')
   async getChat(
+    @Req() req,
     @Param('id', ParseIntPipe) reserveId: number,
     @Session() session,
     @Res() res,
   ) {
     // reserveId 가 유효한지 확인
     const topicReserve: TopicReserve =
-      await this.topicServices.findOnePassedTopicReserve(reserveId);
+      await this.topicService.findOnePassedTopicReserve(reserveId);
     if (topicReserve) {
       session.reserveId = reserveId;
-      const viewDto = await this.appService.createViewDto(session);
-      viewDto.topic = await this.listService.setTopicDto(reserveId);
-      this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
-      return res.render('ex_debate_show', viewDto);
+      const authDto: AuthDto = await this.authService.setAuthDto(
+        req.user.userId,
+      );
+      const topic: TopicDataDto = await this.topicService.setListTopicDto(
+        reserveId,
+      );
+      const data = { ...authDto, topic: topic };
+      this.logger.debug(`viewDto: ${JSON.stringify(data)}`);
+      res.render('ex_debate_show', data);
     } else {
       throw new NotFoundException();
     }

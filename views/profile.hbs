@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>실시간 토론 페이지</title>
+    <script
+      src='https://cdn.socket.io/4.4.0/socket.io.min.js'
+      integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
+      crossorigin='anonymous'
+    ></script>  
+    <link rel='stylesheet' href='/css/index.css' />
+  </head>
+
+  <body>
+    {{!-- index.js파일에서 사용할 script선언 --}}
+    <script>
+      let isLogined = {{isLogined}};
+      const nickname = "{{nickname}}";
+      const userId = "{{userId}}";
+      const hasOpinion = {{hasOpinion}};
+      const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
+      const endDate = "{{topic.endDate}}";
+    </script>
+
+    {{!-- 상단 메뉴 --}}
+    {{> header}}
+
+    <!-- 주제 -->
+    <div class='time-topic-div'>
+      <div class='time'  id="topic-time">
+      </div>
+      <div class='topic'>
+        주제 : {{topic.currentTopicName}}<br>
+      </div>
+    </div>
+
+    <!-- 찬성반대투표바 -->
+    <div class='age-dis-bar-wrapper'>
+      <div>
+      <div class='agree-bar'><span class="agree-sign">찬성:</span></div>
+      <div class='disagree-bar'><span class='disagree-sign'>반대:</span></div>
+      </div>
+      <div class="btn-group">
+        <button class='bar-button agree-btn'>찬성</button>
+        <button class='bar-button disagree-btn'>반대</button>
+      </div>
+    </div>
+
+    <!-- 실시간 토론 하는 곳 -->
+    <div class='debate-wrapper'>
+      <div class='debate-box'>
+        <ul class='live-debate' id='messages'>
+        </ul>
+      </div>
+
+      <div class='input-box'>
+        <textarea id='message' class='opinion-input' type='text' maxlength="200" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
+        <button id='send' class='send' type='button'>전송</button>
+      </div>
+    </div>
+
+    <script src='./js/index.js'></script>
+  </body>
+</html>

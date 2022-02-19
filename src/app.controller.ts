@@ -4,33 +4,47 @@ import {
   Logger,
   Post,
   Render,
+  Req,
   Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
-import { ChatService } from './chat/chat.service';
-import { ViewDto } from './dto/view.dto';
-import { Chat } from './chat/chat.entity';
+import { AuthService } from './auth/auth.service';
+import { AuthDto } from './auth/dto/auth.dto';
+import { MainAuthGuard } from './auth/passport/main.guard';
+import { ViewDto, ViewTopicDto } from './dto/view.dto';
+import { TopicDataDto } from './topic/dto/topic.dto';
+import { TopicService } from './topic/topic.service';
 
 @Controller()
 export class AppController {
   constructor(
-    private appService: AppService,
-    private readonly chatServices: ChatService,
+    private topicService: TopicService,
+    private authService: AuthService,
   ) {}
   private readonly logger = new Logger(AppController.name);
 
   @Get('/')
   @Render('index')
-  async root(@Session() session: Record<string, any>) {
-    session.reserveId = await this.appService.getCurrentReserveId();
-    const viewDto = await this.appService.createViewDto(session);
+  @UseGuards(MainAuthGuard)
+  async root(@Session() session, @Req() req) {
+    this.logger.debug(`JWT Payload: ${JSON.stringify(req.user)}`);
 
-    viewDto.hasOpinion = await this.appService.checkHasOpinion(viewDto.userId);
-    viewDto.topic = await this.appService.setIndexTopicDto();
+    session.reserveId = await this.topicService.getCurrentReserveId();
 
-    this.logger.debug(`viewDto: ${JSON.stringify(viewDto, null, 4)}`);
-    return viewDto;
+    const authDto: AuthDto = await this.authService.setAuthDto(req.user.userId);
+    const hasOpinion: boolean = await this.topicService.checkHasOpinion(
+      req.user.userId,
+    );
+
+    const topicDataDto: TopicDataDto =
+      await this.topicService.setTopicDataDto();
+
+    const data = { ...authDto, hasOpinion, topic: topicDataDto };
+    this.logger.debug(`send view data: ${JSON.stringify(data)}`);
+    return data;
   }
 
   @Post('/time')

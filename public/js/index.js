@@ -1,4 +1,4 @@
-const chatSocket = io.connect('http://localhost:3000/message');
+const chatSocket = io.connect('/message');
 const topicSocket = io.connect('/topic');
 
 //서버시간 가져오기
@@ -95,10 +95,15 @@ document.addEventListener('DOMContentLoaded', function () {
   //스크롤 아래 고정
   live_debate.scrollTop = live_debate.scrollHeight;
 
+  if (isLogined === false) {
+    input_box.style.display = 'none';
+    live_debate.style.height = '100%'
+  }
+
   if (isLogined === true && hasOpinion === false) {
+    input_box.style.display = 'none';
     opinion_input.style.display = 'none';
     send_btn.style.display = 'none';
-    input_box.style.display = 'none';
 
     //찬성 선택시
     agree_btn.addEventListener('click', () => {
@@ -125,7 +130,12 @@ document.addEventListener('DOMContentLoaded', function () {
   /**엔터 이벤트 등록 */
   opinion.addEventListener('keypress', (event) => {
     if (event.keyCode === 13) {
-      send_chat_socket_emit();
+      if (!event.shiftKey) {
+        send_chat_socket_emit();
+      } else {
+        opinion.value = opinion.value + "\n";
+        opinion.scrollTop = opinion.scrollHeight;
+      }
     }
   });
 });
@@ -275,8 +285,7 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
 
 /*서버로 채팅 내용을 보내는 함수 */
 async function send_chat_socket_emit() {
-  const opinion_input = document.querySelector('#message').value;
-
+  const opinion_input = document.querySelector('#message').value.replace(/\n/g, "<br>"); 
   if (opinion_input != '') {
     console.log('sending message to server');
     chatSocket.emit('new-message-to-server', {

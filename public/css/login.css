@@ -1,33 +1,23 @@
-.form-ex-debatelist {
+@font-face {
+  font-family: 'Cafe24Ssurround';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
   margin: 0px;
 }
 
-.btn-ex-debatelist {
-  margin-left: 10px;
-}
-
-.title {
-  text-decoration: none;
-  color: white;
-  font-size: 30px;
-  display: block;
-  margin: 0 auto;
-}
-
-.title img {
-  vertical-align: middle;
-}
-
-.title:hover {
-  color: white;
-}
-
-.form-login {
+body{
   margin: 0px;
+  background-color: aliceblue;
+  font-family: Cafe24Ssurround;
 }
 
-.btn-login {
-  margin-right: 10px;
+.div-title{
+  text-align: center;
+  margin-top: 30px;
 }
 
 /*로그인 버튼 모음*/
@@ -36,43 +26,82 @@
 }
 
 .login-btn {
-  width: 50%;
-  height: 5%;
+  width: 200px;
+  height: 60px;
   border: none;
   border-radius: 5px;
+  line-height: 50px;
+  padding: 0px;
+  text-align: center;
+}
+
+.naver {
+  background-color: #03C75A;
+  color: white;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.naver img{
+  height: 50px;
+  width: 50px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+
+.naver p{
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px;
+  margin-right: 10px;
 }
 
 .kakao {
-  background-color: #f7e600;
-  color: #3a1d1d;
+  background-color: #FEE500;
+  color: #000000 85%;
   font-weight: bold;
   margin-top: 10px;
 }
 
 .kakao img {
-  margin-bottom: 2px;
+  height: 50px;
+  width: 50px;
+  vertical-align: middle;
+  margin-bottom: 5px;
 }
 
-.naver {
-  margin-top: 10px;
-  background-color: #2db400;
-  color: white;
-  font-weight: bold;
-  margin-top: 50px;
+.kakao p{
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px;
+  margin-right: 10px;
 }
+
 
 .google {
   margin-top: 10px;
   font-weight: bold;
+  background-color: #FFFFFF;
+  border: 2px #e9ecef solid;
 }
 
 .google img {
-  margin-bottom: 2px;
-  margin-right: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.google p{
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0px;
+  margin-right: 10px;
 }
 
 @media (min-width: 992px) {
   .login-btn {
-    width: 30%;
+    width: 20%;
   }
 }

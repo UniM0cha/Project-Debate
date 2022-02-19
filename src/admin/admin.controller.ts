@@ -6,22 +6,33 @@ import {
   Param,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Role } from 'src/auth/passport/roles.decorator';
+import { RolesGuard } from 'src/auth/passport/roles.guard';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
+import { UserRole } from 'src/users/users.entity';
+import { AdminService } from './admin.service';
 import { ReserveDto } from './dto/reserve.dto';
 import { TopicDto } from './dto/topic.dto';
 
 @Controller('admin')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Role(UserRole.ADMIN)
 export class AdminController {
-  constructor(private readonly topicService: TopicService) {}
+  constructor(
+    private readonly topicService: TopicService,
+    private readonly adminService: AdminService,
+  ) {}
   private readonly logger = new Logger(AdminController.name);
 
   // 추후에 권한 있는 사람만 접근 가능하도록 만들 것
   @Get('/')
-  main(@Res() res) {
-    return res.render('admin/main');
+  async main(@Res() res) {
+    res.render('admin/main');
   }
 
   @Get('/topic')
@@ -33,7 +44,7 @@ export class AdminController {
       await this.topicService.findAllTopicReservesWithTopic();
     const topics: Topic[] = await this.topicService.findAllTopics();
 
-    return res.render('admin/topic', {
+    res.render('admin/topic', {
       topicReserves: topicReserves,
       topics: topics,
     });
@@ -43,7 +54,7 @@ export class AdminController {
   @Get('/topic/:id')
   async getTopic(@Param('id') id: number, @Res() res) {
     const topic: Topic = await this.topicService.findOneTopic(id);
-    return res.render('admin/topic_detail', { topic: topic });
+    res.render('admin/topic_detail', { topic: topic });
   }
 
   /** 주제 추가 */
@@ -51,7 +62,7 @@ export class AdminController {
   async createNewTopic(@Body() body: TopicDto, @Res() res) {
     this.logger.debug(`body: ${JSON.stringify(body, null, 4)}`);
     await this.topicService.createTopic(body);
-    return res.redirect('/admin/topic');
+    res.redirect('/admin/topic');
   }
 
   /** 주제 수정 */
@@ -80,7 +91,7 @@ export class AdminController {
       await this.topicService.findOneTopicReserveWithTopic(id);
     this.logger.debug(`reserve: ${JSON.stringify(reserve)}`);
     const topics: Topic[] = await this.topicService.findAllTopics();
-    return res.render('admin/reserve_detail', {
+    res.render('admin/reserve_detail', {
       reserve: reserve,
       topics: topics,
     });

@@ -12,10 +12,26 @@ import { ChatModule } from './chat/chat.module';
 import { TopicModule } from './topic/topic.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AdminModule } from './admin/admin.module';
+import { ProfileModule } from './profile/profile.module';
+import { ConfigModule } from '@nestjs/config';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(typeORMConfig),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      namingStrategy: new SnakeNamingStrategy(),
+      autoLoadEntities: true,
+      // synchronize: true,
+      // dropSchema: true,
+      logging: true,
+    }),
     ScheduleModule.forRoot(),
     ListModule,
     UsersModule,
@@ -25,6 +41,7 @@ import { AdminModule } from './admin/admin.module';
     ChatModule,
     TopicModule,
     AdminModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

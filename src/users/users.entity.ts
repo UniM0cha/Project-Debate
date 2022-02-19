@@ -30,6 +30,9 @@ export class Users {
   @Column({ nullable: true })
   googleId: string;
 
+  @Column()
+  profileImage: string;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   registerDate: Date;
 
@@ -38,4 +41,27 @@ export class Users {
 
   @OneToMany(() => TopicUsers, (topicUsers) => topicUsers.topicUsersId)
   topicUsers: TopicUsers[];
+
+  setUser(
+    nickname: string,
+    email: string,
+    platform: string,
+    platformId: string,
+    profileImage: string,
+  ) {
+    this.nickname = nickname;
+    this.email = email;
+    switch (platform) {
+      case 'kakao':
+        this.kakaoId = platformId;
+        break;
+      case 'naver':
+        this.naverId = platformId;
+        break;
+      case 'google':
+        this.googleId = platformId;
+        break;
+    }
+    this.profileImage = profileImage;
+  }
 }
