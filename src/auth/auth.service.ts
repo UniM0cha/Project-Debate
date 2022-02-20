@@ -5,14 +5,6 @@ import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { AuthDto } from './dto/auth.dto';
 
-const SERVER_URL = `debatalk.ddns.net`;
-const KAKAO_REST_API_KEY = `114fbc070b3563572db5fe6be76b2ae8`;
-const NAVER_CLIENT_ID = `OzobY4hdweiTJHUmbhNn`;
-const NAVER_CLIENT_SECRET = `__B9xmG_FB`;
-const NAVER_RANDOM_STATE = `hollyshit`;
-const GOOGLE_CLINET_ID = `241359741651-24t8rj9mpjktd4h5urgqotfvk908rsla.apps.googleusercontent.com`;
-const GOOGLE_CLINET_SECRET = `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`;
-
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
