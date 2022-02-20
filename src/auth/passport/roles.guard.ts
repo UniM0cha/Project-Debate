@@ -5,7 +5,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { UserRole } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { ROLES_KEY } from './roles.decorator';

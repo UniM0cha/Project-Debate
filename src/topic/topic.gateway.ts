@@ -7,7 +7,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { OpinionType } from './entity/topic-users.entity';
 import { TopicService } from './topic.service';
 
 @WebSocketGateway({ namespace: 'topic', cors: true })

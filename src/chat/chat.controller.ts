@@ -1,7 +1,4 @@
-import { Controller, Logger, Param, Post, Res, Session } from '@nestjs/common';
-import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
-import { TopicService } from 'src/topic/topic.service';
-import { Chat } from './chat.entity';
+import { Controller, Logger, Post, Session } from '@nestjs/common';
 import { ChatService } from './chat.service';
 
 @Controller('chat')

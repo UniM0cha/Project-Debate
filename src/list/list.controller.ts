@@ -15,7 +15,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { MainAuthGuard } from 'src/auth/passport/main.guard';
 import { ChatService } from 'src/chat/chat.service';
-import { TopicDataDto } from 'src/topic/dto/topic.dto';
+import { TopicDto } from 'src/topic/dto/topic.dto';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
@@ -173,7 +173,7 @@ export class ListController {
       const authDto: AuthDto = await this.authService.setAuthDto(
         req.user.userId,
       );
-      const topic: TopicDataDto = await this.topicService.setListTopicDto(
+      const topic: TopicDto = await this.topicService.setListTopicDto(
         reserveId,
       );
       const data = { ...authDto, topic: topic };
