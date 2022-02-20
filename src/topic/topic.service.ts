@@ -8,10 +8,10 @@ import { TopicRepository } from './repository/topic.repository';
 import { Cron } from '@nestjs/schedule';
 import { TopicReserveRepository } from './repository/topic-reserve.repository';
 import { ReserveType, TopicReserve } from './entity/topic-reservation.entity';
-import { TopicDto } from 'src/admin/dto/topic.dto';
-import { ReserveDto } from 'src/admin/dto/reserve.dto';
+import { AdminTopicDto } from 'src/admin/dto/admin.topic.dto';
+import { AdminReserveDto } from 'src/admin/dto/reserve.dto';
 import { MoreThan } from 'typeorm';
-import { TopicDataDto } from './dto/topic.dto';
+import { TopicDto } from './dto/topic.dto';
 
 @Injectable()
 export class TopicService {
@@ -125,14 +125,14 @@ export class TopicService {
     return await this.topicReserveRepository.findOne(id);
   }
 
-  async createTopic(topic: TopicDto): Promise<Topic> {
+  async createTopic(topic: AdminTopicDto): Promise<Topic> {
     const newTopic = new Topic();
     newTopic.setTopic(topic.topicName);
     const createdTopic = await this.topicRepository.save(newTopic);
     return createdTopic;
   }
 
-  async updateTopic(id: number, topic: TopicDto): Promise<any> {
+  async updateTopic(id: number, topic: AdminTopicDto): Promise<any> {
     return await this.topicRepository.update(
       { topicId: id },
       { topicName: topic.topicName },
@@ -143,7 +143,7 @@ export class TopicService {
     return await this.topicRepository.delete(id);
   }
 
-  async createReserve(reserve: ReserveDto): Promise<TopicReserve> {
+  async createReserve(reserve: AdminReserveDto): Promise<TopicReserve> {
     const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
 
     const newReserve = new TopicReserve();
@@ -155,7 +155,7 @@ export class TopicService {
     return createdReserve;
   }
 
-  async updateReserve(id: number, reserve: ReserveDto): Promise<any> {
+  async updateReserve(id: number, reserve: AdminReserveDto): Promise<any> {
     const topic: Topic = await this.topicRepository.findOne(reserve.topicId);
 
     const korDate = new Date(reserve.reserveDate);
@@ -362,8 +362,8 @@ export class TopicService {
     });
   }
 
-  async setTopicDataDto(): Promise<TopicDataDto> {
-    let topic: TopicDataDto = new TopicDataDto();
+  async setTopicDataDto(): Promise<TopicDto> {
+    let topic: TopicDto = new TopicDto();
 
     let currentReserve: TopicReserve = await this.findCurrentReserve();
     let nextReserve: TopicReserve = await this.findNextReserve();
@@ -375,7 +375,7 @@ export class TopicService {
     let afterTopicName = nextReserve ? nextReserve.topic.topicName : null;
     let endDate = nextReserve ? nextReserve.startDate : null;
 
-    topic.setTopicDataDto(
+    topic.setTopicDto(
       currentReserveId,
       currentTopicName,
       afterTopicName,
@@ -384,14 +384,14 @@ export class TopicService {
     return topic;
   }
 
-  async setListTopicDto(reserveId: number): Promise<TopicDataDto> {
-    let topicDto: TopicDataDto = new TopicDataDto();
+  async setListTopicDto(reserveId: number): Promise<TopicDto> {
+    let topicDto: TopicDto = new TopicDto();
     const topicReserve: TopicReserve = await this.findOneTopicReserveWithTopic(
       reserveId,
     );
     const currentReserveId: number = topicReserve.reserveId;
     const currentTopicName: string = topicReserve.topic.topicName;
-    topicDto.setTopicDataDto(currentReserveId, currentTopicName, null, null);
+    topicDto.setTopicDto(currentReserveId, currentTopicName, null, null);
     return topicDto;
   }
 

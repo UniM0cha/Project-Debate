@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { TopicReserve } from './entity/topic-reservation.entity';
 import { OpinionType } from './entity/topic-users.entity';
 import { TopicService } from './topic.service';
 

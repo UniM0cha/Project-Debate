@@ -2,12 +2,9 @@ import {
   Controller,
   Get,
   Logger,
-  Post,
   Render,
   Req,
-  Res,
   Session,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';

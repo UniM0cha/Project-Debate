@@ -2,7 +2,6 @@ import { Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth20';
 import { GoogleUserDto } from '../dto/google.user.dto';
-import { KakaoUserDto } from '../dto/kakao.user.dto';
 
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   private readonly logger = new Logger(GoogleStrategy.name);

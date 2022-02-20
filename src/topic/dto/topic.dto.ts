@@ -1,10 +1,10 @@
-export class TopicDataDto {
+export class TopicDto {
   private currentReserveId: number;
   private currentTopicName: string;
   private afterTopicName: string;
   private endDate: Date;
 
-  setTopicDataDto(
+  setTopicDto(
     _currentReserveId: number,
     _currentTopicName: string,
     _afterTopicName: string,
