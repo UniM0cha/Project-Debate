@@ -117,6 +117,20 @@ export class UsersService {
     return user ? user.nickname : null;
   }
 
+  async getUserData(
+    userId: string,
+  ): Promise<{ nickname: string; profileImage: string; email: string }> {
+    const user: Users = await this.usersRepository.findOne({
+      select: ['nickname', 'profileImage', 'email'],
+      where: { userId: userId },
+    });
+    return {
+      nickname: user?.nickname,
+      profileImage: user?.profileImage,
+      email: user?.email,
+    };
+  }
+
   async findUserRole(userId: string): Promise<UserRole> {
     const user: Users = await this.usersRepository.findOne({
       select: ['role'],
