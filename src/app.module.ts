@@ -19,7 +19,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'mariadb',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       username: process.env.DB_USER,
@@ -27,8 +27,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       database: process.env.DB_NAME,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
-      // synchronize: true,
-      // dropSchema: true,
+      synchronize: true,
+      dropSchema: true,
       logging: true,
     }),
     ScheduleModule.forRoot(),
