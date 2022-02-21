@@ -66,7 +66,7 @@ export class ChatService {
     this.logger.debug(`minusday: ${JSON.stringify(minusday, null, 4)}`);
 
     // 수정
-    const chattingList: Chat[] = await this.qwerqwer(data.userId);
+    const chattingList: Chat[] = await this.getOneChatTime(data.userId);
 
     this.logger.debug(`chattingList: ${JSON.stringify(chattingList, null, 4)}`);
 
@@ -96,25 +96,7 @@ export class ChatService {
     return await this.chatRepository.find({ topicReserve: topicReserve });
   }
 
-  // // controller에서 5초마다 얘를 불러줄거임
-  // async qwerqwer(): Promise<Chat[]> {
-  //   const minusChatDate = new Date();
-  //   //minusChatDate.setHours(minusChatDate.getHours() + 9);
-  //   const todayDate = new Date(minusChatDate);
-  //   minusChatDate.setSeconds(todayDate.getSeconds() - 5);
-  //   this.logger.debug(`todayDate: ${JSON.stringify(todayDate, null, 4)}`);
-  //   this.logger.debug(
-  //     `minusChatDate: ${JSON.stringify(minusChatDate, null, 4)}`,
-  //   );
-
-  //   return await this.chatRepository.find({
-  //     where: { chatDate: MoreThan(minusChatDate) },
-  //     order: { chatDate: 'ASC' },
-  //     relations: ['users'],
-  //   });
-  // }
-
-  async qwerqwer(usersId): Promise<Chat[]> {
+  async getOneChatTime(usersId): Promise<Chat[]> {
     return await this.chatRepository.find({
       where: { users: usersId },
       skip: 3,

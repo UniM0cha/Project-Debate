@@ -33,8 +33,8 @@
       </thead>
 
       <tbody class="list-body">
-      {{#if arr1}}
-        {{#each arr1}}
+      {{#if getPassedListValue}}
+        {{#each getPassedListValue}}
           <tr>
             <td>{{countNumber}}</a></td>
             <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
