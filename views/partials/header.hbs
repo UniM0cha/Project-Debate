@@ -20,12 +20,12 @@
       </div>
 
       <div class="div-login">
-        <form class='form-login expand' action='/auth'>
-          <button type='submit' class='btn-login'>로그인</button>
-        </form>
-        <form class='form-logout expand' action='/profile'>
-          <button type='submit' class='btn-login'>프로필</button>
-        </form>
+        {{#if userId}}
+          <a href="/profile"><img src="{{profileImage}}" style="width: 50px; height: 50px; border-radius: 50%;">{{nickname}}</a>
+          {{!-- <button type='button' class='btn-login' onclick="location.href='/profile'">프로필</button> --}}
+        {{else}}
+          <button type='button' class='btn-login' onclick="location.href='/auth'">로그인</button>
+        {{/if}}
       </div>
 
       </div>
