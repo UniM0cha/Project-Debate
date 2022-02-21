@@ -66,13 +66,15 @@ export class ChatService {
     this.logger.debug(`minusday: ${JSON.stringify(minusday, null, 4)}`);
 
     // 수정
-    const chattingList: Chat[] = await this.qwerqwer({});
+    const chattingList: Chat[] = await this.qwerqwer(data.userId);
 
     this.logger.debug(`chattingList: ${JSON.stringify(chattingList, null, 4)}`);
 
-    if (chattingList[0].chatDate >= minusday) {
-      this.logger.error(`채팅 저장 실패: 도배로 인해 채팅이 제한되었습니다.`);
-      return { state: 4 };
+    if (chattingList[0] != undefined) {
+      if (chattingList[0].chatDate >= minusday) {
+        this.logger.error(`채팅 저장 실패: 도배로 인해 채팅이 제한되었습니다.`);
+        return { state: 4 };
+      }
     }
 
     chat.createChat(today, data.opinion_input, user, reserve, opinionType);
