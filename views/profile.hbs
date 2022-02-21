@@ -52,6 +52,7 @@
       }
 
     </style>
+    <script src="/js/profile.js"></script>
   </head>
 
   <body>
@@ -62,15 +63,15 @@
     <div class="flexbox">
       <div class="profile-container">
         <h1 class="profile-title">프로필 수정</h1>
-        <form action="">
+        <form id="edit-form">
           <div class="profile-items profile-image-nickname"> 
             <aside class="aside">
               <img class="profile-image" src="{{profileImage}}">
             </aside>
             <div class="content nickname">
               <h3>닉네임</h3>
-              <input type="text" value="{{nickname}}">
-              <div class="notice">사용 가능한 닉네임 입니다.</div>
+              <input type="text" id="nickname" name="nickname" value="{{nickname}}">
+              <div id="checkMessage">사용 가능한 닉네임 입니다.</div>
             </div>
           </div>
           <div class="profile-items">
@@ -80,8 +81,8 @@
               <br>이메일 수정은 지원하지 않습니다.
             </div>
           </div>
-          <input type="submit" value="수정">
-          <input type="button" value="취소">
+          <input type="submit" id="submit" value="수정">
+          <input type="button" id="cancel"value="취소" onclick="location.href='/'">
         </form>
       </div>
     </div>

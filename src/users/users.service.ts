@@ -138,4 +138,21 @@ export class UsersService {
     });
     return user ? user.role : null;
   }
+
+  async updateProfile(
+    userId: string,
+    userData: { nickname: string },
+  ): Promise<number> {
+    const nickname = userData.nickname;
+    try {
+      await this.usersRepository.update(
+        { userId: userId },
+        { nickname: nickname },
+      );
+    } catch (e) {
+      this.logger.error(e);
+      throw 5;
+    }
+    return 0;
+  }
 }
