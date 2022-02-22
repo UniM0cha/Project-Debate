@@ -6,7 +6,6 @@ import { UsersModule } from './users/users.module';
 import { HttpModule } from '@nestjs/axios';
 import { AuthModule } from './auth/auth.module';
 import { ListModule } from './list/list.module';
-import { typeORMConfig } from 'src/configs/typeorm.config';
 import { ChatGateway } from './app.gateway';
 import { ChatModule } from './chat/chat.module';
 import { TopicModule } from './topic/topic.module';
@@ -28,8 +27,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       database: process.env.DB_NAME,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
-      // synchronize: true,
-      // dropSchema: true,
+      synchronize: true,
+      dropSchema: true,
       logging: true,
     }),
     ScheduleModule.forRoot(),
