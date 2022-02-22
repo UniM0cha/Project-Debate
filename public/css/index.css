@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'new';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff')
+    format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
-*{
+* {
   margin: 0px;
 }
 
-body{
+body {
   margin: 0px;
   background-color: aliceblue;
   font-family: new;
 }
-
 
 /*중간 토론 주제*/
 .time-topic-div {
@@ -113,7 +113,7 @@ body{
   margin-bottom: 5px;
 }
 
-.agree-bar span{
+.agree-bar span {
   vertical-align: middle;
 }
 
@@ -146,15 +146,15 @@ body{
   height: 26px;
 }
 
-.main{
+.main {
   display: flex;
 }
 
-.first-ad{
- display: none;
+.first-ad {
+  display: none;
 }
 
-.second-ad{
+.second-ad {
   display: none;
 }
 
@@ -237,8 +237,8 @@ body{
   margin-right: 7px;
 }
 
-.agree .user-opinion{
-  background-color: #E8F5FF;
+.agree .user-opinion {
+  background-color: #e8f5ff;
 }
 
 .disagree .user-opinion {
@@ -247,7 +247,7 @@ body{
   background-color: FF8C8C;
 }
 
-.input-box{
+.input-box {
   display: flex;
   height: 10%;
 }
@@ -262,7 +262,7 @@ body{
   padding: 10px;
 }
 
-.opinion-input:focus{
+.opinion-input:focus {
   outline: none;
   border: 2px #868e96 solid;
 }
@@ -287,17 +287,15 @@ body{
 
 /*태블릿*/
 @media (min-width: 768px) {
-  .first-ad{
-    
+  .first-ad {
   }
-  .second-ad{
-    
+  .second-ad {
   }
 }
 
 /*노트북&데스크탑*/
 @media (min-width: 992px) {
-  .menu{
+  .menu {
     width: 60%;
   }
   .time-topic-div {
@@ -306,18 +304,18 @@ body{
   .age-dis-bar-wrapper {
     width: 95%;
   }
-  .agree-bar{
+  .agree-bar {
     height: 40px;
     line-height: 40px;
   }
-  .disagree-bar{
+  .disagree-bar {
     height: 40px;
     line-height: 40px;
   }
-  .agree-btn{
+  .agree-btn {
     height: 40px;
   }
-  .disagree-btn{
+  .disagree-btn {
     height: 40px;
   }
   .debate-wrapper {
@@ -326,16 +324,16 @@ body{
   }
 }
 
-@media (min-width: 1140px){
-  .first-ad{
+@media (min-width: 1140px) {
+  .first-ad {
     display: flex;
     margin-top: 100px;
     border: solid 1px black;
     margin-left: auto;
     height: fit-content;
   }
-  
-  .second-ad{
+
+  .second-ad {
     display: flex;
     margin-top: 100px;
     border: solid 1px black;

@@ -90,10 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const live_debate = document.querySelector('.live-debate');
   const input_box = document.querySelector('.input-box');
   // //찬성반대바 구현
-  // const agree_bar = document.querySelector('.agree-bar');
-  // const disagree_bar = document.querySelector('.disagree-bar');
-  // const agree_sign = document.querySelector('.agree-sign');
-  // const disagree_sign = document.querySelector('.disagree-sign');
   const agree_btn = document.querySelector('.agree-btn');
   const disagree_btn = document.querySelector('.disagree-btn');
   //스크롤 아래 고정
@@ -111,23 +107,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //찬성 선택시
     agree_btn.addEventListener('click', () => {
-      //찬성 반대 선택 이후 버튼 숨기기
-      // agree_btn.style.display = 'none';
-      // disagree_btn.style.display = 'none';
-      // opinion_input.style.display = 'block';
-      // send_btn.style.display = 'block';
-      // input_box.style.display = 'flex';
       sendAgreeToServer();
     });
 
     //반대 선택시
     disagree_btn.addEventListener('click', () => {
-      //찬성 반대 선택 이후 버튼 숨기기
-      // agree_btn.style.display = 'none';
-      // disagree_btn.style.display = 'none';
-      // opinion_input.style.display = 'block';
-      // send_btn.style.display = 'block';
-      // input_box.style.display = 'flex';
       sendDisagreeToServer();
     });
   } else {
@@ -296,10 +280,14 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
     case 3:
       alert(`의견 제시 후 이용해주세요.`);
       break;
+    // 도배로 인한 채팅 금지 상태
+    case 4:
+      alert(`도배로 인해 채팅이 제한된 상태입니다..`);
+      break;
   }
 });
 
-/**서버로 채팅 내용을 보내는 함수 */
+/*서버로 채팅 내용을 보내는 함수 */
 async function send_chat_socket_emit() {
   const opinion_input = document.querySelector('#message').value.replace(/\n/g, "<br>"); 
   if (opinion_input != '') {
