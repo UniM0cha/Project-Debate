@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,10 +19,12 @@ import { UserRole } from 'src/users/users.entity';
 import { AdminService } from './admin.service';
 import { AdminReserveDto } from './dto/reserve.dto';
 import { AdminTopicDto } from './dto/admin.topic.dto';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
 
 @Controller('admin')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Role(UserRole.ADMIN)
+@UseFilters(new HttpExceptionFilter())
 export class AdminController {
   constructor(
     private readonly topicService: TopicService,

@@ -61,11 +61,17 @@ export class AuthService {
 
   async setAuthDto(userId: string): Promise<AuthDto> {
     let isLogined: boolean = userId ? true : false;
-    let nickname: string = null;
+    let userData: { nickname: string; profileImage: string; email: string };
     if (isLogined) {
-      nickname = await this.usersService.findNickname(userId);
+      userData = await this.usersService.getUserData(userId);
     }
-    return new AuthDto(isLogined, nickname, userId);
+    return new AuthDto(
+      isLogined,
+      userId,
+      userData?.nickname,
+      userData?.profileImage,
+      userData?.email,
+    );
   }
 
   async login(user: Users): Promise<string> {

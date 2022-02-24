@@ -1,63 +1,43 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <title>실시간 토론 페이지</title>
-    <script
-      src='https://cdn.socket.io/4.4.0/socket.io.min.js'
-      integrity='sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj'
-      crossorigin='anonymous'
-    ></script>  
+    <title>프로필 수정</title>
     <link rel='stylesheet' href='/css/index.css' />
+    <link rel='stylesheet' href='/css/profile.css' />
+    
+    <script src="/js/profile.js"></script>
   </head>
 
   <body>
-    {{!-- index.js파일에서 사용할 script선언 --}}
-    <script>
-      let isLogined = {{isLogined}};
-      const nickname = "{{nickname}}";
-      const userId = "{{userId}}";
-      const hasOpinion = {{hasOpinion}};
-      const reserveId = {{#if topic.currentReserveId}}{{topic.currentReserveId}}{{else}}0{{/if}};
-      const endDate = "{{topic.endDate}}";
-    </script>
 
     {{!-- 상단 메뉴 --}}
     {{> header}}
 
-    <!-- 주제 -->
-    <div class='time-topic-div'>
-      <div class='time'  id="topic-time">
-      </div>
-      <div class='topic'>
-        주제 : {{topic.currentTopicName}}<br>
-      </div>
-    </div>
-
-    <!-- 찬성반대투표바 -->
-    <div class='age-dis-bar-wrapper'>
-      <div>
-      <div class='agree-bar'><span class="agree-sign">찬성:</span></div>
-      <div class='disagree-bar'><span class='disagree-sign'>반대:</span></div>
-      </div>
-      <div class="btn-group">
-        <button class='bar-button agree-btn'>찬성</button>
-        <button class='bar-button disagree-btn'>반대</button>
-      </div>
-    </div>
-
-    <!-- 실시간 토론 하는 곳 -->
-    <div class='debate-wrapper'>
-      <div class='debate-box'>
-        <ul class='live-debate' id='messages'>
-        </ul>
-      </div>
-
-      <div class='input-box'>
-        <textarea id='message' class='opinion-input' type='text' maxlength="200" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
-        <button id='send' class='send' type='button'>전송</button>
+    <div class="flexbox">
+      <div class="profile-container">
+        <h1 class="profile-title">프로필 수정</h1>
+        <form id="edit-form">
+          <div class="profile-items profile-image-nickname"> 
+            <aside class="aside">
+              <img class="profile-image" src="{{profileImage}}">
+            </aside>
+            <div class="content nickname">
+              <h3>닉네임</h3>
+              <input type="text" id="nickname" name="nickname" value="{{nickname}}">
+              <div id="checkMessage">사용 가능한 닉네임 입니다.</div>
+            </div>
+          </div>
+          <div class="profile-items">
+            <aside class="aside"><h2>이메일</h2></aside>
+            <div class="content email">
+              <input type="text" value="{{email}}" readonly>
+              <br>이메일 수정은 지원하지 않습니다.
+            </div>
+          </div>
+          <input type="submit" id="submit" value="수정">
+          <input type="button" id="cancel"value="취소" onclick="location.href='/'">
+        </form>
       </div>
     </div>
-
-    <script src='./js/index.js'></script>
   </body>
 </html>
