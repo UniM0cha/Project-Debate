@@ -6,6 +6,9 @@ import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { Chat } from './chat.entity';
 import { ChatRepository } from './chat.repository';
+import { MoreThan } from 'typeorm';
+import { appendFile } from 'fs';
+import { AppController } from 'src/app.controller';
 
 @Injectable()
 export class ChatService {
@@ -27,7 +30,9 @@ export class ChatService {
      * 1 : 존재하지 않는 유저
      * 2 : 유효하지 않는 주제
      * 3 : 유저가 의견을 제시하지 않음
+     * 4 : 도배로 인한 채팅 금지
      */
+
     const user: Users = await this.usersService.findOneById(data.userId);
     if (!user) {
       this.logger.error(`채팅 저장 실패: 유저가 존재하지 않습니다.`);
@@ -48,9 +53,30 @@ export class ChatService {
       return { state: 3 };
     }
 
+    ////////////////////////////////////////////////////////
+
     const today = new Date();
     const nickname = user.nickname;
     const chat = new Chat();
+
+    const minusday = new Date();
+    minusday.setSeconds(today.getSeconds() - 5);
+
+    this.logger.debug(`today: ${JSON.stringify(today, null, 4)}`);
+    this.logger.debug(`minusday: ${JSON.stringify(minusday, null, 4)}`);
+
+    // 수정
+    const chattingList: Chat[] = await this.getOneChatTime(data.userId);
+
+    this.logger.debug(`chattingList: ${JSON.stringify(chattingList, null, 4)}`);
+
+    if (chattingList[0] != undefined) {
+      if (chattingList[0].chatDate >= minusday) {
+        this.logger.error(`채팅 저장 실패: 도배로 인해 채팅이 제한되었습니다.`);
+        return { state: 4 };
+      }
+    }
+
     chat.createChat(today, data.opinion_input, user, reserve, opinionType);
     await this.chatRepository.save(chat);
     this.logger.debug(`채팅 저장 성공`);
@@ -62,10 +88,22 @@ export class ChatService {
     };
   }
 
+  ////////////////////////////////////////////////////////
+
   async getAllChat(reserveId: number): Promise<Chat[]> {
     const topicReserve: TopicReserve =
       await this.topicService.findOneTopicReserve(reserveId);
     return await this.chatRepository.find({ topicReserve: topicReserve });
+  }
+
+  async getOneChatTime(usersId): Promise<Chat[]> {
+    return await this.chatRepository.find({
+      where: { users: usersId },
+      skip: 3,
+      take: 1,
+      order: { chatDate: 'DESC' },
+      relations: ['users'],
+    });
   }
 
   async validateAndGetAllChat(

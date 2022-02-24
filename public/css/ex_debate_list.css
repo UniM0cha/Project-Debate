@@ -22,6 +22,11 @@ body{
   margin-top: 10px;
 }
 
+.ex-debate-show-link{
+  text-decoration: none;
+  color: black;
+}
+
 
 /*페이지 이동*/
 .page-item{
