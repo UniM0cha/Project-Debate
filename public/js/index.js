@@ -70,18 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // 모든 채팅 가져옴
   getAllChat();
 
-  //로그인, 로그아웃 버튼 구현
-  const loginform = document.querySelector('.form-login');
-  const logoutform = document.querySelector('.form-logout');
+  // //로그인, 로그아웃 버튼 구현
+  // const loginform = document.querySelector('.form-login');
+  // const logoutform = document.querySelector('.form-logout');
 
-  //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
-  if (isLogined == true) {
-    loginform.style.display = 'none';
-    logoutform.style.display = 'block';
-  } else {
-    loginform.style.display = 'block';
-    logoutform.style.display = 'none';
-  }
+  // //로그인했을때->로그아웃버튼, 로그인안했을때->로그인 버튼
+  // if (isLogined == true) {
+  //   loginform.style.display = 'none';
+  //   logoutform.style.display = 'block';
+  // } else {
+  //   loginform.style.display = 'block';
+  //   logoutform.style.display = 'none';
+  // }
   //로그인, 로그아웃 버튼 구현
 
   //로그인 시 채팅 가능
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (isLogined === false) {
     input_box.style.display = 'none';
-    live_debate.style.height = '100%'
+    live_debate.style.height = '100%';
   }
 
   if (isLogined === true && hasOpinion === false) {
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!event.shiftKey) {
         send_chat_socket_emit();
       } else {
-        opinion.value = opinion.value + "\n";
+        opinion.value = opinion.value + '\n';
         opinion.scrollTop = opinion.scrollHeight;
       }
     }
@@ -289,7 +289,9 @@ chatSocket.on('chat-state-to-client', ({ state }) => {
 
 /*서버로 채팅 내용을 보내는 함수 */
 async function send_chat_socket_emit() {
-  const opinion_input = document.querySelector('#message').value.replace(/\n/g, "<br>"); 
+  const opinion_input = document
+    .querySelector('#message')
+    .value.replace(/\n/g, '<br>');
   if (opinion_input != '') {
     console.log('sending message to server');
     chatSocket.emit('new-message-to-server', {

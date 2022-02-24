@@ -5,11 +5,13 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
 import { UserRole } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
-import { ROLES_KEY } from './roles.decorator';
+
+/**
+ * 아직 테스트중인 가드입니다!!! 적용된 곳 없음!!
+ */
 
 @Injectable()
 export class WsGuard implements CanActivate {

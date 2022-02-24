@@ -10,12 +10,14 @@ import {
   Redirect,
   UseGuards,
   Req,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { MainAuthGuard } from 'src/auth/passport/main.guard';
 import { ChatService } from 'src/chat/chat.service';
-import { TopicDataDto } from 'src/topic/dto/topic.dto';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
+import { TopicDto } from 'src/topic/dto/topic.dto';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
@@ -23,6 +25,7 @@ import { ListService } from './list.service';
 
 @Controller('list')
 @UseGuards(MainAuthGuard)
+@UseFilters(new HttpExceptionFilter())
 export class ListController {
   constructor(
     private readonly topicService: TopicService,
@@ -107,7 +110,7 @@ export class ListController {
       const authDto: AuthDto = await this.authService.setAuthDto(
         req.user.userId,
       );
-      const topic: TopicDataDto = await this.topicService.setListTopicDto(
+      const topic: TopicDto = await this.topicService.setListTopicDto(
         reserveId,
       );
       const data = { ...authDto, topic: topic };

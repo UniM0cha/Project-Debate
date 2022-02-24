@@ -1,85 +1,83 @@
 @font-face {
   font-family: 'new';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff')
+    format('woff');
   font-weight: normal;
   font-style: normal;
 }
-  
-  *{
-    margin: 0px;
-  }
-  
-  
-  /* 상단 메뉴바 */
-  .menu{
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 15px;
-    margin-top: 10px;
-  }
-  
-  .inner-menu{
-    display: flex;
-    align-items: center;
-    padding: 0px;
-  }
-  
-  /* 이전 리스트 버튼 */
-  .div-ex-debatelist{
-    text-align: right;
-  }
-  
-  .btn-ex-debatelist{
-    border: none;
-    padding: 15px 15px;
-    font-size: 20px;
-    font-family: new;
-    font-weight: bold;
-    background-color: transparent;
-  }
-  
-  .btn-ex-debatelist:hover{
-  }
-  
-  .btn-ex-debatelist:active{
-  }
-  
-  /* 사이트 로고 */
-  .div-title{
-    flex: 1;
-    text-align: left;
-  }
-  .title{
-    text-decoration: none;
-    font-size: 30px;
-    font-weight: bold;
-    color: black;
-  
-  }
-  
-  /* 로그인 버튼 */
-  .div-login{
-    text-align: right;
-  }
-  .btn-login{
-    border: none;
-    font-size: 20px;
-    padding: 15px 15px;
-    font-family: new;
-    font-weight: bold;
-    background-color: transparent;
-  }
-  
-  .btn-login:hover{
-  }
-  
-  .btn-login:active{
-  }
 
-  @media (min-width: 992px) {
-    .menu{
-      width: 60%;
-    }
-    
+* {
+  margin: 0px;
+}
+
+/* 상단 메뉴바 */
+.menu {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+  margin-top: 10px;
+}
+
+.inner-menu {
+  display: flex;
+  align-items: center;
+  padding: 0px;
+}
+
+/* 이전 리스트 버튼 */
+.div-ex-debatelist {
+  text-align: right;
+}
+
+.btn-ex-debatelist {
+  border: none;
+  padding: 15px 15px;
+  font-size: 20px;
+  font-family: new;
+  font-weight: bold;
+  background-color: transparent;
+}
+
+.btn-ex-debatelist:hover {
+}
+
+.btn-ex-debatelist:active {
+}
+
+/* 사이트 로고 */
+.div-title {
+  flex: 1;
+  text-align: left;
+}
+.title {
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: bold;
+  color: black;
+}
+
+/* 로그인 버튼 */
+.div-login {
+  text-align: right;
+}
+.btn-login {
+  border: none;
+  font-size: 20px;
+  padding: 15px 15px;
+  font-family: new;
+  font-weight: bold;
+  background-color: transparent;
+}
+
+.btn-login:hover {
+}
+
+.btn-login:active {
+}
+
+@media (min-width: 992px) {
+  .menu {
+    width: 60%;
   }
+}

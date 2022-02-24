@@ -1,6 +1,5 @@
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
 import { OpinionType } from 'src/topic/entity/topic-users.entity';
-import { Topic } from 'src/topic/entity/topic.entity';
 import { Users } from 'src/users/users.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 

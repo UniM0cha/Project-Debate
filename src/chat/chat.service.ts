@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { TopicReserve } from 'src/topic/entity/topic-reservation.entity';
-import { OpinionType, TopicUsers } from 'src/topic/entity/topic-users.entity';
+import { OpinionType } from 'src/topic/entity/topic-users.entity';
 import { TopicService } from 'src/topic/topic.service';
 import { Users } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';

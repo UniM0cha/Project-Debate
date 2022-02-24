@@ -14,6 +14,7 @@ import { AdminModule } from './admin/admin.module';
 import { ProfileModule } from './profile/profile.module';
 import { ConfigModule } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Module({
   imports: [
@@ -43,7 +44,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     ProfileModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway],
+  providers: [AppService, ChatGateway, HttpExceptionFilter],
   exports: [AppService],
 })
 export class AppModule {}

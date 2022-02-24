@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-naver';
-import { KakaoUserDto } from '../dto/kakao.user.dto';
 import { NaverUserDto } from '../dto/naver.user.dto';
 
 export class NaverStrategy extends PassportStrategy(Strategy) {

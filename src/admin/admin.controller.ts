@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,12 +17,14 @@ import { Topic } from 'src/topic/entity/topic.entity';
 import { TopicService } from 'src/topic/topic.service';
 import { UserRole } from 'src/users/users.entity';
 import { AdminService } from './admin.service';
-import { ReserveDto } from './dto/reserve.dto';
-import { TopicDto } from './dto/topic.dto';
+import { AdminReserveDto } from './dto/reserve.dto';
+import { AdminTopicDto } from './dto/admin.topic.dto';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
 
 @Controller('admin')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Role(UserRole.ADMIN)
+@UseFilters(new HttpExceptionFilter())
 export class AdminController {
   constructor(
     private readonly topicService: TopicService,
@@ -59,7 +62,7 @@ export class AdminController {
 
   /** 주제 추가 */
   @Post('new-topic')
-  async createNewTopic(@Body() body: TopicDto, @Res() res) {
+  async createNewTopic(@Body() body: AdminTopicDto, @Res() res) {
     this.logger.debug(`body: ${JSON.stringify(body, null, 4)}`);
     await this.topicService.createTopic(body);
     res.redirect('/admin/topic');
@@ -69,7 +72,7 @@ export class AdminController {
   @Post('update-topic/:id')
   async updateTopic(
     @Param('id') id: number,
-    @Body() body: TopicDto,
+    @Body() body: AdminTopicDto,
     @Res() res,
   ) {
     this.logger.debug(`id: ${id}, body: ${JSON.stringify(body, null, 4)}`);
@@ -99,7 +102,7 @@ export class AdminController {
 
   /** 예약 추가 */
   @Post('new-reserve')
-  async createNewReserve(@Body() body: ReserveDto, @Res() res) {
+  async createNewReserve(@Body() body: AdminReserveDto, @Res() res) {
     this.logger.debug(`body: ${JSON.stringify(body, null, 4)}`);
     await this.topicService.createReserve(body);
     res.redirect('/admin/topic');
@@ -108,7 +111,7 @@ export class AdminController {
   @Post('update-reserve/:id')
   async updateRserve(
     @Param('id') id: number,
-    @Body() body: ReserveDto,
+    @Body() body: AdminReserveDto,
     @Res() res,
   ) {
     this.logger.debug(`id: ${id}, body: ${JSON.stringify(body, null, 4)}`);
