@@ -90,3 +90,11 @@ async function validateAndSubmitNickname(nickname) {
     location.href = '/';
   }
 }
+
+function logout() {
+  confirm('hello?');
+  console.log('asdfsdgd');
+  if (confirm('로그아웃 하시겠습니까?')) {
+    location.href = '/auth/logout';
+  }
+}
