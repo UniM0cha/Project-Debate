@@ -1,26 +1,57 @@
-.title {
-    text-decoration: none;
-    color: white;
+@font-face {
+    font-family: 'new';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-WhiteObliqueA.woff')
+      format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+  
+* {
+    margin: 0px;
+}
+  
+body {
+    margin: 0px;
+    background-color: aliceblue;
+    font-family: new;
+}
+
+.register_div{
+    padding: 20px 50px;
+    margin-top: 50px;
+    background-color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+    border-radius: 7px;
+    border: 2px #ced4da solid;
+}
+
+.register_title{
     font-size: 30px;
-    display: block;
-    margin: 0 auto;
-}
-  
-.title img {
-    vertical-align: middle;
-}
-  
-.title:hover {
-    color: white;
+    font-weight: 1000;
 }
   
 .nickname_register{
-    margin-top: 20px;
-    display: flex;
+    margin-top: 10px;
+    text-align: center;
+    font-family: none;
 }
 
+#nickname{
+    width: 100%;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: 2px solid black;
+}
 /* 닉네임 생성 */
 
 #submit{
+    width: 100%;
+    text-decoration: none;
+    margin-bottom: 5px;
+    background-color: whitesmoke;
+    border-radius: 5px;
 }
 
