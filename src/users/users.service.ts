@@ -97,8 +97,13 @@ export class UsersService {
     if (!findName) {
       const acceptRegex = /^[\w가-힇ㄱ-ㅎ]+$/g;
       if (acceptRegex.test(nickname)) {
-        this.logger.debug('사용 가능한 닉네임');
-        return 0;
+        if (nickname.length <= 10) {
+          this.logger.debug('사용 가능한 닉네임');
+          return 0;
+        } else {
+          this.logger.error('닉네임 길이 제한');
+          return 3;
+        }
       } else {
         this.logger.error('사용 불가능한 닉네임: 형식에 맞지 않음');
         return 2;

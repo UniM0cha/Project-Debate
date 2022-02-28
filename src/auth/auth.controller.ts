@@ -57,13 +57,13 @@ export class AuthController {
     return HttpStatus.OK;
   }
 
-  @Get('login/google')
-  @HttpCode(200)
-  @UseGuards(AuthGuard('google'))
-  async googleLogin() {
-    this.logger.debug(`카카오 로그인 요청`);
-    return HttpStatus.OK;
-  }
+  // @Get('login/google')
+  // @HttpCode(200)
+  // @UseGuards(AuthGuard('google'))
+  // async googleLogin() {
+  //   this.logger.debug(`카카오 로그인 요청`);
+  //   return HttpStatus.OK;
+  // }
 
   @Get('redirect/naver')
   @HttpCode(200)
@@ -105,25 +105,25 @@ export class AuthController {
     );
   }
 
-  @Get('redirect/google')
-  @HttpCode(200)
-  @UseGuards(AuthGuard('google'))
-  async googleRedirect(
-    @Req() req,
-    @Res({ passthrough: true }) res: Response,
-    @Session() session,
-  ) {
-    const googleUser: GoogleUserDto = req.user as GoogleUserDto;
+  // @Get('redirect/google')
+  // @HttpCode(200)
+  // @UseGuards(AuthGuard('google'))
+  // async googleRedirect(
+  //   @Req() req,
+  //   @Res({ passthrough: true }) res: Response,
+  //   @Session() session,
+  // ) {
+  //   const googleUser: GoogleUserDto = req.user as GoogleUserDto;
 
-    await this.loginRegister(
-      res,
-      session,
-      'google',
-      googleUser.googleId,
-      googleUser.email,
-      googleUser.profileImage,
-    );
-  }
+  //   await this.loginRegister(
+  //     res,
+  //     session,
+  //     'google',
+  //     googleUser.googleId,
+  //     googleUser.email,
+  //     googleUser.profileImage,
+  //   );
+  // }
 
   async loginRegister(
     res: Response,
@@ -243,5 +243,10 @@ export class AuthController {
     // 로그인 완료되고 가입시에 저장한 데이터 삭제, 상태코드 전송
     delete session.registerData;
     res.json(state);
+  }
+
+  @Get('logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('access_token').redirect('/');
   }
 }

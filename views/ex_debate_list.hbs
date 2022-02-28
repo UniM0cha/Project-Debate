@@ -33,11 +33,11 @@
       </thead>
 
       <tbody class="list-body">
-      {{#if arr1}}
-        {{#each arr1}}
+      {{#if getPassedListValue}}
+        {{#each getPassedListValue}}
           <tr>
             <td>{{countNumber}}</a></td>
-            <td style="width: 60%; text-overflow: ellipsis;"><a href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
+            <td style="width: 60%; text-overflow: ellipsis;"><a class="ex-debate-show-link" href="/list/view/{{reserveId}}">{{topic.topicName}}</a></td>
             <td>{{dateFormat startDate "YY.MM.DD"}}~{{dateFormat endDate "YY.MM.DD"}}</td>
           </tr>
         {{/each}}

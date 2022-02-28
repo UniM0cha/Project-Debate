@@ -20,7 +20,7 @@ body {
 .time-topic-div {
   margin-top: 10px;
   width: 90%;
-  background-color: antiquewhite;
+  background-color: #e9ecef;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -28,6 +28,7 @@ body {
   height: auto;
   border-radius: 5px;
   padding-top: 5px;
+  border: 2px #ced4da solid;
 }
 
 .time {
@@ -41,19 +42,66 @@ body {
   font-weight: bold;
 }
 
+.agree-persent {
+  display: inline-flex;
+}
+
+.disagree-persent {
+  display: inline-flex;
+}
+
 /* 찬성반대바 */
 .age-dis-bar-wrapper {
   width: 95%;
   background-color: transparent;
   margin-top: 5px;
   display: flex;
-  flex-direction: column;
   margin-right: auto;
   margin-left: auto;
 }
 
+.agree-persent {
+  display: inline-flex;
+  width: fit-content;
+  line-height: 26px;
+  margin-right: 5px;
+  font-family: none;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  flex-direction: none;
+}
+
+.in-agree-persent {
+  vertical-align: middle;
+}
+
+.in-disagree-persent {
+  vertical-align: middle;
+}
+
+.disagree-persent {
+  display: inline-flex;
+  width: fit-content;
+  line-height: 26px;
+  margin-left: 5px;
+  font-family: none;
+  align-items: center;
+  font-weight: bold;
+}
+
+.out-age-dis-bar-box {
+  width: 100%;
+  display: grid;
+}
+
+.age-dis-bar-box {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
 .agree-bar {
-  width: 50%;
+  width: 100%;
   float: left;
   background-color: #4aa8d8;
   color: white;
@@ -69,7 +117,7 @@ body {
 }
 
 .disagree-bar {
-  width: 50%;
+  width: 100%;
   float: left;
   background-color: #ff4040;
   color: white;
@@ -80,26 +128,20 @@ body {
 }
 
 /* 찬성반대버튼*/
-.btn-group {
-  display: inline;
-}
-
 .bar-button {
-  width: 50%;
+  width: 100%;
   border-radius: 7px;
+  border: 2px #868e96 solid;
+  margin-bottom: 5px;
 }
 
 .agree-btn {
-  float: left;
-  border: none;
-  background-color: #4aa8d8;
+  background-color: #e9ecef;
   height: 26px;
 }
 
 .disagree-btn {
-  float: left;
-  border: none;
-  background-color: #ff4040;
+  background-color: #e9ecef;
   height: 26px;
 }
 
@@ -122,12 +164,12 @@ body {
   width: 90%;
   height: 70vh;
   background-color: transparent;
-  padding-top: 10px;
   background-color: white;
   border-radius: 5px;
   padding-bottom: 5px;
   margin-left: auto;
   margin-right: auto;
+  border: 2px #ced4da solid;
 }
 
 .debate-wrapper ul {
@@ -211,10 +253,10 @@ body {
 
 .opinion-input {
   width: 80%;
-  border-radius: 7px;
+  border-radius: 5px;
   word-break: break-all;
   margin: 0px;
-  border: 1px #868e96 solid;
+  border: 2px #ced4da solid;
   resize: none;
   padding: 10px;
 }
@@ -226,11 +268,16 @@ body {
 
 .send {
   width: 20%;
-  border-radius: 7px;
+  border-radius: 5px;
   border: none;
   font-family: new;
-  border: 1px #868e96 solid;
+  border: 2px #ced4da solid;
   font-size: 20px;
+  font-weight: bold;
+}
+
+.send:active {
+  background-color: #adb5bd;
 }
 
 /*휴대폰*/

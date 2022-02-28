@@ -51,6 +51,11 @@ async function validateNickname(nickname) {
     submit.disabled = true;
   }
   //
+  else if (state === 3) {
+    message.innerHTML = '닉네임은 10자 이내로 입력해주세요.';
+    submit.disabled = true;
+  }
+  //
   else if (state === 0) {
     message.innerHTML = '사용가능한 닉네임입니다.';
     submit.disabled = false;
@@ -85,8 +90,20 @@ async function validateAndSubmitNickname(nickname) {
     alert('닉네임에는 영어, 한글, 숫자, 언더바(_)만 입력 가능합니다.');
   }
   //
+  else if (state === 3) {
+    alert('닉네임은 10자 이내로 입력해주세요.');
+  }
+  //
   else if (state === 0) {
     alert('수정이 완료되었습니다.');
     location.href = '/';
+  }
+}
+
+function logout() {
+  confirm('hello?');
+  console.log('asdfsdgd');
+  if (confirm('로그아웃 하시겠습니까?')) {
+    location.href = '/auth/logout';
   }
 }

@@ -62,18 +62,10 @@ export class ListController {
       return getEndTime.startDate;
     });
 
-    // const getEndTimeList: Date[] = getEndTime.map((getEndTime) => {
-    //   getEndTime.reserveDate.setDate(getEndTime.reserveDate.getDate() - 1);
-    //   return getEndTime.reserveDate;
-    // });
-    //getEndTimeList.reverse();
-
-    // getPassedTopicList = getPassedTopicList.slice((page - 1) * 10, page * 10);
-
-    let arr1 = [];
+    let getPassedListValue = [];
 
     getPassedTopicList.forEach((element, index) => {
-      arr1.push({
+      getPassedListValue.push({
         countNumber: index + 1,
         reserveId: element.reserveId,
         startDate: element.startDate,
@@ -84,76 +76,18 @@ export class ListController {
       });
     });
 
-    arr1.reverse();
+    getPassedListValue.reverse();
 
-    this.logger.debug(`arr1: ${JSON.stringify(arr1, null, 4)}`);
-    arr1 = arr1.slice((page - 1) * 10, page * 10);
-
-    /*
     this.logger.debug(
-      `getPassedTopicList: ${JSON.stringify(getPassedTopicList, null, 4)}`,
+      `getPassedListValue: ${JSON.stringify(getPassedListValue, null, 4)}`,
     );
-    const arr1 = {
-      getPassedTopicList: getPassedTopicList,
-      getEndTimeList: getEndTimeList,
-    };
-    this.logger.debug(`arr1: ${JSON.stringify(arr1, null, 4)}`);
-
-    const arr2 = arr1.map((arr1) => {
-      return {
-        reserveId: arr1.getPassedTopicList.reserveId,
-        reserveDate: arr1.getPassedTopicList.reserveDate,
-        reserveEndDate: arr1.getEndTimeList,
-        topic: {
-          topicName: arr1.getPassedTopicList.topic.topicName,
-        },
-      };
-    });
-    this.logger.debug(`arr2: ${JSON.stringify(arr2, null, 4)}`);
-    */
-
-    // const arr2 = arr1.map((arr) => {
-    //   return {
-    //     reserveId: arr.getPassedTopicList.reserveId
-    //     reserveDate: arr.reserveDate,
-
-    //   };
-    // });
-
-    // arr1.push(getPassedTopicList.slice((page - 1) * 10, page * 10));
-    // getPassedTopicList = getPassedTopicList.slice((page - 1) * 10, page * 10);
-
-    //console.log('arr1 : ' + JSON.stringify(getPassedTopicList, null, 4)); // test
-    // console.log('arr1 : ' + JSON.stringify(arr1, null, 4)); // test
-
-    // [[1,2,3,4,5,6,7,8,9,10],[11]]
-
-    /**
-     * /list/page/1
-     *
-     * 데이터가 1 ~ 25 있다고 쳐봐
-     *
-     * 1 -> 1 ~ 10
-     * 2 -> 11 ~ 20
-     * 3 -> 21 ~ 25
-     *
-     *
-     * 2 -> 11 ~ 20
-     * x -> (10x-9) ~ 10x
-     *
-     *
-     */
-
-    // res.render('ex_debate_list', { topics: topics });
+    getPassedListValue = getPassedListValue.slice((page - 1) * 10, page * 10);
 
     const authDto: AuthDto = await this.authService.setAuthDto(req.user.userId);
 
     res.render('ex_debate_list', {
-      arr1: arr1, // test
+      getPassedListValue: getPassedListValue,
       ...authDto,
-      //getPassedTopicList: getPassedTopicList,
-      //getEndTimeList: getEndTimeList,
-      //topicReserves: topicReserves,
       topics: topics,
       topicReserveCount: topicReserveCount,
       topicReservePageCount: topicReservePageCount,
